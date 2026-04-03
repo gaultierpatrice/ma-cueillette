@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Log in</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="form.email" name="email" required />
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input type="password" [(ngModel)]="form.password" name="password" required />
+    </div>
+
+    <button type="submit">Log in</button>
+  </form>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <p>No account yet? <a routerLink="/register">Register</a></p>
+</div>
