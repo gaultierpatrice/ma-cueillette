@@ -5,6 +5,7 @@ import com.cueillette.backend.model.User;
 import com.cueillette.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,5 +29,12 @@ public class UserController {
         return ResponseEntity.ok(created);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
+        String token = userService.login(request.email(), request.password());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
+
     public record RegisterRequest(String name, String email, String password, Role role) {}
+    public record LoginRequest(String email, String password) {}
 }

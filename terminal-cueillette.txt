@@ -1,0 +1,16 @@
+terminal cueillette:
+
+
+podman pod create --name cueillette -p 3210:80 -p 5432:5432
+
+podman run -d --name pgadmin_c --pod cueillette -e PGADMIN_DEFAULT_EMAIL=gaultiercode@gmail.com -e PGADMIN_DEFAULT_PASSWORD=pgapicking docker.io/dpage/pgadmin4
+
+podman run -d --name postgres_c --pod cueillette -e POSTGRES_DB=cueillette_db -e POSTGRES_PASSWORD=pgpicking -v cueillette_postgres_data:/var/lib/postgresql/data docker.io/library/postgres:16
+
+
+
+Pour lancer le back : run BackendApplication
+Pour lancer le front : ng serve
+
+
+Ou on s'est arreté sur le tuto securité : Step 4 — Update UserService.java
