@@ -9,6 +9,11 @@ export interface RegisterPayload {
   role: 'USER' | 'ADMIN' | 'PRODUCER';
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/users';
@@ -17,5 +22,9 @@ export class UserService {
 
   register(payload: RegisterPayload): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, payload);
+  }
+
+  login(payload: LoginPayload): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, payload);
   }
 }

@@ -31,7 +31,7 @@ public class UserService {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password)); // hashed!
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user.setSubscriptionDate(LocalDateTime.now());
 
