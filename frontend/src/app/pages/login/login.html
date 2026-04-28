@@ -15,7 +15,9 @@
     <button type="submit">Log in</button>
   </form>
 
-  <p class="error" *ngIf="error">{{ error }}</p>
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
 
   <p>No account yet? <a routerLink="/register">Register</a></p>
 </div>
