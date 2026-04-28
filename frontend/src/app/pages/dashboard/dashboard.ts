@@ -9,10 +9,16 @@ import { AuthService } from '../../services/auth';
   templateUrl: './dashboard.html',
 })
 export class DashboardComponent {
+  username: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
+
+  ngOnInit(): void {
+    this.username = this.authService.getUsername();
+  }
 
   logout() {
     this.authService.logout();
