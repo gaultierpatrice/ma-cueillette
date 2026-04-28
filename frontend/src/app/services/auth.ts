@@ -19,4 +19,11 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
   }
+
+  getUsername(): string {
+    const token = this.getToken();
+    if (!token) return '';
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name ?? '';
+  }
 }
