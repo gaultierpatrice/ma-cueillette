@@ -1,9 +1,12 @@
 package com.cueillette.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "reports")
 public class Report {
@@ -29,17 +32,4 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "picking_id", nullable = false)
     private Picking picking;
-
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public LocalDateTime getReportedAt() { return reportedAt; }
-    public void setReportedAt(LocalDateTime reportedAt) { this.reportedAt = reportedAt; }
-    public ReportStatus getStatus() { return status; }
-    public void setStatus(ReportStatus status) { this.status = status; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public Picking getPicking() { return picking; }
-    public void setPicking(Picking picking) { this.picking = picking; }
 }
