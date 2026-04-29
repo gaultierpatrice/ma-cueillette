@@ -1,9 +1,12 @@
 package com.cueillette.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.List;
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(name = "pickings")
 public class Picking {
@@ -49,37 +52,4 @@ public class Picking {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
-
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public Double getLat() { return lat; }
-    public void setLat(Double lat) { this.lat = lat; }
-    public Double getLng() { return lng; }
-    public void setLng(Double lng) { this.lng = lng; }
-    public String getWebsite() { return website; }
-    public void setWebsite(String website) { this.website = website; }
-    public String getOpeningHours() { return openingHours; }
-    public void setOpeningHours(String openingHours) { this.openingHours = openingHours; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public List<DayOfWeek> getDaysOpen() { return daysOpen; }
-    public void setDaysOpen(List<DayOfWeek> daysOpen) { this.daysOpen = daysOpen; }
-    public List<Label> getLabels() { return labels; }
-    public void setLabels(List<Label> labels) { this.labels = labels; }
-    public User getProducer() { return producer; }
-    public void setProducer(User producer) { this.producer = producer; }
-    public List<Product> getProducts() { return products; }
-    public void setProducts(List<Product> products) { this.products = products; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getPostalCode() { return postalCode; }
-    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
-    public String getCity() { return city; }
-    public void setCity(String city) { this.city = city; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
 }
