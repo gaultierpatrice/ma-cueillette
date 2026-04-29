@@ -106,6 +106,10 @@ header nav {
   font-weight: bold;
 }
 
+.logo-link {
+  margin-left: -38px;
+}
+
 header nav .links a {
   color: white;
   margin-left: 20px;
