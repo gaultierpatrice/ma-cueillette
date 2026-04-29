@@ -20,6 +20,11 @@ public class Picking {
     private String website;
     private String openingHours;
     private String description;
+    private String name;
+    private String postalCode;
+    private String city;
+    private String email;
+    private String phone;
 
     @ElementCollection(targetClass = DayOfWeek.class)
     @Enumerated(EnumType.STRING)
@@ -34,7 +39,7 @@ public class Picking {
     private List<Label> labels;
 
     @ManyToOne
-    @JoinColumn(name = "producer_id", nullable = false)
+    @JoinColumn(name = "producer_id")
     private User producer;
 
     @ManyToMany
@@ -67,4 +72,14 @@ public class Picking {
     public void setProducer(User producer) { this.producer = producer; }
     public List<Product> getProducts() { return products; }
     public void setProducts(List<Product> products) { this.products = products; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 }
