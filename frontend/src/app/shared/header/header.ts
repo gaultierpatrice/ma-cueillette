@@ -18,14 +18,21 @@ export class HeaderComponent {
     register: 'Inscription',
     login: 'Connexion',
     dashboard: 'Tableau de bord',
+    pickings: 'Liste des cueillettes',
+    favorites: 'Mes favoris',
+    'contact-admin': 'Contacter Admin',
+    'add-picking': 'Proposer ma Cueillette',
+    legal: 'Mentions légales',
+    about: 'A propos',
   };
 
   constructor(private router: Router) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        const path = event.urlAfterRedirects.replace('/', '');
-        this.pageTitle = this.titles[path] ?? '';
+        const path = event.urlAfterRedirects.replace(/^\//, '').split('?')[0];
+        const firstSegment = path.split('/')[0];
+        this.pageTitle = this.titles[firstSegment] ?? '';
       });
   }
 }

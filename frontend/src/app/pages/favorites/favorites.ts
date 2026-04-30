@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-landing',
+  selector: 'app-favorites',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './landing.html',
-  styleUrl: 'landing.css',
+  templateUrl: './favorites.html',
 })
-export class LandingComponent {}
+export class FavoritesComponent {
+  readonly exampleId = 12;
+}
+
