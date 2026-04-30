@@ -1,0 +1,14 @@
+.hero {
+  width: 100%;
+  min-height: 100%;
+  background-image: url('/assets/images/illustration/vegetables.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero p,
+a,
+h2 {
+  filter: invert(1);
+}

@@ -1,4 +1,28 @@
 footer {
   width: 100%;
+  background: #1b5e20;
+  color: #ccc;
+  padding: 16px 32px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.links {
+  display: flex;
+  gap: 40px;
+}
+
+.links a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.links img {
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
 }
 
