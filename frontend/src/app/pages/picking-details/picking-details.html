@@ -1,0 +1,8 @@
+<div class="container">
+  <h2>Details cueillette #{{ id }}</h2>
+
+  <div style="display: grid; gap: 8px; margin-top: 10px">
+    <a [routerLink]="['/pickings', id, 'review']">Nouvel avis</a>
+    <a routerLink="/pickings">Retour à la liste</a>
+  </div>
+</div>

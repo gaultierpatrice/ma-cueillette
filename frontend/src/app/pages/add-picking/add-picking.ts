@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-landing',
+  selector: 'app-add-cueillette',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './landing.html',
-  styleUrl: 'landing.css',
+  templateUrl: './add-picking.html',
 })
-export class LandingComponent {}
+export class AddCueilletteComponent {
+}
+
