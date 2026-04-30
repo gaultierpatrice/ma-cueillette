@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
+  min-height: 85vh;
   background-image: url('/assets/images/illustration/vegetables.jpg');
   background-size: cover;
   background-position: center;
@@ -83,6 +83,16 @@
 }
 
 .hero a[routerLink='/contact-admin'] {
+  background: rgba(245, 222, 179, 0.95);
+  color: #5d4037;
+}
+
+.hero a[routerLink='/legal'] {
+  background: rgba(245, 222, 179, 0.95);
+  color: #5d4037;
+}
+
+.hero a[routerLink='/about'] {
   background: rgba(245, 222, 179, 0.95);
   color: #5d4037;
 }
