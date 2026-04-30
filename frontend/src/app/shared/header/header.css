@@ -20,7 +20,7 @@ header {
   height: 42px;
   object-fit: scale-down;
   transform: scaleX(-1);
-  margin-left: -2px;
+  margin-left: -40px;
 }
 
 nav {
