@@ -11,6 +11,7 @@ import { ContactAdminComponent } from './pages/contact-admin/contact-admin';
 import { AddCueilletteComponent } from './pages/add-picking/add-picking';
 import { LegalComponent } from './pages/legal/legal';
 import { AboutComponent } from './pages/about/about';
+import { DeleteAccountComponent } from './pages/delete-account/delete-account';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'add-picking', component: AddCueilletteComponent },
   { path: 'legal', component: LegalComponent },
   { path: 'about', component: AboutComponent },
+  { path: 'delete-account', component: DeleteAccountComponent },
   { path: 'search', redirectTo: 'pickings', pathMatch: 'full' },
   { path: '', component: LandingComponent },
   { path: '**', redirectTo: '' },
