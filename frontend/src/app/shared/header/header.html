@@ -1,8 +1,13 @@
 <header>
   <nav>
-    <a routerLink="/" class="logo-link">
+    <a routerLink="/" class="logo-link" aria-label="Accueil">
       <img src="assets/images/icons/logo-macueillette.png" alt="logo" class="logo-img" />
-      <span class="logo">Ma-Cueillette.fr</span>
+    </a>
+
+    <span class="header-title" aria-label="Ma-Cueillette.fr">Ma-Cueillette.fr</span>
+
+    <a routerLink="/dashboard" class="dashboard-link" aria-label="Tableau de bord">
+      <img src="/assets/images/icons/user-solid.png" alt="Compte" />
     </a>
   </nav>
 </header>

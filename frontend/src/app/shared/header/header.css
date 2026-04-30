@@ -1,6 +1,46 @@
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
 .logo-img {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   object-fit: scale-down;
   transform: scaleX(-1);
+  margin-left: -2px;
+}
+
+nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+span {
+  font-size: x-large;
+}
+
+.dashboard-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-link img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: invert(1);
 }
