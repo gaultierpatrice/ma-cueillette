@@ -7,40 +7,42 @@
 
   <div class="location-section">
     <h3>Votre position</h3>
-    
+
     <div class="location-options">
-      <button 
-        (click)="useCurrentLocation()" 
-        [disabled]="geolocating"
-        class="btn btn-primary">
+      <button (click)="useCurrentLocation()" [disabled]="geolocating" class="btn btn-primary">
         {{ geolocating ? 'Chargement...' : 'Utiliser ma position actuelle' }}
       </button>
 
       <div class="address-search">
-        <input 
-          type="text" 
+        <input
+          type="text"
           [(ngModel)]="addressInput"
           (keyup.enter)="searchByAddress()"
           placeholder="Ou entrez une adresse..."
           [disabled]="geolocating"
-          class="address-input">
-        <button 
-          (click)="searchByAddress()" 
+          class="address-input"
+        />
+        <button
+          (click)="searchByAddress()"
           [disabled]="!addressInput || geolocating"
-          class="btn btn-secondary">
+          class="btn btn-secondary"
+        >
           Chercher
         </button>
       </div>
 
       @if (userLocation) {
-        <button (click)="clearLocation()" class="btn btn-link">
-          Effacer la position
-        </button>
+        <button (click)="clearLocation()" class="btn btn-link">Effacer la position</button>
       }
     </div>
 
     @if (locationMessage) {
-      <div class="location-message" [class.error]="locationMessage.includes('Impossible') || locationMessage.includes('introuvable')">
+      <div
+        class="location-message"
+        [class.error]="
+          locationMessage.includes('Impossible') || locationMessage.includes('introuvable')
+        "
+      >
         {{ locationMessage }}
       </div>
     }
@@ -49,7 +51,7 @@
       <div class="location-warning">
         💡 Activez la localisation pour voir les cueillettes les plus proches de vous
       </div>
-      
+
       <div class="view-all-section">
         <p class="or-divider">ou</p>
         <button (click)="viewAllPickings()" class="btn btn-view-all">
@@ -76,6 +78,8 @@
             @if (locationSource) {
               <span class="location-from">depuis {{ locationSource }}</span>
             }
+          } @else if (sortBy === 'postal_code') {
+            Cueillettes (ordre par code postal)
           } @else {
             Cueillettes (ordre alphabétique)
           }
@@ -83,26 +87,33 @@
 
         <div class="sort-controls">
           <label>Trier par:</label>
-          <button 
-            [class.active]="sortBy === 'distance'" 
+          <button
+            [class.active]="sortBy === 'distance'"
             [disabled]="!userLocation"
             (click)="setSortBy('distance')"
-            class="sort-btn">
-            📍 Distance
+            class="sort-btn"
+          >
+            Distance
           </button>
-          <button 
+          <button
             [class.active]="sortBy === 'alphabetical'"
             (click)="setSortBy('alphabetical')"
-            class="sort-btn">
-            🔤 Alphabétique
+            class="sort-btn"
+          >
+            Alphabétique
+          </button>
+          <button
+            [class.active]="sortBy === 'postal_code'"
+            (click)="setSortBy('postal_code')"
+            class="sort-btn"
+          >
+            Code postal
           </button>
         </div>
       </div>
 
       @if (pickings.length === 0) {
-        <div class="no-results">
-          Aucune cueillette trouvée
-        </div>
+        <div class="no-results">Aucune cueillette trouvée</div>
       }
 
       <div class="pickings-list">
@@ -110,13 +121,33 @@
           <div class="picking-card" [routerLink]="['/pickings', picking.id]">
             <div class="picking-info">
               <h4 class="picking-name">{{ picking.name }}</h4>
-              <div class="picking-distance">
-                @if (picking.distance !== undefined && sortBy === 'distance') {
-                  <span class="distance">📍 {{ picking.distance }} km</span>
-                } @else {
-                  <span class="postal-code">📮 {{ picking.postalCode || 'N/A' }}</span>
+
+              <div class="picking-details">
+                <div class="picking-address">
+                  {{ picking.address }}
+                </div>
+                <div class="picking-city-postal">
+                  {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
+                </div>
+                @if (picking.phone) {
+                  <div class="picking-phone">
+                    {{ picking.phone }}
+                  </div>
+                }
+                @if (picking.website) {
+                  <div class="picking-website">
+                    <a [href]="picking.website" target="_blank" (click)="$event.stopPropagation()">
+                      {{ picking.website }}
+                    </a>
+                  </div>
                 }
               </div>
+
+              @if (picking.distance !== undefined && sortBy === 'distance') {
+                <div class="picking-distance">
+                  <span class="distance">{{ picking.distance }} km</span>
+                </div>
+              }
             </div>
             <div class="picking-arrow">→</div>
           </div>
