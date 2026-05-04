@@ -53,4 +53,11 @@ public class UserService {
 
         return jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getName());
     }
+
+    public void deleteUserAccount(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userRepository.delete(user);
+    }
 }
