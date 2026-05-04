@@ -28,6 +28,7 @@ public class Picking {
     private String city;
     private String email;
     private String phone;
+    private String imageUrl;
 
     @ElementCollection(targetClass = DayOfWeek.class)
     @Enumerated(EnumType.STRING)
