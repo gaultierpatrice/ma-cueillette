@@ -37,6 +37,20 @@
   border-bottom: 2px solid #e9ecef;
 }
 
+.image-container {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.picking-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .image-placeholder {
   width: 100%;
   height: 250px;
@@ -313,6 +327,10 @@
 @media (max-width: 768px) {
   .card-header {
     grid-template-columns: 1fr;
+  }
+
+  .image-container {
+    height: 200px;
   }
 
   .image-placeholder {

@@ -11,6 +11,7 @@ export interface Picking {
   website?: string;
   openingHours?: string;
   description?: string;
+  imageUrl?: string;
   daysOpen?: string[];
   labels?: string[];
   products?: Product[];

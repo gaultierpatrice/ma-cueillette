@@ -6,8 +6,14 @@
   <div *ngIf="picking && !loading">
     <div class="details-card">
       <div class="card-header">
-        <div class="image-placeholder">
-          <span class="placeholder-icon">🌾</span>
+        <div class="image-container">
+          <img *ngIf="picking.imageUrl" 
+               [src]="picking.imageUrl" 
+               [alt]="picking.name"
+               class="picking-image">
+          <div *ngIf="!picking.imageUrl" class="image-placeholder">
+            <span class="placeholder-icon">🌾</span>
+          </div>
         </div>
         
         <div class="header-info">
