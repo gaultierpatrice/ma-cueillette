@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cueillette-review',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './picking-review.html',
 })
 export class CueilletteReviewComponent {
@@ -15,4 +13,3 @@ export class CueilletteReviewComponent {
     this.cueilletteId = this.route.snapshot.paramMap.get('id') ?? '';
   }
 }
-
