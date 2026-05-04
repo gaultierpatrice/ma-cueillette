@@ -42,7 +42,7 @@ public class Picking {
     private List<Label> labels;
 
     @ManyToOne
-    @JoinColumn(name = "producer_id")
+    @JoinColumn(name = "producer_id", nullable = true)
     private User producer;
 
     @ManyToMany
