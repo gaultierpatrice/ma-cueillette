@@ -11,7 +11,6 @@
   padding: 20px;
   padding-top: 20px;
 }
-
 .hero-card {
   background: rgba(198, 225, 180, 0.9);
   backdrop-filter: blur(4px);
@@ -22,7 +21,6 @@
   width: 100%;
   margin-bottom: auto;
 }
-
 .hero-card::before {
   display: block;
   font-size: 20px;
@@ -30,14 +28,12 @@
   color: #1b5e20;
   margin-bottom: 4px;
 }
-
 .hero-card p {
   font-size: 14px;
   color: #1b5e20;
   margin: 0;
   font-weight: normal;
 }
-
 .hero .container {
   background: transparent;
   padding: 0;
@@ -48,19 +44,16 @@
   flex-grow: 1;
   width: 100%;
 }
-
 .hero .container > div {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .hero .container > div > div {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
 .hero a {
   display: block;
   padding: 16px 24px;
@@ -74,33 +67,27 @@
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .hero a:hover {
   background: rgba(168, 208, 141, 1);
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-
 .hero a[routerLink='/contact-admin'] {
   background: rgba(245, 222, 179, 0.95);
   color: #5d4037;
 }
-
 .hero a[routerLink='/legal'] {
   background: rgba(245, 222, 179, 0.95);
   color: #5d4037;
 }
-
 .hero a[routerLink='/about'] {
   background: rgba(245, 222, 179, 0.95);
   color: #5d4037;
 }
-
 .hero a[routerLink='/contact-admin']:hover {
   background: rgba(245, 222, 179, 1);
 }
-
 .hero .container > div > div:first-child,
 .hero .container > div > div:nth-child(2),
 .hero .container > div > div:last-child {
@@ -109,38 +96,42 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .hero .container > div > div:last-child {
   background: rgba(245, 222, 179, 0.95);
 }
-
+.hero .container .minor {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
 .hero .container > div > div a {
   background: transparent;
   box-shadow: none;
   padding: 12px 16px;
   font-size: 15px;
 }
-
 .hero .container > div > div a:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: none;
   box-shadow: none;
 }
-
 .hero .container > div > div:first-child a,
 .hero .container > div > div:nth-child(2) a {
   border-bottom: 1px solid rgba(27, 94, 32, 0.15);
 }
-
 .hero .container > div > div:first-child a:last-child,
 .hero .container > div > div:nth-child(2) a:last-child {
   border-bottom: none;
 }
-
 .hero .container > div > div:last-child a {
   border-bottom: 1px solid rgba(93, 64, 55, 0.15);
 }
-
 .hero .container > div > div:last-child a:last-child {
   border-bottom: none;
+}
+.hero .container .minor a {
+  border-bottom: none;
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 13px;
 }
