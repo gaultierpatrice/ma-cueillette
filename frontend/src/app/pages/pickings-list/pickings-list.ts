@@ -10,7 +10,7 @@ import { PickingWithDistance, UserLocation } from '../../services/picking.types'
   selector: 'app-cueillettes-list',
   imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './pickings-list.html',
-  styleUrls: ['./pickings-list.css']
+  styleUrls: ['./pickings-list.css'],
 })
 export class CueillettesListComponent implements OnInit {
   pickings: PickingWithDistance[] = [];
@@ -20,7 +20,7 @@ export class CueillettesListComponent implements OnInit {
   locationMessage = '';
   addressInput = '';
   geolocating = false;
-  sortBy: 'distance' | 'alphabetical' = 'distance';
+  sortBy: 'distance' | 'alphabetical' | 'postal_code' = 'distance';
   showPickings = false;
   locationSource = '';
   displayedPickingsCount = 10;
@@ -28,7 +28,7 @@ export class CueillettesListComponent implements OnInit {
   constructor(
     private pickingService: PickingService,
     private geolocationService: GeolocationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   get displayedPickings(): PickingWithDistance[] {
@@ -54,7 +54,7 @@ export class CueillettesListComponent implements OnInit {
 
     this.pickingService.getAllPickings().subscribe({
       next: (data) => {
-        this.pickings = data.map(p => ({ ...p, distance: undefined }));
+        this.pickings = data.map((p) => ({ ...p, distance: undefined }));
         this.sortPickings();
         this.loading = false;
       },
@@ -62,7 +62,7 @@ export class CueillettesListComponent implements OnInit {
         this.error = 'Erreur lors du chargement des cueillettes';
         this.loading = false;
         console.error(err);
-      }
+      },
     });
   }
 
@@ -80,9 +80,11 @@ export class CueillettesListComponent implements OnInit {
         this.geolocating = false;
       },
       error: (err) => {
-        this.locationMessage = err.message || 'Impossible de récupérer votre position. Veuillez entrer une adresse ou autoriser la géolocalisation.';
+        this.locationMessage =
+          err.message ||
+          'Impossible de récupérer votre position. Veuillez entrer une adresse ou autoriser la géolocalisation.';
         this.geolocating = false;
-      }
+      },
     });
   }
 
@@ -92,10 +94,10 @@ export class CueillettesListComponent implements OnInit {
     }
 
     this.geolocating = true;
-    this.locationMessage = 'Recherche de l\'adresse...';
+    this.locationMessage = "Recherche de l'adresse...";
 
     const location = await this.geolocationService.geocodeAddress(this.addressInput);
-    
+
     if (location) {
       this.userLocation = location;
       this.locationMessage = '';
@@ -105,7 +107,7 @@ export class CueillettesListComponent implements OnInit {
     } else {
       this.locationMessage = 'Adresse introuvable. Veuillez réessayer.';
     }
-    
+
     this.geolocating = false;
   }
 
@@ -129,16 +131,16 @@ export class CueillettesListComponent implements OnInit {
       return;
     }
 
-    this.pickings = this.pickings.map(picking => {
+    this.pickings = this.pickings.map((picking) => {
       const distance = this.geolocationService.calculateDistance(
         this.userLocation!.lat,
         this.userLocation!.lng,
         picking.lat,
-        picking.lng
+        picking.lng,
       );
       return {
         ...picking,
-        distance
+        distance,
       };
     });
 
@@ -149,14 +151,24 @@ export class CueillettesListComponent implements OnInit {
   }
 
   sortPickings() {
-    if (this.sortBy === 'distance' && this.userLocation && this.pickings.some(p => p.distance !== undefined)) {
+    if (
+      this.sortBy === 'distance' &&
+      this.userLocation &&
+      this.pickings.some((p) => p.distance !== undefined)
+    ) {
       this.pickings.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+    } else if (this.sortBy === 'postal_code') {
+      this.pickings.sort((a, b) => {
+        const postalA = a.postalCode || '';
+        const postalB = b.postalCode || '';
+        return postalA.localeCompare(postalB, undefined, { numeric: true });
+      });
     } else {
       this.pickings.sort((a, b) => a.name.localeCompare(b.name));
     }
   }
 
-  setSortBy(sortType: 'distance' | 'alphabetical') {
+  setSortBy(sortType: 'distance' | 'alphabetical' | 'postal_code') {
     this.sortBy = sortType;
     this.resetDisplayCount();
     this.sortPickings();
@@ -170,7 +182,7 @@ export class CueillettesListComponent implements OnInit {
     this.showPickings = false;
     this.sortBy = 'alphabetical';
     this.resetDisplayCount();
-    this.pickings = this.pickings.map(p => ({ ...p, distance: undefined }));
+    this.pickings = this.pickings.map((p) => ({ ...p, distance: undefined }));
     this.sortPickings();
   }
 }
