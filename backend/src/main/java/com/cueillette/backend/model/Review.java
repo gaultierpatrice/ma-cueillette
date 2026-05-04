@@ -1,5 +1,6 @@
 package com.cueillette.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,9 +26,11 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"password", "role", "email"})
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "picking_id", nullable = false)
+    @JsonIgnoreProperties({"products", "labels", "daysOpen", "producer"})
     private Picking picking;
 }
