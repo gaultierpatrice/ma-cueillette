@@ -5,10 +5,12 @@
         <a routerLink="/pickings">Liste des cueillettes</a>
         <a routerLink="/add-picking">Proposer ma cueillette</a>
       </div>
-      <div>
-        <a routerLink="/login">Connexion</a>
-        <a routerLink="/register">Inscription</a>
-      </div>
+      @if (!isAuthenticated) {
+        <div>
+          <a routerLink="/login">Connexion</a>
+          <a routerLink="/register">Inscription</a>
+        </div>
+      }
     </div>
     <div>
       <a routerLink="/legal">Mentions légales</a>

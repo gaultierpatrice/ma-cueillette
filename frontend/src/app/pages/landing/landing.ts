@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-landing',
@@ -9,4 +10,15 @@ import { RouterModule } from '@angular/router';
   templateUrl: './landing.html',
   styleUrl: 'landing.css',
 })
-export class LandingComponent {}
+export class LandingComponent implements OnInit {
+  isAuthenticated: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.isAuthenticated = this.authService.isLoggedIn();
+  }
+}

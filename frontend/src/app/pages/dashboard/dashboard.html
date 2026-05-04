@@ -1,29 +1,47 @@
 <section class="hero">
-  <div class="hero-card">
-    <div class="container" style="background: transparent; padding: 0; max-width: 520px">
+  <div class="container" style="background: transparent; padding: 0; max-width: 520px">
+    <div>
       @if (isAuthenticated) {
-        <div class="authenticated-view">
+        <div class="hero-card">
           <h2>Bienvenue {{ username }} !</h2>
-          <p>Vous êtes connecte avec succes.</p>
-          <button class="btn-logout" (click)="logout()">Se deconnecter</button>
+          <p>Vous êtes connecté avec succès.</p>
+          <button class="btn-logout" (click)="logout()">Se déconnecter</button>
         </div>
       } @else {
-        <div class="non-authenticated-view">
-          <h2>Bienvenue sur notre application !</h2>
-          <p>Veuillez vous connecter ou créer un compte pour continuer.</p>
-          <div class="action-buttons">
-            <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
-            <button class="btn-register" (click)="navigateToRegister()">S'inscrire</button>
-          </div>
+        <div class="hero-card">
+          <h2>Bienvenue !</h2>
+          <p>Connectez-vous pour accéder à toutes les fonctionnalités.</p>
+          <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
         </div>
       }
+
       <div>
-        <a routerLink="/favorites">Mes favoris</a>
+        @if (isAuthenticated) {
+          <a routerLink="/favorites">Mes favoris</a>
+        }
+        <a routerLink="/pickings">Liste des cueillettes</a>
+        @if (isAuthenticated) {
+          <a routerLink="/add-picking">Proposer ma cueillette</a>
+        }
       </div>
-      <a routerLink="/pickings">Liste des cueillettes</a>
-      <div><a routerLink="/add-picking">Proposer ma cueillette</a></div>
-      <div><a routerLink="/delete-account">Supprimer mon compte</a></div>
-      <a routerLink="/contact-admin">Contacter l'administrateur</a>
+
+      @if (!isAuthenticated) {
+        <div>
+          <a routerLink="/login">Connexion</a>
+          <a routerLink="/register">Inscription</a>
+        </div>
+      }
     </div>
+
+    @if (isAuthenticated) {
+      <div>
+        <a routerLink="/delete-account">Supprimer mon compte</a>
+        <a routerLink="/contact-admin">Contacter l'administrateur</a>
+      </div>
+    } @else {
+      <div>
+        <a routerLink="/contact-admin">Contacter l'administrateur</a>
+      </div>
+    }
   </div>
 </section>
