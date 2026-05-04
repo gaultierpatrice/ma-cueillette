@@ -1,20 +1,19 @@
 <section class="hero">
   <div class="hero-card">
-    <div class="container" style="background: transparent; padding: 0; max-width: 520px;">
+    <div class="container" style="background: transparent; padding: 0; max-width: 520px">
       @if (isAuthenticated) {
         <div class="authenticated-view">
-          <h2>Welcome {{ username }}!</h2>
-          <p>You are successfully logged in.</p>
-          <button class="btn-logout" (click)="logout()">Log out</button>
+          <h2>Bienvenue {{ username }} !</h2>
+          <p>Vous êtes connecte avec succes.</p>
+          <button class="btn-logout" (click)="logout()">Se deconnecter</button>
         </div>
       } @else {
         <div class="non-authenticated-view">
-          <h2>Welcome to Our App!</h2>
-          <p>Please log in or create an account to continue.</p>
-
+          <h2>Bienvenue sur notre application !</h2>
+          <p>Veuillez vous connecter ou créer un compte pour continuer.</p>
           <div class="action-buttons">
-            <button class="btn-login" (click)="navigateToLogin()">Log In</button>
-            <button class="btn-register" (click)="navigateToRegister()">Register</button>
+            <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
+            <button class="btn-register" (click)="navigateToRegister()">S'inscrire</button>
           </div>
         </div>
       }
@@ -24,7 +23,7 @@
       <a routerLink="/pickings">Liste des cueillettes</a>
       <div><a routerLink="/add-picking">Proposer ma cueillette</a></div>
       <div><a routerLink="/delete-account">Supprimer mon compte</a></div>
-      <a routerLink="/contact-admin">Contact admin</a>
+      <a routerLink="/contact-admin">Contacter l'administrateur</a>
     </div>
   </div>
 </section>

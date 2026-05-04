@@ -1,27 +1,21 @@
 <div class="container">
-  <h2>Create an account</h2>
-
+  <h2>Creer un compte</h2>
   <form (ngSubmit)="onSubmit()">
     <div class="field">
-      <label>Name</label>
+      <label>Nom</label>
       <input type="text" [(ngModel)]="form.name" name="name" required />
     </div>
-
     <div class="field">
       <label>Email</label>
       <input type="email" [(ngModel)]="form.email" name="email" required />
     </div>
-
     <div class="field">
-      <label>Password</label>
+      <label>Mot de Passe</label>
       <input type="password" [(ngModel)]="form.password" name="password" required />
     </div>
-
-    <button type="submit">Register</button>
+    <button type="submit">Creer mon compte</button>
   </form>
-
-  <p class="error" *ngIf="error">{{ error }}</p>
-  <p class="success" *ngIf="success">{{ success }}</p>
-
-  <p>Already have an account? <a routerLink="/login">Log in</a></p>
+  <p class="error">{{ error }}</p>
+  <p class="success">{{ success }}</p>
+  <p><a routerLink="/login">Vous avez déjà un compte? Se connecter</a></p>
 </div>
