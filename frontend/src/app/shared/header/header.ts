@@ -5,8 +5,7 @@ import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
