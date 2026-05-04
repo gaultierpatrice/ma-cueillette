@@ -1,0 +1,339 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #7f8c8d;
+}
+
+.error-message {
+  padding: 15px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.details-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.card-header {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-icon {
+  font-size: 80px;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.picking-name {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.info-section {
+  margin-bottom: 10px;
+}
+
+.info-section h3 {
+  font-size: 1em;
+  color: #34495e;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.info-section p {
+  margin: 5px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.days-list,
+.products-list,
+.labels-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.day-badge,
+.product-badge,
+.label-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.day-badge {
+  background-color: #3498db;
+  color: white;
+}
+
+.product-badge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.product-badge.fruit {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffcc80;
+}
+
+.label-badge {
+  background-color: #fff9c4;
+  color: #f57c00;
+  border: 1px solid #ffeb3b;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.contact-item .label {
+  font-weight: 600;
+  color: #2c3e50;
+  min-width: 120px;
+}
+
+.contact-link {
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contact-link:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.description {
+  line-height: 1.8;
+  color: #555;
+  white-space: pre-wrap;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-gps {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-gps:hover {
+  background-color: #229954;
+}
+
+.btn-favorite {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-favorite:hover {
+  background-color: #c0392b;
+}
+
+.btn-back {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn-back:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-small:hover {
+  background-color: #2980b9;
+}
+
+.reviews-section {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-top: 2px solid #e9ecef;
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reviews-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.5em;
+}
+
+.no-reviews {
+  color: #7f8c8d;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.review-date {
+  font-size: 0.9em;
+  color: #7f8c8d;
+}
+
+.rating {
+  margin-bottom: 10px;
+}
+
+.star {
+  color: #ddd;
+  font-size: 20px;
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: #f39c12;
+}
+
+.review-comment {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.view-all-reviews {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.view-all-reviews:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.navigation {
+  margin-top: 20px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .card-header {
+    grid-template-columns: 1fr;
+  }
+
+  .image-placeholder {
+    height: 200px;
+  }
+
+  .picking-name {
+    font-size: 1.5em;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .reviews-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}

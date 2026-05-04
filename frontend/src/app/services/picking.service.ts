@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Picking } from './picking.types';
+import { Picking, Review } from './picking.types';
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +13,13 @@ export class PickingService {
 
   getAllPickings(): Observable<Picking[]> {
     return this.http.get<Picking[]>(this.apiUrl);
+  }
+
+  getPickingById(id: string): Observable<Picking> {
+    return this.http.get<Picking>(`${this.apiUrl}/${id}`);
+  }
+
+  getPickingReviews(id: string): Observable<Review[]> {
+    return this.http.get<Review[]>(`${this.apiUrl}/${id}/reviews`);
   }
 }
