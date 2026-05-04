@@ -4,8 +4,8 @@
       @if (isAuthenticated) {
         <div class="hero-card">
           <h2>Bienvenue {{ username }} !</h2>
-          <p>Vous êtes connecté avec succès.</p>
-          <button class="btn-logout" (click)="logout()">Se déconnecter</button>
+          <a routerLink="/pickings">Liste des cueillettes</a>
+          <a routerLink="/favorites">Mes favoris</a>
         </div>
       } @else {
         <div class="hero-card">
@@ -14,22 +14,17 @@
           <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
         </div>
       }
-
-      <div>
-        @if (isAuthenticated) {
-          <a routerLink="/favorites">Mes favoris</a>
-        }
-        <a routerLink="/pickings">Liste des cueillettes</a>
-        @if (isAuthenticated) {
-          <a routerLink="/add-picking">Proposer ma cueillette</a>
-        }
-      </div>
     </div>
-
     @if (isAuthenticated) {
       <div>
-        <a routerLink="/delete-account">Supprimer mon compte</a>
-        <a routerLink="/contact-admin">Contacter l'administrateur</a>
+        <div class="minor">
+          <a routerLink="/add-picking">Proposer ma cueillette</a>
+          <a routerLink="/contact-admin">Contacter l'administrateur</a>
+        </div>
+        <div class="disconnect">
+          <button class="btn-logout" (click)="logout()">Se déconnecter</button>
+          <a routerLink="/delete-account">Supprimer mon compte</a>
+        </div>
       </div>
     } @else {
       <div>
