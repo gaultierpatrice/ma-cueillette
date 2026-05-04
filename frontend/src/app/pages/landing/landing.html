@@ -5,7 +5,11 @@
         <a routerLink="/pickings">Liste des cueillettes</a>
         <a routerLink="/add-picking">Proposer ma cueillette</a>
       </div>
-      @if (!isAuthenticated) {
+      @if (isAuthenticated) {
+        <div>
+          <a routerLink="/dashboard">Mon Compte</a>
+        </div>
+      } @else {
         <div>
           <a routerLink="/login">Connexion</a>
           <a routerLink="/register">Inscription</a>

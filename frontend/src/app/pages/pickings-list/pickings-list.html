@@ -1,7 +1,135 @@
 <div class="container">
-  <h2>Liste des cueillettes</h2>
+  <h2>Rechercher des cueillettes</h2>
 
-  <div>
-    <a routerLink="/favorites">Mes favoris</a>
+  <div class="navigation">
+    <a routerLink="/favorites" class="link">Mes favoris</a>
   </div>
+
+  <div class="location-section">
+    <h3>Votre position</h3>
+    
+    <div class="location-options">
+      <button 
+        (click)="useCurrentLocation()" 
+        [disabled]="geolocating"
+        class="btn btn-primary">
+        {{ geolocating ? 'Chargement...' : 'Utiliser ma position actuelle' }}
+      </button>
+
+      <div class="address-search">
+        <input 
+          type="text" 
+          [(ngModel)]="addressInput"
+          (keyup.enter)="searchByAddress()"
+          placeholder="Ou entrez une adresse..."
+          [disabled]="geolocating"
+          class="address-input">
+        <button 
+          (click)="searchByAddress()" 
+          [disabled]="!addressInput || geolocating"
+          class="btn btn-secondary">
+          Chercher
+        </button>
+      </div>
+
+      @if (userLocation) {
+        <button (click)="clearLocation()" class="btn btn-link">
+          Effacer la position
+        </button>
+      }
+    </div>
+
+    @if (locationMessage) {
+      <div class="location-message" [class.error]="locationMessage.includes('Impossible') || locationMessage.includes('introuvable')">
+        {{ locationMessage }}
+      </div>
+    }
+
+    @if (!userLocation && !locationMessage && !geolocating) {
+      <div class="location-warning">
+        💡 Activez la localisation pour voir les cueillettes les plus proches de vous
+      </div>
+      
+      <div class="view-all-section">
+        <p class="or-divider">ou</p>
+        <button (click)="viewAllPickings()" class="btn btn-view-all">
+          Voir toutes les cueillettes sans localisation
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="loading">Chargement des cueillettes...</div>
+  }
+
+  @if (error) {
+    <div class="error-message">{{ error }}</div>
+  }
+
+  @if (!loading && !error && showPickings) {
+    <div class="pickings-section">
+      <div class="section-header">
+        <h3>
+          @if (sortBy === 'distance' && userLocation) {
+            <span>Cueillettes triées par distance</span>
+            @if (locationSource) {
+              <span class="location-from">depuis {{ locationSource }}</span>
+            }
+          } @else {
+            Cueillettes (ordre alphabétique)
+          }
+        </h3>
+
+        <div class="sort-controls">
+          <label>Trier par:</label>
+          <button 
+            [class.active]="sortBy === 'distance'" 
+            [disabled]="!userLocation"
+            (click)="setSortBy('distance')"
+            class="sort-btn">
+            📍 Distance
+          </button>
+          <button 
+            [class.active]="sortBy === 'alphabetical'"
+            (click)="setSortBy('alphabetical')"
+            class="sort-btn">
+            🔤 Alphabétique
+          </button>
+        </div>
+      </div>
+
+      @if (pickings.length === 0) {
+        <div class="no-results">
+          Aucune cueillette trouvée
+        </div>
+      }
+
+      <div class="pickings-list">
+        @for (picking of displayedPickings; track picking.id) {
+          <div class="picking-card" [routerLink]="['/pickings', picking.id]">
+            <div class="picking-info">
+              <h4 class="picking-name">{{ picking.name }}</h4>
+              <div class="picking-distance">
+                @if (picking.distance !== undefined && sortBy === 'distance') {
+                  <span class="distance">📍 {{ picking.distance }} km</span>
+                } @else {
+                  <span class="postal-code">📮 {{ picking.postalCode || 'N/A' }}</span>
+                }
+              </div>
+            </div>
+            <div class="picking-arrow">→</div>
+          </div>
+        }
+      </div>
+
+      @if (hasMorePickings) {
+        <div class="show-more-section">
+          <button (click)="showMorePickings()" class="btn btn-show-more">
+            Afficher plus de résultats ({{ remainingPickingsCount }} restants)
+          </button>
+        </div>
+      }
+    </div>
+  }
 </div>
