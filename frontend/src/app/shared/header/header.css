@@ -37,11 +37,12 @@ nav {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-weight: 600;
   white-space: nowrap;
-  font-size: x-large;
   color: inherit;
   text-decoration: none;
+  font-size: xx-large;
+  font-family: 'Laila', sans-serif;
+  font-weight: 300;
 }
 
 .dashboard-link {

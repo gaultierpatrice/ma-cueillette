@@ -1,5 +1,5 @@
 <div class="container">
-  <h2>Log in</h2>
+  <h2>Se connecter</h2>
 
   <form (ngSubmit)="onSubmit()">
     <div class="field">
@@ -8,16 +8,16 @@
     </div>
 
     <div class="field">
-      <label>Password</label>
+      <label>Mot de passe</label>
       <input type="password" [(ngModel)]="form.password" name="password" required />
     </div>
 
-    <button type="submit">Log in</button>
+    <button type="submit">Se connecter</button>
   </form>
 
   @if (error) {
     <p class="error">{{ error }}</p>
   }
 
-  <p>No account yet? <a routerLink="/register">Register</a></p>
+  <p><a routerLink="/register">Pas encore de compte? Creer un compte</a></p>
 </div>
