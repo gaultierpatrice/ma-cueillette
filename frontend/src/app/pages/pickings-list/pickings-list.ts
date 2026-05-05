@@ -67,7 +67,6 @@ export class CueillettesListComponent implements OnInit {
       error: (err) => {
         this.error = 'Erreur lors du chargement des cueillettes';
         this.loading = false;
-        console.error(err);
       },
     });
   }
@@ -211,7 +210,6 @@ export class CueillettesListComponent implements OnInit {
         this.favoritePickingIds = new Set(favorites.map(p => p.id));
       },
       error: (err) => {
-        console.error('Error loading favorites:', err);
       }
     });
   }
@@ -237,11 +235,9 @@ export class CueillettesListComponent implements OnInit {
       this.pickingService.removeFromFavorites(pickingId, token).subscribe({
         next: () => {
           this.favoritePickingIds.delete(pickingId);
-          console.log('Removed from favorites:', pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error removing favorite:', err);
           this.loginModalMessage = 'Erreur lors de la suppression du favori';
           this.isLoginModalVisible = true;
         }
@@ -250,11 +246,9 @@ export class CueillettesListComponent implements OnInit {
       this.pickingService.addToFavorites(pickingId, token).subscribe({
         next: () => {
           this.favoritePickingIds.add(pickingId);
-          console.log('Added to favorites:', pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error adding favorite:', err);
           this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
           this.isLoginModalVisible = true;
         }
