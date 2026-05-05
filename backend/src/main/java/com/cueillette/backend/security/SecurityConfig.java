@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         .requestMatchers("/api/pickings", "/api/pickings/**").permitAll()
                         .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
+                        .requestMatchers("/api/favorites/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

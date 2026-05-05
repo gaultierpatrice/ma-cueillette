@@ -2,6 +2,7 @@ import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
+import { AuthService } from '../../services/auth';
 import { Picking, Review } from '../../services/picking.types';
 
 @Component({
@@ -21,6 +22,7 @@ export class CueilletteDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pickingService: PickingService,
+    private authService: AuthService,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef
   ) {
@@ -35,6 +37,7 @@ export class CueilletteDetailsComponent implements OnInit {
     }
     this.loadPickingDetails();
     this.loadReviews();
+    this.loadUserFavorites();
   }
 
   loadPickingDetails() {
@@ -123,13 +126,63 @@ export class CueilletteDetailsComponent implements OnInit {
     return this.favoritePickingIds.has(pickingId);
   }
 
+  loadUserFavorites() {
+    if (!this.authService.isLoggedIn()) {
+      return;
+    }
+
+    const token = this.authService.getToken();
+    if (!token) {
+      return;
+    }
+
+    this.pickingService.getUserFavorites(token).subscribe({
+      next: (favorites) => {
+        this.favoritePickingIds = new Set(favorites.map(p => p.id));
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading favorites:', err);
+      }
+    });
+  }
+
   toggleFavorite() {
+    if (!this.authService.isLoggedIn()) {
+      alert('Veuillez vous connecter pour ajouter des favoris');
+      return;
+    }
+
+    const token = this.authService.getToken();
+    if (!token) {
+      alert('Veuillez vous connecter pour ajouter des favoris');
+      return;
+    }
+
     if (this.favoritePickingIds.has(this.pickingId)) {
-      this.favoritePickingIds.delete(this.pickingId);
-      console.log('Removed from favorites:', this.pickingId);
+      this.pickingService.removeFromFavorites(this.pickingId, token).subscribe({
+        next: () => {
+          this.favoritePickingIds.delete(this.pickingId);
+          console.log('Removed from favorites:', this.pickingId);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error removing favorite:', err);
+          alert('Erreur lors de la suppression du favori');
+        }
+      });
     } else {
-      this.favoritePickingIds.add(this.pickingId);
-      console.log('Added to favorites:', this.pickingId);
+      this.pickingService.addToFavorites(this.pickingId, token).subscribe({
+        next: () => {
+          this.favoritePickingIds.add(this.pickingId);
+          console.log('Added to favorites:', this.pickingId);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error adding favorite:', err);
+          alert('Erreur lors de l\'ajout du favori');
+        }
+      });
     }
   }
 }

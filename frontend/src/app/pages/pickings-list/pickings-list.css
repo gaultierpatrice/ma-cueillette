@@ -319,7 +319,7 @@ h3 {
 .picking-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   margin-bottom: 8px;
 }
@@ -330,41 +330,58 @@ h3 {
   font-size: 1.2em;
   flex: 1;
 }
+.gps-distance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
 
-.favorite-btn {
-  background: transparent;
+.favorite-btn,
+.gps-btn {
+  background: rgba(168, 208, 141, 0.95);
+  color: white;
   border: none;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 8px 12px;
+  min-height: 40px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
 }
 
-.favorite-btn:hover {
-  background-color: #f8f9fa;
+.favorite-btn:hover,
+.gps-btn:hover {
+  background: rgba(168, 208, 141, 1);
   transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-.favorite-btn:active {
+.favorite-btn:active,
+.gps-btn:active {
   transform: scale(0.95);
 }
 
 .heart-icon {
-  display: block;
   width: 20px;
   height: 20px;
   transition: all 0.2s;
   object-fit: contain;
   flex-shrink: 0;
+  margin: auto;
 }
 
 .favorite-text {
-  font-size: 0.85em;
-  color: #2c3e50;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
   white-space: nowrap;
 }
 

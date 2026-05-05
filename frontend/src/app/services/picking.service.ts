@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Picking, Review } from './picking.types';
 
@@ -8,6 +8,7 @@ import { Picking, Review } from './picking.types';
 })
 export class PickingService {
   private apiUrl = 'http://localhost:8080/api/pickings';
+  private favoritesUrl = 'http://localhost:8080/api/favorites';
 
   constructor(private http: HttpClient) {}
 
@@ -21,5 +22,33 @@ export class PickingService {
 
   getPickingReviews(id: string): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.apiUrl}/${id}/reviews`);
+  }
+
+  addToFavorites(pickingId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post(`${this.favoritesUrl}/${pickingId}`, {}, { headers });
+  }
+
+  removeFromFavorites(pickingId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.delete(`${this.favoritesUrl}/${pickingId}`, { headers });
+  }
+
+  getUserFavorites(token: string): Observable<Picking[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<Picking[]>(this.favoritesUrl, { headers });
+  }
+
+  checkFavorite(pickingId: string, token: string): Observable<{ isFavorite: boolean }> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<{ isFavorite: boolean }>(`${this.favoritesUrl}/check/${pickingId}`, { headers });
   }
 }
