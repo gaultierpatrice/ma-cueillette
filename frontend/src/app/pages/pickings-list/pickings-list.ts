@@ -26,6 +26,8 @@ export class CueillettesListComponent implements OnInit {
   locationSource = '';
   displayedPickingsCount = 10;
   favoritePickingIds: Set<string> = new Set();
+  isLoginModalVisible = false;
+  loginModalMessage = '';
 
   constructor(
     private pickingService: PickingService,
@@ -219,13 +221,15 @@ export class CueillettesListComponent implements OnInit {
     event.preventDefault();
 
     if (!this.authService.isLoggedIn()) {
-      alert('Veuillez vous connecter pour ajouter des favoris');
+      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
+      this.isLoginModalVisible = true;
       return;
     }
 
     const token = this.authService.getToken();
     if (!token) {
-      alert('Veuillez vous connecter pour ajouter des favoris');
+      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
+      this.isLoginModalVisible = true;
       return;
     }
 
@@ -238,7 +242,8 @@ export class CueillettesListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error removing favorite:', err);
-          alert('Erreur lors de la suppression du favori');
+          this.loginModalMessage = 'Erreur lors de la suppression du favori';
+          this.isLoginModalVisible = true;
         }
       });
     } else {
@@ -250,10 +255,15 @@ export class CueillettesListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding favorite:', err);
-          alert('Erreur lors de l\'ajout du favori');
+          this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
+          this.isLoginModalVisible = true;
         }
       });
     }
+  }
+
+  hideLoginModal() {
+    this.isLoginModalVisible = false;
   }
 
   getGoogleMapsLink(picking: PickingWithDistance): string {

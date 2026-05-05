@@ -18,6 +18,8 @@ export class CueilletteDetailsComponent implements OnInit {
   error: string | null = null;
   pickingId: string;
   favoritePickingIds: Set<string> = new Set();
+  isLoginModalVisible = false;
+  loginModalMessage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -149,13 +151,15 @@ export class CueilletteDetailsComponent implements OnInit {
 
   toggleFavorite() {
     if (!this.authService.isLoggedIn()) {
-      alert('Veuillez vous connecter pour ajouter des favoris');
+      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
+      this.isLoginModalVisible = true;
       return;
     }
 
     const token = this.authService.getToken();
     if (!token) {
-      alert('Veuillez vous connecter pour ajouter des favoris');
+      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
+      this.isLoginModalVisible = true;
       return;
     }
 
@@ -168,7 +172,8 @@ export class CueilletteDetailsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error removing favorite:', err);
-          alert('Erreur lors de la suppression du favori');
+          this.loginModalMessage = 'Erreur lors de la suppression du favori';
+          this.isLoginModalVisible = true;
         }
       });
     } else {
@@ -180,9 +185,14 @@ export class CueilletteDetailsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding favorite:', err);
-          alert('Erreur lors de l\'ajout du favori');
+          this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
+          this.isLoginModalVisible = true;
         }
       });
     }
+  }
+
+  hideLoginModal() {
+    this.isLoginModalVisible = false;
   }
 }
