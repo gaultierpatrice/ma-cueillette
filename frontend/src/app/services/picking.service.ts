@@ -24,6 +24,15 @@ export class PickingService {
     return this.http.get<Review[]>(`${this.apiUrl}/${id}/reviews`);
   }
 
+  addReview(pickingId: string | number, rating: number, comment: string, token: string): Observable<Review> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const body = { rating, comment };
+    return this.http.post<Review>(`${this.apiUrl}/${pickingId}/reviews`, body, { headers });
+  }
+
   addToFavorites(pickingId: string | number, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
