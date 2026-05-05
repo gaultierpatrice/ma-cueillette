@@ -30,17 +30,14 @@ export class FavoritesComponent implements OnInit {
 
   loadFavorites() {
     if (!this.authService.isLoggedIn()) {
-      console.log('User not logged in');
       this.error = 'Vous devez être connecté pour voir vos favoris';
       this.loading = false;
       return;
     }
 
     const token = this.authService.getToken();
-    console.log('Token:', token ? 'Token exists' : 'No token found');
     
     if (!token) {
-      console.log('No token found in localStorage');
       this.error = 'Vous devez être connecté pour voir vos favoris';
       this.loading = false;
       return;
@@ -49,19 +46,13 @@ export class FavoritesComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    console.log('Loading favorites with token...');
     this.pickingService.getUserFavorites(token).subscribe({
       next: (data) => {
-        console.log('Favorites loaded:', data);
         this.favoritePickings = data.map((p) => ({ ...p, distance: undefined }));
-        console.log('Mapped favorites:', this.favoritePickings);
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error loading favorites:', err);
-        console.error('Error status:', err.status);
-        console.error('Error message:', err.message);
         this.error = 'Erreur lors du chargement de vos favoris';
         this.loading = false;
       },
@@ -79,12 +70,10 @@ export class FavoritesComponent implements OnInit {
 
     this.pickingService.removeFromFavorites(pickingId, token).subscribe({
       next: () => {
-        console.log('Favorite removed:', pickingId);
         this.favoritePickings = this.favoritePickings.filter(p => p.id !== pickingId);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('Error removing favorite:', err);
         this.loginModalMessage = 'Erreur lors de la suppression du favori';
         this.isLoginModalVisible = true;
       }
