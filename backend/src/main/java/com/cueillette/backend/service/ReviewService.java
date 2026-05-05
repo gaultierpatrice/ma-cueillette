@@ -5,7 +5,6 @@ import com.cueillette.backend.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ReviewService {
@@ -16,7 +15,7 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public List<Review> getReviewsByPickingId(UUID pickingId) {
+    public List<Review> getReviewsByPickingId(Long pickingId) {
         return reviewRepository.findByPickingIdOrderByPublishedAtDesc(pickingId);
     }
 }

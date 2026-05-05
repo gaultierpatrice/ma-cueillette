@@ -59,7 +59,7 @@ export class FavoritesComponent implements OnInit {
     });
   }
 
-  removeFavorite(event: Event, pickingId: string) {
+  removeFavorite(event: Event, pickingId: number) {
     event.stopPropagation();
     event.preventDefault();
 

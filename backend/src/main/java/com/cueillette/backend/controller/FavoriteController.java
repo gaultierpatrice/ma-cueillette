@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/favorites")
@@ -28,7 +27,7 @@ public class FavoriteController {
     @PostMapping("/{pickingId}")
     public ResponseEntity<?> addFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
+            @PathVariable Long pickingId) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtUtil.extractEmail(token);
@@ -47,7 +46,7 @@ public class FavoriteController {
     @DeleteMapping("/{pickingId}")
     public ResponseEntity<?> removeFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
+            @PathVariable Long pickingId) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtUtil.extractEmail(token);
@@ -78,7 +77,7 @@ public class FavoriteController {
     @GetMapping("/check/{pickingId}")
     public ResponseEntity<?> checkFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
+            @PathVariable Long pickingId) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtUtil.extractEmail(token);

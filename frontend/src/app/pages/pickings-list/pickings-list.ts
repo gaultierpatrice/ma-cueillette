@@ -25,7 +25,7 @@ export class CueillettesListComponent implements OnInit {
   showPickings = false;
   locationSource = '';
   displayedPickingsCount = 10;
-  favoritePickingIds: Set<string> = new Set();
+  favoritePickingIds: Set<number> = new Set();
   isLoginModalVisible = false;
   loginModalMessage = '';
 
@@ -191,7 +191,7 @@ export class CueillettesListComponent implements OnInit {
     this.sortPickings();
   }
 
-  isFavorite(pickingId: string): boolean {
+  isFavorite(pickingId: number): boolean {
     return this.favoritePickingIds.has(pickingId);
   }
 
@@ -214,7 +214,7 @@ export class CueillettesListComponent implements OnInit {
     });
   }
 
-  toggleFavorite(event: Event, pickingId: string) {
+  toggleFavorite(event: Event, pickingId: number) {
     event.stopPropagation();
     event.preventDefault();
 

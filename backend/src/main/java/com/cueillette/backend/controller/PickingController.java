@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pickings")
@@ -26,7 +25,7 @@ public class PickingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Picking> getPickingById(@PathVariable UUID id) {
+    public ResponseEntity<Picking> getPickingById(@PathVariable Long id) {
         return pickingService.getPickingById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +29,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public Favorite addFavorite(String userEmail, UUID pickingId) {
+    public Favorite addFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
@@ -50,7 +49,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public void removeFavorite(String userEmail, UUID pickingId) {
+    public void removeFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
@@ -70,7 +69,7 @@ public class FavoriteService {
                 .collect(Collectors.toList());
     }
 
-    public boolean isFavorite(String userEmail, UUID pickingId) {
+    public boolean isFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         

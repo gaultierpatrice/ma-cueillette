@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PickingService {
@@ -21,7 +20,7 @@ public class PickingService {
         return pickingRepository.findAll();
     }
 
-    public Optional<Picking> getPickingById(UUID id) {
+    public Optional<Picking> getPickingById(Long id) {
         return pickingRepository.findById(id);
     }
 }

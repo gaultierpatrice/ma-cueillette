@@ -16,22 +16,22 @@ export class PickingService {
     return this.http.get<Picking[]>(this.apiUrl);
   }
 
-  getPickingById(id: string): Observable<Picking> {
+  getPickingById(id: string | number): Observable<Picking> {
     return this.http.get<Picking>(`${this.apiUrl}/${id}`);
   }
 
-  getPickingReviews(id: string): Observable<Review[]> {
+  getPickingReviews(id: string | number): Observable<Review[]> {
     return this.http.get<Review[]>(`${this.apiUrl}/${id}/reviews`);
   }
 
-  addToFavorites(pickingId: string, token: string): Observable<any> {
+  addToFavorites(pickingId: string | number, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
     return this.http.post(`${this.favoritesUrl}/${pickingId}`, {}, { headers });
   }
 
-  removeFromFavorites(pickingId: string, token: string): Observable<any> {
+  removeFromFavorites(pickingId: string | number, token: string): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -45,7 +45,7 @@ export class PickingService {
     return this.http.get<Picking[]>(this.favoritesUrl, { headers });
   }
 
-  checkFavorite(pickingId: string, token: string): Observable<{ isFavorite: boolean }> {
+  checkFavorite(pickingId: string | number, token: string): Observable<{ isFavorite: boolean }> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
