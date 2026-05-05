@@ -122,25 +122,41 @@
             <div class="picking-info">
               <div class="picking-header">
                 <h4 class="picking-name">{{ picking.name }}</h4>
-                <button
-                  class="favorite-btn"
-                  [class.favorited]="isFavorite(picking.id)"
-                  (click)="toggleFavorite($event, picking.id)"
-                  title="{{
-                    isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
-                  }}"
-                >
-                  <img
-                    [src]="
-                      isFavorite(picking.id)
-                        ? 'assets/images/icons/heart-solid.png'
-                        : 'assets/images/icons/heart-regular.png'
-                    "
-                    [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
-                    class="heart-icon"
-                  />
-                  <span class="favorite-text">Ajouter aux favoris</span>
-                </button>
+                <div class="gps-distance">
+                  @if (picking.distance !== undefined && sortBy === 'distance') {
+                    <div class="picking-distance">
+                      <span class="distance">{{ picking.distance }} km</span>
+                    </div>
+                  }
+                  <button
+                    class="gps-btn"
+                    (click)="openGoogleMaps($event, picking)"
+                    title="Itinéraire GPS"
+                  >
+                    Itineraire
+                  </button>
+                </div>
+                <div class="header-actions">
+                  <button
+                    class="favorite-btn"
+                    [class.favorited]="isFavorite(picking.id)"
+                    (click)="toggleFavorite($event, picking.id)"
+                    title="{{
+                      isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
+                    }}"
+                  >
+                    <img
+                      [src]="
+                        isFavorite(picking.id)
+                          ? 'assets/images/icons/heart-solid.png'
+                          : 'assets/images/icons/heart-regular.png'
+                      "
+                      [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
+                      class="heart-icon"
+                    />
+                    <span class="favorite-text">Ajouter aux favoris</span>
+                  </button>
+                </div>
               </div>
 
               <div class="picking-details">
@@ -163,12 +179,6 @@
                   </div>
                 }
               </div>
-
-              @if (picking.distance !== undefined && sortBy === 'distance') {
-                <div class="picking-distance">
-                  <span class="distance">{{ picking.distance }} km</span>
-                </div>
-              }
             </div>
             <div class="picking-arrow">→</div>
           </div>

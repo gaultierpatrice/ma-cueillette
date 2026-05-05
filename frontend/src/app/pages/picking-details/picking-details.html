@@ -7,10 +7,12 @@
     <div class="details-card">
       <div class="card-header">
         <div class="image-container">
-          <img *ngIf="picking.imageUrl" 
-               [src]="picking.imageUrl" 
-               [alt]="picking.name"
-               class="picking-image">
+          <img
+            *ngIf="picking.imageUrl"
+            [src]="picking.imageUrl"
+            [alt]="picking.name"
+            class="picking-image"
+          />
           <div *ngIf="!picking.imageUrl" class="image-placeholder">
             <span class="placeholder-icon">🌾</span>
           </div>
@@ -18,6 +20,26 @@
 
         <div class="header-info">
           <h2 class="picking-name">{{ picking.name }}</h2>
+
+          <div class="actions">
+            <button
+              class="btn btn-favorite"
+              [class.favorited]="isFavorite(pickingId)"
+              (click)="toggleFavorite()"
+              title="{{ isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}"
+            >
+              <img
+                [src]="
+                  isFavorite(pickingId)
+                    ? 'assets/images/icons/heart-solid.png'
+                    : 'assets/images/icons/heart-regular.png'
+                "
+                [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
+                class="heart-icon"
+              />
+            </button>
+            <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps"> Itinéraire GPS </a>
+          </div>
 
           <div class="info-section">
             <h3>Adresse:</h3>
@@ -90,29 +112,6 @@
               translateLabel(label)
             }}</span>
           </div>
-        </div>
-
-        <div class="actions">
-          <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps"> Itinéraire GPS </a>
-          <button
-            class="btn btn-favorite"
-            [class.favorited]="isFavorite(pickingId)"
-            (click)="toggleFavorite()"
-            title="{{
-              isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris'
-            }}"
-          >
-            <img
-              [src]="
-                isFavorite(pickingId)
-                  ? 'assets/images/icons/heart-solid.png'
-                  : 'assets/images/icons/heart-regular.png'
-              "
-              [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
-              class="heart-icon"
-            />
-            <span>Ajouter aux favoris</span>
-          </button>
         </div>
       </div>
 

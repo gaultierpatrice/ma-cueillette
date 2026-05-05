@@ -203,4 +203,15 @@ export class CueillettesListComponent implements OnInit {
       console.log('Added to favorites:', pickingId);
     }
   }
+
+  getGoogleMapsLink(picking: PickingWithDistance): string {
+    return `https://www.google.com/maps/dir/?api=1&destination=${picking.lat},${picking.lng}`;
+  }
+
+  openGoogleMaps(event: Event, picking: PickingWithDistance) {
+    event.stopPropagation();
+    event.preventDefault();
+    const url = this.getGoogleMapsLink(picking);
+    window.open(url, '_blank');
+  }
 }
