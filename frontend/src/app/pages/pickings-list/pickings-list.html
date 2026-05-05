@@ -120,7 +120,28 @@
         @for (picking of displayedPickings; track picking.id) {
           <div class="picking-card" [routerLink]="['/pickings', picking.id]">
             <div class="picking-info">
-              <h4 class="picking-name">{{ picking.name }}</h4>
+              <div class="picking-header">
+                <h4 class="picking-name">{{ picking.name }}</h4>
+                <button
+                  class="favorite-btn"
+                  [class.favorited]="isFavorite(picking.id)"
+                  (click)="toggleFavorite($event, picking.id)"
+                  title="{{
+                    isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
+                  }}"
+                >
+                  <img
+                    [src]="
+                      isFavorite(picking.id)
+                        ? 'assets/images/icons/heart-solid.png'
+                        : 'assets/images/icons/heart-regular.png'
+                    "
+                    [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
+                    class="heart-icon"
+                  />
+                  <span class="favorite-text">Ajouter aux favoris</span>
+                </button>
+              </div>
 
               <div class="picking-details">
                 <div class="picking-address">

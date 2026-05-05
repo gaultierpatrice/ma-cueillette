@@ -24,6 +24,7 @@ export class CueillettesListComponent implements OnInit {
   showPickings = false;
   locationSource = '';
   displayedPickingsCount = 10;
+  favoritePickingIds: Set<string> = new Set();
 
   constructor(
     private pickingService: PickingService,
@@ -184,5 +185,22 @@ export class CueillettesListComponent implements OnInit {
     this.resetDisplayCount();
     this.pickings = this.pickings.map((p) => ({ ...p, distance: undefined }));
     this.sortPickings();
+  }
+
+  isFavorite(pickingId: string): boolean {
+    return this.favoritePickingIds.has(pickingId);
+  }
+
+  toggleFavorite(event: Event, pickingId: string) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (this.favoritePickingIds.has(pickingId)) {
+      this.favoritePickingIds.delete(pickingId);
+      console.log('Removed from favorites:', pickingId);
+    } else {
+      this.favoritePickingIds.add(pickingId);
+      console.log('Added to favorites:', pickingId);
+    }
   }
 }

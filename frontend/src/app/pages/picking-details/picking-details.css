@@ -202,9 +202,24 @@
 .btn-favorite {
   background-color: #e74c3c;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-favorite:hover {
+  background-color: #c0392b;
+}
+
+.btn-favorite .heart-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.btn-favorite.favorited {
   background-color: #c0392b;
 }
 

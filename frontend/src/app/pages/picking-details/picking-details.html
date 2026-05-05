@@ -94,7 +94,25 @@
 
         <div class="actions">
           <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps"> Itinéraire GPS </a>
-          <button class="btn btn-favorite">Ajouter aux favoris</button>
+          <button
+            class="btn btn-favorite"
+            [class.favorited]="isFavorite(pickingId)"
+            (click)="toggleFavorite()"
+            title="{{
+              isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris'
+            }}"
+          >
+            <img
+              [src]="
+                isFavorite(pickingId)
+                  ? 'assets/images/icons/heart-solid.png'
+                  : 'assets/images/icons/heart-regular.png'
+              "
+              [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
+              class="heart-icon"
+            />
+            <span>Ajouter aux favoris</span>
+          </button>
         </div>
       </div>
 
