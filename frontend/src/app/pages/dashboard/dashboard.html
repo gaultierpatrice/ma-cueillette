@@ -4,7 +4,7 @@
       @if (isAuthenticated) {
         <div class="hero-card">
           <h2>Bienvenue {{ username }} !</h2>
-          <a routerLink="/pickings">Liste des cueillettes</a>
+
           <a routerLink="/favorites">Mes favoris</a>
         </div>
       } @else {
@@ -14,6 +14,7 @@
           <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
         </div>
       }
+      <a routerLink="/pickings">Chercher une cueillette</a>
     </div>
     @if (isAuthenticated) {
       <div>
