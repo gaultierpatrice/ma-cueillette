@@ -1,5 +1,5 @@
 export interface Picking {
-  id: string;
+  id: number;
   name: string;
   address: string;
   lat: number;
@@ -18,14 +18,14 @@ export interface Picking {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   harvestSeason?: string;
   type?: string;
 }
 
 export interface Review {
-  id: string;
+  id: number;
   rating: number;
   comment?: string;
   publishedAt: string;

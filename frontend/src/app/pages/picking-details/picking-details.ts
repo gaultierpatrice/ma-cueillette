@@ -16,8 +16,8 @@ export class CueilletteDetailsComponent implements OnInit {
   reviews: Review[] = [];
   loading = true;
   error: string | null = null;
-  pickingId: string;
-  favoritePickingIds: Set<string> = new Set();
+  pickingId: number;
+  favoritePickingIds: Set<number> = new Set();
   isLoginModalVisible = false;
   loginModalMessage = '';
 
@@ -28,7 +28,8 @@ export class CueilletteDetailsComponent implements OnInit {
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef
   ) {
-    this.pickingId = this.route.snapshot.paramMap.get('id') ?? '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.pickingId = idParam ? parseInt(idParam, 10) : 0;
   }
 
   ngOnInit() {
@@ -124,7 +125,7 @@ export class CueilletteDetailsComponent implements OnInit {
     return labels[label] || label;
   }
 
-  isFavorite(pickingId: string): boolean {
+  isFavorite(pickingId: number): boolean {
     return this.favoritePickingIds.has(pickingId);
   }
 
