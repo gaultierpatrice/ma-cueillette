@@ -16,6 +16,7 @@ export class CueilletteDetailsComponent implements OnInit {
   loading = true;
   error: string | null = null;
   pickingId: string;
+  favoritePickingIds: Set<string> = new Set();
 
   constructor(
     private route: ActivatedRoute,
@@ -116,5 +117,19 @@ export class CueilletteDetailsComponent implements OnInit {
       'ZERO_PESTICIDE': 'Zéro pesticide'
     };
     return labels[label] || label;
+  }
+
+  isFavorite(pickingId: string): boolean {
+    return this.favoritePickingIds.has(pickingId);
+  }
+
+  toggleFavorite() {
+    if (this.favoritePickingIds.has(this.pickingId)) {
+      this.favoritePickingIds.delete(this.pickingId);
+      console.log('Removed from favorites:', this.pickingId);
+    } else {
+      this.favoritePickingIds.add(this.pickingId);
+      console.log('Added to favorites:', this.pickingId);
+    }
   }
 }

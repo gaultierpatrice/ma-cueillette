@@ -23,7 +23,7 @@
           <a routerLink="/contact-admin">Contacter l'administrateur</a>
         </div>
         <div class="disconnect">
-          <button class="btn-logout" (click)="logout()">Se déconnecter</button>
+          <button class="btn-logout" (click)="showLogoutModal()">Se déconnecter</button>
           <a routerLink="/delete-account">Supprimer mon compte</a>
         </div>
       </div>
@@ -34,3 +34,16 @@
     }
   </div>
 </section>
+
+@if (isLogoutModalVisible) {
+  <div class="modal-overlay" (click)="hideLogoutModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirmation</h3>
+      <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="hideLogoutModal()">Annuler</button>
+        <button class="btn-confirm" (click)="confirmLogout()">OK</button>
+      </div>
+    </div>
+  </div>
+}

@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 export class DashboardComponent implements OnInit {
   username: string = '';
   isAuthenticated: boolean = false;
+  isLogoutModalVisible: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -23,11 +24,19 @@ export class DashboardComponent implements OnInit {
     this.username = this.authService.getUsername();
   }
 
-  logout(): void {
-    // Use AuthService to handle logout
+  showLogoutModal(): void {
+    this.isLogoutModalVisible = true;
+  }
+
+  hideLogoutModal(): void {
+    this.isLogoutModalVisible = false;
+  }
+
+  confirmLogout(): void {
     this.authService.logout();
     this.isAuthenticated = false;
     this.username = '';
+    this.isLogoutModalVisible = false;
   }
 
   navigateToLogin(): void {

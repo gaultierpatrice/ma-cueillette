@@ -316,10 +316,56 @@ h3 {
   flex: 1;
 }
 
+.picking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
 .picking-name {
-  margin: 0 0 8px 0;
+  margin: 0;
   color: #2c3e50;
   font-size: 1.2em;
+  flex: 1;
+}
+
+.favorite-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.favorite-btn:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.05);
+}
+
+.favorite-btn:active {
+  transform: scale(0.95);
+}
+
+.heart-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.favorite-text {
+  font-size: 0.85em;
+  color: #2c3e50;
+  white-space: nowrap;
 }
 
 .picking-distance {
