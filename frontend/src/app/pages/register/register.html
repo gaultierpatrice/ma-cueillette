@@ -1,21 +1,32 @@
 <div class="container">
   <h2>Creer un compte</h2>
-  <form (ngSubmit)="onSubmit()">
+  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
     <div class="field">
       <label>Nom</label>
       <input type="text" [(ngModel)]="form.name" name="name" required />
     </div>
     <div class="field">
       <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" name="email" required />
+      <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
     </div>
     <div class="field">
       <label>Mot de Passe</label>
-      <input type="password" [(ngModel)]="form.password" name="password" required />
+      <input type="password" [(ngModel)]="form.password" name="password" autocomplete="new-password" required />
     </div>
     <button type="submit">Creer mon compte</button>
   </form>
-  <p class="error">{{ error }}</p>
   <p class="success">{{ success }}</p>
   <p><a routerLink="/login">Vous avez déjà un compte? Se connecter</a></p>
 </div>
+
+@if (isErrorModalVisible) {
+  <div class="modal-overlay" (click)="hideErrorModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Erreur d'inscription</h3>
+      <p>{{ errorMessage }}</p>
+      <div class="modal-buttons">
+        <button class="btn-confirm" (click)="hideErrorModal()">OK</button>
+      </div>
+    </div>
+  </div>
+}
