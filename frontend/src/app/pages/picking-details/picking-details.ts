@@ -14,6 +14,7 @@ import { Picking, Review } from '../../services/picking.types';
 export class CueilletteDetailsComponent implements OnInit {
   picking: Picking | null = null;
   reviews: Review[] = [];
+  allReviews: Review[] = [];
   loading = true;
   error: string | null = null;
   pickingId: number;
@@ -65,6 +66,7 @@ export class CueilletteDetailsComponent implements OnInit {
   loadReviews() {
     this.pickingService.getPickingReviews(this.pickingId).subscribe({
       next: (data) => {
+        this.allReviews = data;
         this.reviews = data.slice(0, 3);
       },
       error: (err) => {
@@ -81,6 +83,16 @@ export class CueilletteDetailsComponent implements OnInit {
   get fruits() {
     if (!this.picking?.products) return [];
     return this.picking.products.filter(p => p.type === 'FRUIT');
+  }
+
+  get averageRating(): number | null {
+    if (!this.allReviews || this.allReviews.length === 0) return null;
+    const sum = this.allReviews.reduce((acc, review) => acc + review.rating, 0);
+    return sum / this.allReviews.length;
+  }
+
+  get totalReviews(): number {
+    return this.allReviews ? this.allReviews.length : 0;
   }
 
   getGoogleMapsLink(): string {

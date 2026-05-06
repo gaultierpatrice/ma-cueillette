@@ -1,7 +1,7 @@
 package com.cueillette.backend.controller;
 
+import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.model.Favorite;
-import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.FavoriteService;
 import org.springframework.http.HttpStatus;
@@ -66,7 +66,7 @@ public class FavoriteController {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtUtil.extractEmail(token);
 
-            List<Picking> favorites = favoriteService.getUserFavorites(email);
+            List<PickingWithRatingDTO> favorites = favoriteService.getUserFavorites(email);
             return ResponseEntity.ok(favorites);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

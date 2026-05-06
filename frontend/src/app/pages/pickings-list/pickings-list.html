@@ -121,7 +121,23 @@
           <div class="picking-card" [routerLink]="['/pickings', picking.id]">
             <div class="picking-info">
               <div class="picking-header">
-                <h4 class="picking-name">{{ picking.name }}</h4>
+                <div class="name-rating-container">
+                  <h4 class="picking-name">{{ picking.name }}</h4>
+                  @if (
+                    picking.averageRating !== null &&
+                    picking.averageRating !== undefined &&
+                    picking.reviewCount &&
+                    picking.reviewCount > 0
+                  ) {
+                    <div class="rating-display">
+                      <span class="stars">★</span>
+                      <span class="rating-value">{{
+                        picking.averageRating | number: '1.1-1'
+                      }}</span>
+                      <span class="review-count">({{ picking.reviewCount }})</span>
+                    </div>
+                  }
+                </div>
                 <div class="gps-distance">
                   @if (picking.distance !== undefined && sortBy === 'distance') {
                     <div class="picking-distance">

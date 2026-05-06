@@ -1,5 +1,6 @@
 package com.cueillette.backend.controller;
 
+import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.service.PickingService;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class PickingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Picking>> getAllPickings() {
-        List<Picking> pickings = pickingService.getAllPickings();
+    public ResponseEntity<List<PickingWithRatingDTO>> getAllPickings() {
+        List<PickingWithRatingDTO> pickings = pickingService.getAllPickingsWithRatings();
         return ResponseEntity.ok(pickings);
     }
 

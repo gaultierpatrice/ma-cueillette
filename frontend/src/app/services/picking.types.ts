@@ -15,6 +15,8 @@ export interface Picking {
   daysOpen?: string[];
   labels?: string[];
   products?: Product[];
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export interface Product {
