@@ -20,18 +20,20 @@ h3 {
 }
 
 .link {
-  color: #3498db;
+  color: white;
+  background-color: #3498db;
   text-decoration: none;
   padding: 8px 16px;
-  border: 1px solid #3498db;
+  border: none;
   border-radius: 4px;
   display: inline-block;
   transition: all 0.3s;
+  font-weight: 500;
 }
 
 .link:hover {
-  background-color: #3498db;
-  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 .location-section {
