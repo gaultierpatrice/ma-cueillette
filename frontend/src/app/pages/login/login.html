@@ -1,22 +1,24 @@
-<div class="container">
-  <h2>Se connecter</h2>
+<section class="hero">
+  <div class="container">
+    <h2>Se connecter</h2>
 
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-    <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
-    </div>
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
+      </div>
 
-    <div class="field">
-      <label>Mot de passe</label>
-      <input type="password" [(ngModel)]="form.password" name="password" autocomplete="current-password" required />
-    </div>
+      <div class="field">
+        <label>Mot de passe</label>
+        <input type="password" [(ngModel)]="form.password" name="password" autocomplete="current-password" required />
+      </div>
 
-    <button type="submit">Se connecter</button>
-  </form>
+      <button type="submit">Se connecter</button>
+    </form>
 
-  <p><a routerLink="/register">Pas encore de compte? Creer un compte</a></p>
-</div>
+    <p><a routerLink="/register">Pas encore de compte? Creer un compte</a></p>
+  </div>
+</section>
 
 @if (isErrorModalVisible) {
   <div class="modal-overlay" (click)="hideErrorModal()">

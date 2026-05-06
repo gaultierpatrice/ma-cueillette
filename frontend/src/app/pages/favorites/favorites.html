@@ -1,5 +1,6 @@
-<div class="container">
-  <h2>Mes favoris</h2>
+<section class="hero">
+  <div class="container">
+    <h2>Mes favoris</h2>
 
   @if (loading) {
     <div class="loading">Chargement de vos favoris...</div>
@@ -111,7 +112,8 @@
   <div class="navigation">
     <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
   </div>
-</div>
+  </div>
+</section>
 
 @if (isLoginModalVisible) {
   <div class="modal-overlay" (click)="hideLoginModal()">

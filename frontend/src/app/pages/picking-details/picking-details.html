@@ -1,5 +1,6 @@
-<div class="container">
-  <div *ngIf="loading" class="loading">Chargement des détails...</div>
+<section class="hero">
+  <div class="container">
+    <div *ngIf="loading" class="loading">Chargement des détails...</div>
 
   <div *ngIf="error" class="error-message">{{ error }}</div>
 
@@ -164,7 +165,8 @@
       <a routerLink="/pickings" class="btn btn-back">← Retour à la liste</a>
     </div>
   </div>
-</div>
+  </div>
+</section>
 
 @if (isLoginModalVisible) {
   <div class="modal-overlay" (click)="hideLoginModal()">

@@ -8,6 +8,20 @@
   --color-bg-section: #f5f7f0;
 }
 
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  background-image: url('/assets/images/illustration/vegetables.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+}
+
 .container {
   max-width: 1150px;
   width: 100%;
