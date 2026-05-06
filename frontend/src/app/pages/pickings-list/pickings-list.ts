@@ -21,8 +21,7 @@ export class CueillettesListComponent implements OnInit {
   locationMessage = '';
   addressInput = '';
   geolocating = false;
-  sortBy: 'distance' | 'alphabetical' | 'postal_code' = 'distance';
-  showPickings = false;
+  sortBy: 'distance' | 'alphabetical' | 'postal_code' = 'alphabetical';
   locationSource = '';
   displayedPickingsCount = 10;
   favoritePickingIds: Set<number> = new Set();
@@ -63,10 +62,12 @@ export class CueillettesListComponent implements OnInit {
         this.pickings = data.map((p) => ({ ...p, distance: undefined }));
         this.sortPickings();
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement des cueillettes';
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -79,7 +80,6 @@ export class CueillettesListComponent implements OnInit {
       next: (location) => {
         this.userLocation = location;
         this.locationMessage = '';
-        this.showPickings = true;
         this.locationSource = 'votre position actuelle';
         this.calculateDistances();
         this.geolocating = false;
@@ -106,7 +106,6 @@ export class CueillettesListComponent implements OnInit {
     if (location) {
       this.userLocation = location;
       this.locationMessage = '';
-      this.showPickings = true;
       this.locationSource = this.addressInput;
       this.calculateDistances();
     } else {
@@ -114,13 +113,6 @@ export class CueillettesListComponent implements OnInit {
     }
 
     this.geolocating = false;
-  }
-
-  viewAllPickings() {
-    this.showPickings = true;
-    this.sortBy = 'alphabetical';
-    this.resetDisplayCount();
-    this.sortPickings();
   }
 
   showMorePickings() {
@@ -184,7 +176,6 @@ export class CueillettesListComponent implements OnInit {
     this.addressInput = '';
     this.locationMessage = '';
     this.locationSource = '';
-    this.showPickings = false;
     this.sortBy = 'alphabetical';
     this.resetDisplayCount();
     this.pickings = this.pickings.map((p) => ({ ...p, distance: undefined }));

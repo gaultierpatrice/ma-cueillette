@@ -6,7 +6,8 @@
   </div>
 
   <div class="location-section">
-    <h3>Votre position</h3>
+    <h3>Trier par distance (optionnel)</h3>
+    <p class="location-hint">Utilisez votre position pour trier les cueillettes par distance</p>
 
     <div class="location-options">
       <button (click)="useCurrentLocation()" [disabled]="geolocating" class="btn btn-primary">
@@ -46,19 +47,6 @@
         {{ locationMessage }}
       </div>
     }
-
-    @if (!userLocation && !locationMessage && !geolocating) {
-      <div class="location-warning">
-        💡 Activez la localisation pour voir les cueillettes les plus proches de vous
-      </div>
-
-      <div class="view-all-section">
-        <p class="or-divider">ou</p>
-        <button (click)="viewAllPickings()" class="btn btn-view-all">
-          Voir toutes les cueillettes sans localisation
-        </button>
-      </div>
-    }
   </div>
 
   @if (loading) {
@@ -69,7 +57,7 @@
     <div class="error-message">{{ error }}</div>
   }
 
-  @if (!loading && !error && showPickings) {
+  @if (!loading && !error) {
     <div class="pickings-section">
       <div class="section-header">
         <h3>
