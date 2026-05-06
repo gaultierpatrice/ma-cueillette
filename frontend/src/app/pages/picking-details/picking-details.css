@@ -71,11 +71,40 @@
   gap: 15px;
 }
 
+.name-rating-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .picking-name {
   margin: 0;
   color: #2c3e50;
   font-size: 2em;
   font-weight: bold;
+}
+
+.rating-display-large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2em;
+}
+
+.rating-display-large .stars {
+  color: #f39c12;
+  font-size: 1.5em;
+}
+
+.rating-display-large .rating-value {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.3em;
+}
+
+.rating-display-large .review-count {
+  color: #7f8c8d;
+  font-size: 0.9em;
 }
 
 .info-section {

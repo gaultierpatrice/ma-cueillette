@@ -19,7 +19,14 @@
         </div>
 
         <div class="header-info">
-          <h2 class="picking-name">{{ picking.name }}</h2>
+          <div class="name-rating-section">
+            <h2 class="picking-name">{{ picking.name }}</h2>
+            <div *ngIf="averageRating !== null && totalReviews > 0" class="rating-display-large">
+              <span class="stars">★</span>
+              <span class="rating-value">{{ averageRating | number: '1.1-1' }}</span>
+              <span class="review-count">({{ totalReviews }})</span>
+            </div>
+          </div>
 
           <div class="actions">
             <button
