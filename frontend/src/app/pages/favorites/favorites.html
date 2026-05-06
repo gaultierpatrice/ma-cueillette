@@ -1,10 +1,6 @@
 <div class="container">
   <h2>Mes favoris</h2>
 
-  <div class="navigation">
-    <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
-  </div>
-
   @if (loading) {
     <div class="loading">Chargement de vos favoris...</div>
   }
@@ -17,13 +13,20 @@
     @if (favoritePickings.length === 0) {
       <div class="no-favorites">
         <p>Vous n'avez pas encore de favoris.</p>
-        <p>Explorez les cueillettes et ajoutez-les à vos favoris pour les retrouver facilement ici !</p>
+        <p>
+          Explorez les cueillettes et ajoutez-les à vos favoris pour les retrouver facilement ici !
+        </p>
         <a routerLink="/pickings" class="btn btn-primary">Découvrir les cueillettes</a>
       </div>
     } @else {
       <div class="pickings-section">
         <div class="section-header">
-          <h3>{{ favoritePickings.length }} cueillette{{ favoritePickings.length > 1 ? 's' : '' }} favorite{{ favoritePickings.length > 1 ? 's' : '' }}</h3>
+          <h3>
+            {{ favoritePickings.length }} cueillette{{
+              favoritePickings.length > 1 ? 's' : ''
+            }}
+            favorite{{ favoritePickings.length > 1 ? 's' : '' }}
+          </h3>
         </div>
 
         <div class="pickings-list">
@@ -33,10 +36,17 @@
                 <div class="picking-header">
                   <div class="name-rating-container">
                     <h4 class="picking-name">{{ picking.name }}</h4>
-                    @if (picking.averageRating !== null && picking.averageRating !== undefined && picking.reviewCount && picking.reviewCount > 0) {
+                    @if (
+                      picking.averageRating !== null &&
+                      picking.averageRating !== undefined &&
+                      picking.reviewCount &&
+                      picking.reviewCount > 0
+                    ) {
                       <div class="rating-display">
                         <span class="stars">★</span>
-                        <span class="rating-value">{{ picking.averageRating | number: '1.1-1' }}</span>
+                        <span class="rating-value">{{
+                          picking.averageRating | number: '1.1-1'
+                        }}</span>
                         <span class="review-count">({{ picking.reviewCount }})</span>
                       </div>
                     }
@@ -80,7 +90,11 @@
                   }
                   @if (picking.website) {
                     <div class="picking-website">
-                      <a [href]="picking.website" target="_blank" (click)="$event.stopPropagation()">
+                      <a
+                        [href]="picking.website"
+                        target="_blank"
+                        (click)="$event.stopPropagation()"
+                      >
                         {{ picking.website }}
                       </a>
                     </div>
@@ -94,6 +108,9 @@
       </div>
     }
   }
+  <div class="navigation">
+    <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
+  </div>
 </div>
 
 @if (isLoginModalVisible) {
