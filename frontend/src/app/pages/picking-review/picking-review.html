@@ -1,8 +1,9 @@
-<div class="container">
-  <div class="header">
-    <h2>Avis - {{ picking?.name }}</h2>
-    <a [routerLink]="['/pickings', pickingId]" class="btn-back">← Retour à la fiche</a>
-  </div>
+<section class="hero">
+  <div class="container">
+    <div class="header">
+      <h2>Avis - {{ picking?.name }}</h2>
+      <a [routerLink]="['/pickings', pickingId]" class="btn-back">← Retour à la fiche</a>
+    </div>
 
   <div class="review-form-card">
     <h3>Laisser un avis</h3>
@@ -84,4 +85,5 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+</section>

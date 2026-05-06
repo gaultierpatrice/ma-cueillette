@@ -6,6 +6,19 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule],
   templateUrl: './legal.html',
   styles: [`
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      flex: 1;
+      background-image: url('/assets/images/illustration/vegetables.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 20px;
+    }
+
     .legal-container {
       max-width: 1100px;
       margin: 0 auto;

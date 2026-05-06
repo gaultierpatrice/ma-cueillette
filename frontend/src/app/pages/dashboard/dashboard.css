@@ -50,14 +50,16 @@
   transform: translateY(-1px);
 }
 .hero .container {
-  background: transparent;
-  padding: 0;
+  background: rgba(198, 225, 180, 0.2);
+  backdrop-filter: blur(1px);
+  padding: 20px;
   max-width: 900px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
   width: 100%;
+  border-radius: 12px;
 }
 .center-link {
   display: flex;
