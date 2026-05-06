@@ -17,6 +17,9 @@ h3 {
 
 .navigation {
   margin-bottom: 30px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .link {
