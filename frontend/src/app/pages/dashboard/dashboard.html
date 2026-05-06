@@ -1,20 +1,19 @@
 <section class="hero">
-  <div class="container" style="background: transparent; padding: 0; max-width: 520px">
-    <div>
-      @if (isAuthenticated) {
-        <div class="hero-card">
-          <h2>Bienvenue {{ username }} !</h2>
-
-          <a routerLink="/favorites">Mes favoris</a>
-        </div>
-      } @else {
-        <div class="hero-card">
-          <h2>Bienvenue !</h2>
-          <p>Connectez-vous pour accéder à toutes les fonctionnalités.</p>
-          <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
-        </div>
-      }
+  <div class="container" style="background: transparent; padding: 0; max-width: 900px">
+    @if (isAuthenticated) {
+      <div class="hero-card">
+        <h2>Bienvenue {{ username }} !</h2>
+      </div>
+    } @else {
+      <div class="hero-card">
+        <h2>Bienvenue !</h2>
+        <p>Connectez-vous pour accéder à toutes les fonctionnalités.</p>
+        <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
+      </div>
+    }
+    <div class="center-link">
       <a routerLink="/pickings">Chercher une cueillette</a>
+      <a routerLink="/favorites">Mes favoris</a>
     </div>
     @if (isAuthenticated) {
       <div>
