@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './legal.html',
   styles: [`
     .legal-container {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 20px;
       line-height: 1.6;

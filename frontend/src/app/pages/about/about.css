@@ -108,7 +108,6 @@ p {
   margin-bottom: 0;
 }
 
-/* Benefits Grid */
 .benefits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -134,7 +133,6 @@ p {
   margin-bottom: 0;
 }
 
-/* Lists */
 ul {
   margin: 1.5rem 0;
   padding-left: 1.5rem;
@@ -145,7 +143,6 @@ ul li {
   color: var(--color-text);
 }
 
-/* Seasons List */
 .seasons-list {
   background: var(--color-bg-section);
   padding: 2rem;
@@ -172,7 +169,6 @@ ul li {
   font-size: 1.05rem;
 }
 
-/* CTA Section */
 .cta-section {
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
@@ -209,7 +205,6 @@ ul li {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Contact Box */
 .contact-box {
   background: var(--color-bg-section);
   padding: 2rem;
@@ -247,14 +242,45 @@ ul li {
   box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
 }
 
-.contact-box a[href^="mailto"] {
+.contact-box a[href^='mailto'] {
   color: var(--color-secondary);
   text-decoration: none;
   font-weight: 600;
 }
 
-.contact-box a[href^="mailto"]:hover {
+.contact-box a[href^='mailto']:hover {
   text-decoration: underline;
+}
+
+/* Navigation buttons */
+.navigation-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: var(--color-bg-section);
+  border-radius: 8px;
+}
+
+.navigation-buttons a {
+  display: inline-block;
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.navigation-buttons a:hover {
+  transform: scale(1.05);
+  background-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
 }
 
 /* Tagline */
@@ -288,5 +314,15 @@ ul li {
 
   .tagline {
     font-size: 1.2rem;
+  }
+
+  .navigation-buttons {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .navigation-buttons a {
+    text-align: center;
+    width: 100%;
   }
 }
