@@ -7,13 +7,16 @@
     } @else {
       <div class="hero-card">
         <h2>Bienvenue !</h2>
-        <p>Connectez-vous pour accéder à toutes les fonctionnalités.</p>
+        <p>Connectez-vous ou créez un compte pour accéder à toutes les fonctionnalités.</p>
         <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
+        <button class="btn-register" (click)="navigateToRegister()">Créer un compte</button>
       </div>
     }
     <div class="center-link">
       <a routerLink="/pickings">Chercher une cueillette</a>
-      <a routerLink="/favorites">Mes favoris</a>
+      @if (isAuthenticated) {
+        <a routerLink="/favorites">Mes favoris</a>
+      }
     </div>
     @if (isAuthenticated) {
       <div>
