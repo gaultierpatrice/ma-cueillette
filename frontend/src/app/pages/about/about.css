@@ -15,11 +15,24 @@
   justify-content: center;
   width: 100%;
   flex: 1;
-  background-image: url('/assets/images/illustration/vegetables.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url('/assets/images/illustration/vegetables.jpg');
+  background-size: auto 20%;
+  background-position: center;
+  background-repeat: repeat;
+
+  z-index: -1;
 }
 
 .container {
