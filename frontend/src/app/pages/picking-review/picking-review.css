@@ -9,12 +9,15 @@
   background-position: center;
   background-repeat: no-repeat;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header {
@@ -30,6 +33,9 @@
   margin: 0;
   color: #2c5f2d;
   font-size: 28px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .btn-back {
@@ -53,6 +59,8 @@
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .review-form-card h3 {
@@ -209,6 +217,9 @@ textarea:focus {
   padding: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .review-card:hover {
@@ -256,6 +267,11 @@ textarea:focus {
   line-height: 1.6;
   font-size: 15px;
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 768px) {
@@ -282,5 +298,32 @@ textarea:focus {
 
   .btn-submit {
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+  }
+
+  .review-form-card {
+    padding: 15px;
+  }
+
+  .review-card {
+    padding: 15px;
+  }
+
+  .reviewer-name {
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .review-comment {
+    font-size: 14px;
   }
 }
