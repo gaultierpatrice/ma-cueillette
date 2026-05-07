@@ -86,6 +86,11 @@ main > :not(router-outlet) {
   font-family: 'Inter', sans-serif;
   resize: vertical;
 }
+.field textarea.auto-resize {
+  resize: none;
+  overflow: hidden;
+  min-height: 44px;
+}
 .field-hint {
   display: block;
   margin-top: 4px;

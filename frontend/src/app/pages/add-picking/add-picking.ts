@@ -7,21 +7,23 @@ import { AuthService } from '../../services/auth';
   selector: 'app-add-cueillette',
   imports: [RouterModule, FormsModule],
   templateUrl: './add-picking.html',
-  styles: [`
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      flex: 1;
-      background-image: url('/assets/images/illustration/vegetables.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      padding: 20px;
-    }
-  `]
+  styles: [
+    `
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex: 1;
+        background-image: url('/assets/images/illustration/vegetables.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 20px;
+      }
+    `,
+  ],
 })
 export class AddCueilletteComponent implements OnInit {
   form = {
@@ -43,6 +45,12 @@ export class AddCueilletteComponent implements OnInit {
     if (farmName) {
       this.form.name = farmName;
     }
+  }
+
+  autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
   onSubmit(): void {

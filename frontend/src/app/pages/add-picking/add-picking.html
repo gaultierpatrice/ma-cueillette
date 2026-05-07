@@ -82,6 +82,17 @@
 
       <div class="field">
         <label>Horaires d'ouverture</label>
+        <textarea 
+          #openingHoursTextarea
+          class="auto-resize"
+          [(ngModel)]="form.openingHours" 
+          name="openingHours" 
+          rows="2"
+          maxlength="255"
+          placeholder="Lun-Ven: 9h-18h, Sam: 9h-12h"
+          (input)="autoResize($event)"
+        ></textarea>
+        <small class="field-hint">Indiquez vos horaires d'ouverture en suivant le format suggéré (ex: Lun-Ven: 9h-18h, Sam: 9h-12h). Soyez aussi précis que possible.</small>
         <input 
           type="text" 
           [(ngModel)]="form.openingHours" 
