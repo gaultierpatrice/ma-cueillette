@@ -74,7 +74,6 @@
   margin: 0 auto;
 }
 .hero a:hover {
-  background: rgba(168, 208, 141, 1);
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -121,8 +120,10 @@
   min-height: 48px;
   border-radius: 8px;
 }
+.hero .container > div > .login-btn a {
+  padding: 30px 50px;
+}
 .hero .container > div > div a:hover {
-  background: rgba(168, 208, 141, 1);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
