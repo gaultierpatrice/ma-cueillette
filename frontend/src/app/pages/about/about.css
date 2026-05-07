@@ -18,6 +18,7 @@
   padding: 20px;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hero::before {
@@ -40,6 +41,7 @@
   width: 100%;
   padding: 0;
   background: transparent;
+  box-sizing: border-box;
 }
 
 .about-container {
@@ -50,6 +52,8 @@
   line-height: 1.7;
   color: var(--color-text);
   background-color: var(--color-bg);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -111,7 +115,6 @@ p {
   margin-bottom: 3rem;
 }
 
-/* Step List */
 .step-list {
   margin: 2rem 0;
 }
@@ -310,15 +313,32 @@ ul li {
   box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
 }
 
-/* Tagline */
 .tagline {
   text-align: center;
   font-size: 1.5rem;
   font-style: italic;
   color: var(--color-secondary);
   margin-top: 4rem;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   border-top: 2px solid var(--color-accent);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  hyphens: auto;
+}
+
+.tagline strong {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  display: block;
 }
 
 /* Responsive Design */
@@ -351,5 +371,47 @@ ul li {
   .navigation-buttons a {
     text-align: center;
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-container {
+    padding: 1.5rem 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    word-wrap: break-word;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    word-wrap: break-word;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+    padding: 1rem 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .tagline strong {
+    display: inline;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .about-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .tagline {
+    font-size: 0.85rem;
+    padding: 0.75rem 0.25rem;
   }
 }
