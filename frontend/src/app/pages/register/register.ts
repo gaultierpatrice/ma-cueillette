@@ -10,7 +10,7 @@ import { UserService } from '../../services/user';
   styleUrls: ['./register.css'],
 })
 export class RegisterComponent {
-  form = { name: '', email: '', password: '', role: 'USER' as const };
+  form = { name: '', email: '', password: '', role: 'USER' as 'USER' | 'PRODUCER', farmName: '' };
   error = '';
   success = '';
   isErrorModalVisible: boolean = false;
@@ -44,10 +44,25 @@ export class RegisterComponent {
       return;
     }
 
+    if (this.form.role === 'PRODUCER' && !this.form.farmName.trim()) {
+      this.errorMessage = 'Veuillez entrer le nom de votre exploitation agricole.';
+      this.showErrorModal();
+      return;
+    }
+
     this.error = '';
     this.success = '';
     this.isErrorModalVisible = false;
-    this.userService.register(this.form).subscribe({
+    
+    const payload = {
+      name: this.form.name,
+      email: this.form.email,
+      password: this.form.password,
+      role: this.form.role,
+      ...(this.form.role === 'PRODUCER' && { farmName: this.form.farmName })
+    };
+    
+    this.userService.register(payload).subscribe({
       next: () => {
         this.success = 'Account created! Redirecting...';
         setTimeout(() => this.router.navigate(['/login']), 1500);

@@ -26,4 +26,18 @@ export class AuthService {
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload.name ?? '';
   }
+
+  getFarmName(): string {
+    const token = this.getToken();
+    if (!token) return '';
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.farmName ?? '';
+  }
+
+  getUserRole(): string {
+    const token = this.getToken();
+    if (!token) return '';
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role ?? '';
+  }
 }

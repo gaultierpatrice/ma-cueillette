@@ -23,11 +23,18 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
+        System.out.println("DEBUG - Register request received:");
+        System.out.println("  Name: " + request.name());
+        System.out.println("  Email: " + request.email());
+        System.out.println("  Role: " + request.role());
+        System.out.println("  FarmName: " + request.farmName());
+        
         User created = userService.createUser(
                 request.name(),
                 request.email(),
                 request.password(),
-                request.role() != null ? request.role() : Role.USER
+                request.role() != null ? request.role() : Role.USER,
+                request.farmName()
         );
         return ResponseEntity.ok(created);
     }
@@ -47,6 +54,6 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Account deleted successfully"));
     }
 
-    public record RegisterRequest(String name, String email, String password, Role role) {}
+    public record RegisterRequest(String name, String email, String password, Role role, String farmName) {}
     public record LoginRequest(String email, String password) {}
 }
