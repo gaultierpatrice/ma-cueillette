@@ -23,7 +23,7 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public User createUser(String name, String email, String password, Role role) {
+    public User createUser(String name, String email, String password, Role role, String farmName) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already in use");
         }
@@ -34,8 +34,21 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         user.setSubscriptionDate(LocalDateTime.now());
+        
+        System.out.println("DEBUG - Creating user:");
+        System.out.println("  Role: " + role);
+        System.out.println("  FarmName received: " + farmName);
+        
+        if (role == Role.PRODUCER && farmName != null && !farmName.trim().isEmpty()) {
+            user.setFarmName(farmName);
+            System.out.println("  FarmName SET on user: " + farmName);
+        } else {
+            System.out.println("  FarmName NOT set. Conditions: role=" + role + ", farmName=" + farmName);
+        }
 
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        System.out.println("DEBUG - User saved with farmName: " + saved.getFarmName());
+        return saved;
     }
 
     public String login(String email, String password) {
@@ -51,7 +64,7 @@ public class UserService {
             throw new RuntimeException("Invalid password");
         }
 
-        return jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getName());
+        return jwtUtil.generateToken(user.getEmail(), user.getRole().name(), user.getName(), user.getFarmName());
     }
 
     public void deleteUserAccount(String email) {
