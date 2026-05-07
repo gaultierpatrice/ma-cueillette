@@ -2,6 +2,101 @@
   <div class="container">
     <h2>Proposer ma Cueillette</h2>
 
-    <div>Placeholder Form</div>
+      <div class="field">
+        <label>Adresse *</label>
+        <input 
+          type="text" 
+          [(ngModel)]="form.address" 
+          name="address" 
+          required 
+          placeholder="123 Rue de la Ferme"
+        />
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Code postal *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="form.postalCode" 
+            name="postalCode" 
+            required 
+            placeholder="75001"
+          />
+        </div>
+
+        <div class="field">
+          <label>Ville *</label>
+          <input 
+            type="text" 
+            [(ngModel)]="form.city" 
+            name="city" 
+            required 
+            placeholder="Paris"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Téléphone</label>
+        <input 
+          type="tel" 
+          [(ngModel)]="form.phone" 
+          name="phone" 
+          placeholder="01 23 45 67 89"
+        />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input 
+          type="email" 
+          [(ngModel)]="form.email" 
+          name="email" 
+          placeholder="contact@ferme.fr"
+        />
+      </div>
+
+      <div class="field">
+        <label>Site web</label>
+        <input 
+          type="url" 
+          [(ngModel)]="form.website" 
+          name="website" 
+          placeholder="https://www.ferme.fr"
+        />
+      </div>
+
+      <div class="field">
+        <label>Horaires d'ouverture</label>
+        <textarea 
+          #openingHoursTextarea
+          class="auto-resize"
+          [(ngModel)]="form.openingHours" 
+          name="openingHours" 
+          rows="2"
+          maxlength="255"
+          placeholder="Lun-Ven: 9h-18h, Sam: 9h-12h"
+          (input)="autoResize($event)"
+        ></textarea>
+        <small class="field-hint">Indiquez vos horaires d'ouverture en suivant le format suggéré (ex: Lun-Ven: 9h-18h, Sam: 9h-12h). Soyez aussi précis que possible.</small>
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea 
+          [(ngModel)]="form.description" 
+          name="description" 
+          rows="4"
+          placeholder="Décrivez votre exploitation, vos pratiques agricoles, vos produits..."
+        ></textarea>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Note:</strong> La fonctionnalité d'ajout sera bientôt disponible. Le formulaire est prêt à être utilisé.</p>
+      </div>
+
+      <button type="submit">Proposer ma cueillette</button>
+    </form>
   </div>
 </section>
