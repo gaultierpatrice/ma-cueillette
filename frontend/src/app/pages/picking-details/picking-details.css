@@ -9,12 +9,15 @@
   background-position: center;
   background-repeat: no-repeat;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .loading {
@@ -39,6 +42,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-header {
@@ -135,6 +140,9 @@
   margin: 5px 0;
   color: #555;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .days-list,
@@ -179,6 +187,8 @@
 
 .card-body {
   padding: 20px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .contact-item {
@@ -187,6 +197,7 @@
   gap: 10px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
+  flex-wrap: wrap;
 }
 
 .contact-item .label {
@@ -199,6 +210,10 @@
   color: #3498db;
   text-decoration: none;
   transition: color 0.3s;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
 }
 
 .contact-link:hover {
@@ -418,6 +433,41 @@
     flex-direction: column;
     gap: 10px;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .card-body {
+    padding: 15px;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .contact-item .label {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .contact-link {
+    width: 100%;
+    display: block;
+  }
+
+  .picking-name {
+    font-size: 1.3em;
+    word-wrap: break-word;
+  }
+
+  .details-card {
+    overflow: hidden;
   }
 }
 
