@@ -9,6 +9,7 @@
   background-position: center;
   background-repeat: no-repeat;
   padding: 20px;
+  overflow-x: hidden;
 }
 
 .container {
@@ -16,6 +17,8 @@
   margin: 0 auto;
   padding: 20px;
   flex: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -55,6 +58,9 @@ h3 {
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-wrap: break-word;
 }
 
 .location-hint {
@@ -78,6 +84,9 @@ h3 {
   cursor: pointer;
   transition: all 0.3s;
   font-weight: 500;
+  box-sizing: border-box;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 .btn:disabled {
@@ -264,6 +273,7 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  width: 100%;
 }
 
 .picking-card {
@@ -276,6 +286,9 @@ h3 {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
 }
 
 .picking-card:hover {
@@ -286,6 +299,9 @@ h3 {
 
 .picking-info {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .picking-header {
@@ -294,6 +310,7 @@ h3 {
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 
 .name-rating-container {
@@ -301,12 +318,15 @@ h3 {
   flex-direction: column;
   gap: 5px;
   flex: 1;
+  min-width: 0;
 }
 
 .picking-name {
   margin: 0;
   color: #2c3e50;
   font-size: 1.2em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .rating-display {
@@ -330,11 +350,38 @@ h3 {
   color: #7f8c8d;
   font-size: 0.95em;
 }
+.picking-details {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.picking-address,
+.picking-city-postal,
+.picking-phone {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-website {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-website a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
+
 .gps-distance {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .favorite-btn,
@@ -440,6 +487,17 @@ h3 {
   .sort-controls {
     width: 100%;
     flex-wrap: wrap;
+  }
+
+  .picking-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gps-distance {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
   }
 }
 
