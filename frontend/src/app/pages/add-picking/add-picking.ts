@@ -1,29 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { PickingService } from '../../services/picking.service';
+import { CommonModule } from '@angular/common';
+
+interface ProductForm {
+  name: string;
+  type: string;
+  harvestSeason: string;
+}
 
 @Component({
   selector: 'app-add-cueillette',
-  imports: [RouterModule, FormsModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './add-picking.html',
-  styles: [
-    `
-      .hero {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        flex: 1;
-        background-image: url('/assets/images/illustration/vegetables.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 20px;
-      }
-    `,
-  ],
+  styleUrls: ['./add-picking.css'],
 })
 export class AddCueilletteComponent implements OnInit {
   form = {
@@ -38,7 +30,28 @@ export class AddCueilletteComponent implements OnInit {
     description: ''
   };
 
-  constructor(private authService: AuthService) {}
+  categories = {
+    fruits: false,
+    vegetables: false
+  };
+
+  products: ProductForm[] = [];
+
+  newProduct: ProductForm = {
+    name: '',
+    type: '',
+    harvestSeason: ''
+  };
+
+  isSubmitting = false;
+  errorMessage = '';
+  successMessage = '';
+
+  constructor(
+    private authService: AuthService,
+    private pickingService: PickingService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const farmName = this.authService.getFarmName();
@@ -53,7 +66,56 @@ export class AddCueilletteComponent implements OnInit {
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 
+  addProduct(): void {
+    if (this.newProduct.name.trim() && this.newProduct.type) {
+      this.products.push({
+        name: this.newProduct.name.trim(),
+        type: this.newProduct.type,
+        harvestSeason: this.newProduct.harvestSeason.trim()
+      });
+      this.newProduct = {
+        name: '',
+        type: '',
+        harvestSeason: ''
+      };
+    }
+  }
+
+  removeProduct(index: number): void {
+    this.products.splice(index, 1);
+  }
+
   onSubmit(): void {
-    console.log('Form submitted (backend endpoint to be implemented):', this.form);
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.isSubmitting = true;
+
+    const token = this.authService.getToken();
+    if (!token) {
+      this.errorMessage = 'Vous devez être connecté pour ajouter une cueillette.';
+      this.isSubmitting = false;
+      return;
+    }
+
+    const submissionData = {
+      ...this.form,
+      categories: this.categories,
+      products: this.products
+    };
+
+    this.pickingService.createPicking(submissionData, token).subscribe({
+      next: (response) => {
+        this.successMessage = 'Votre cueillette a été ajoutée avec succès!';
+        this.isSubmitting = false;
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Error creating picking:', error);
+        this.errorMessage = 'Une erreur est survenue lors de l\'ajout de votre cueillette. Veuillez réessayer.';
+        this.isSubmitting = false;
+      }
+    });
   }
 }

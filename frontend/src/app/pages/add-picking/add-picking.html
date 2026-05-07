@@ -95,6 +95,74 @@
         ></textarea>
       </div>
 
+      <div class="field">
+        <label>Type de production</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="categories.fruits" name="fruits" />
+            Fruits
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="categories.vegetables" name="vegetables" />
+            Légumes
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Produits cultivés (optionnel)</label>
+        <small class="field-hint">Ajoutez les espèces que vous cultivez</small>
+
+        <div class="products-list">
+          @for (product of products; track $index) {
+            <div class="product-item">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-type">
+                {{ product.type === 'fruit' ? '🍎 Fruit' : '🥕 Légume' }}
+              </span>
+              @if (product.harvestSeason) {
+                <span class="product-season">{{ product.harvestSeason }}</span>
+              }
+              <button type="button" class="btn-remove" (click)="removeProduct($index)">
+                ✕
+              </button>
+            </div>
+          }
+        </div>
+
+        <div class="add-product-form">
+          <div class="form-row">
+            <input
+              type="text"
+              [(ngModel)]="newProduct.name"
+              name="productName"
+              placeholder="Nom du produit (ex: Tomates, Fraises...)"
+              class="product-input"
+            />
+            <select [(ngModel)]="newProduct.type" name="productType" class="product-select">
+              <option value="">Type</option>
+              <option value="fruit">Fruit</option>
+              <option value="vegetable">Légume</option>
+            </select>
+            <input
+              type="text"
+              [(ngModel)]="newProduct.harvestSeason"
+              name="productSeason"
+              placeholder="Saison (optionnel)"
+              class="product-input-small"
+            />
+            <button
+              type="button"
+              class="btn-add"
+              (click)="addProduct()"
+              [disabled]="!newProduct.name || !newProduct.type"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="info-box">
         <p>
           <strong>Note:</strong> La fonctionnalité d'ajout sera bientôt disponible. Le formulaire
@@ -102,7 +170,21 @@
         </p>
       </div>
 
-      <button type="submit">Proposer ma cueillette</button>
+      @if (errorMessage) {
+        <div class="error-box">
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="success-box">
+          <p>{{ successMessage }}</p>
+        </div>
+      }
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
+      </button>
     </form>
   </div>
 </section>
