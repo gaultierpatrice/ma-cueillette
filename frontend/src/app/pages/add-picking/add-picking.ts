@@ -35,7 +35,7 @@ export class AddCueilletteComponent implements OnInit {
     email: '',
     website: '',
     openingHours: '',
-    description: '',
+    description: ''
   };
 
   constructor(private authService: AuthService) {}

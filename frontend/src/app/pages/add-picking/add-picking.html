@@ -1,6 +1,19 @@
 <section class="hero">
   <div class="container">
     <h2>Proposer ma Cueillette</h2>
+    
+    <form (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label>Nom de l'exploitation *</label>
+        <input 
+          type="text" 
+          [(ngModel)]="form.name" 
+          name="name" 
+          required 
+          placeholder="Vous pouvez modifier le nom si nécessaire (ex: Ferme Bio Martin - Site Nord)"
+        />
+        <small class="field-hint">Pré-rempli avec le nom de votre exploitation. Vous pouvez le modifier si vous avez plusieurs sites.</small>
+      </div>
 
       <div class="field">
         <label>Adresse *</label>
@@ -80,6 +93,12 @@
           (input)="autoResize($event)"
         ></textarea>
         <small class="field-hint">Indiquez vos horaires d'ouverture en suivant le format suggéré (ex: Lun-Ven: 9h-18h, Sam: 9h-12h). Soyez aussi précis que possible.</small>
+        <input 
+          type="text" 
+          [(ngModel)]="form.openingHours" 
+          name="openingHours" 
+          placeholder="Lun-Ven: 9h-18h, Sam: 9h-12h"
+        />
       </div>
 
       <div class="field">

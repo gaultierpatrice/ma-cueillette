@@ -3,6 +3,13 @@
     <h2>Creer un compte</h2>
     <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
       <div class="field">
+        <label>Type de compte</label>
+        <select [(ngModel)]="form.role" name="role" required>
+          <option value="USER">Utilisateur</option>
+          <option value="PRODUCER">Producteur</option>
+        </select>
+      </div>
+      <div class="field">
         <label>Nom</label>
         <input type="text" [(ngModel)]="form.name" name="name" required />
       </div>
@@ -14,6 +21,12 @@
         <label>Mot de Passe</label>
         <input type="password" [(ngModel)]="form.password" name="password" autocomplete="new-password" required />
       </div>
+      @if (form.role === 'PRODUCER') {
+        <div class="field">
+          <label>Nom de l'exploitation</label>
+          <input type="text" [(ngModel)]="form.farmName" name="farmName" required />
+        </div>
+      }
       <button type="submit">Creer mon compte</button>
     </form>
     <p class="success">{{ success }}</p>
