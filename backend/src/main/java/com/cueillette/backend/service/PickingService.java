@@ -23,11 +23,14 @@ public class PickingService {
     private final PickingRepository pickingRepository;
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
+    private final GeocodingService geocodingService;
 
-    public PickingService(PickingRepository pickingRepository, ReviewRepository reviewRepository, ProductRepository productRepository) {
+    public PickingService(PickingRepository pickingRepository, ReviewRepository reviewRepository, 
+                         ProductRepository productRepository, GeocodingService geocodingService) {
         this.pickingRepository = pickingRepository;
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
+        this.geocodingService = geocodingService;
     }
 
     public List<Picking> getAllPickings() {
@@ -62,6 +65,22 @@ public class PickingService {
         picking.setOpeningHours(dto.getOpeningHours());
         picking.setDescription(dto.getDescription());
         picking.setProducer(producer);
+
+        if (dto.getLat() != null && dto.getLng() != null) {
+            picking.setLat(dto.getLat());
+            picking.setLng(dto.getLng());
+        } else {
+            Double[] coordinates = geocodingService.geocodeAddress(
+                dto.getAddress(), 
+                dto.getPostalCode(), 
+                dto.getCity()
+            );
+            
+            if (coordinates != null) {
+                picking.setLat(coordinates[0]);
+                picking.setLng(coordinates[1]);
+            }
+        }
 
         if (dto.getProducts() != null && !dto.getProducts().isEmpty()) {
             List<Product> products = new ArrayList<>();

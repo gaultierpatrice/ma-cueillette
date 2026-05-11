@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { PickingService } from '../../services/picking.service';
+import { GeolocationService } from '../../services/geolocation.service';
 import { CommonModule } from '@angular/common';
 
 interface ProductForm {
@@ -46,10 +47,17 @@ export class AddCueilletteComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+  
+  addressValidated = false;
+  isValidatingAddress = false;
+  addressValidationMessage = '';
+  coordinates: { lat: number; lng: number } | null = null;
+  private addressValidationTimeout: any = null;
 
   constructor(
     private authService: AuthService,
     private pickingService: PickingService,
+    private geolocationService: GeolocationService,
     private router: Router
   ) {}
 
@@ -85,9 +93,56 @@ export class AddCueilletteComponent implements OnInit {
     this.products.splice(index, 1);
   }
 
+  onAddressFieldChange(): void {
+    this.addressValidated = false;
+    this.addressValidationMessage = '';
+    this.coordinates = null;
+
+    if (this.addressValidationTimeout) {
+      clearTimeout(this.addressValidationTimeout);
+    }
+
+    if (!this.form.address || !this.form.postalCode || !this.form.city) {
+      return;
+    }
+
+    this.addressValidationTimeout = setTimeout(() => {
+      this.validateAddress();
+    }, 1500);
+  }
+
+  private async validateAddress(): Promise<void> {
+    if (!this.form.address || !this.form.postalCode || !this.form.city) {
+      return;
+    }
+
+    this.isValidatingAddress = true;
+    this.addressValidationMessage = '🔍 Vérification de l\'adresse...';
+
+    const fullAddress = `${this.form.address}, ${this.form.postalCode} ${this.form.city}, France`;
+    const location = await this.geolocationService.geocodeAddress(fullAddress);
+
+    this.isValidatingAddress = false;
+
+    if (location) {
+      this.coordinates = location;
+      this.addressValidated = true;
+      this.addressValidationMessage = `✓ Adresse valide`;
+    } else {
+      this.addressValidationMessage = '⚠ Adresse introuvable. Vérifiez votre saisie.';
+      this.addressValidated = false;
+    }
+  }
+
   onSubmit(): void {
     this.errorMessage = '';
     this.successMessage = '';
+
+    if (!this.addressValidated || !this.coordinates) {
+      this.errorMessage = 'Veuillez d\'abord vérifier l\'adresse avant de soumettre le formulaire.';
+      return;
+    }
+
     this.isSubmitting = true;
 
     const token = this.authService.getToken();
@@ -99,6 +154,8 @@ export class AddCueilletteComponent implements OnInit {
 
     const submissionData = {
       ...this.form,
+      lat: this.coordinates.lat,
+      lng: this.coordinates.lng,
       categories: this.categories,
       products: this.products
     };

@@ -26,6 +26,7 @@
           name="address"
           required
           placeholder="123 Rue de la Ferme"
+          (input)="onAddressFieldChange()"
         />
       </div>
 
@@ -38,14 +39,33 @@
             name="postalCode"
             required
             placeholder="75001"
+            (input)="onAddressFieldChange()"
           />
         </div>
 
         <div class="field">
           <label>Ville *</label>
-          <input type="text" [(ngModel)]="form.city" name="city" required placeholder="Paris" />
+          <input 
+            type="text" 
+            [(ngModel)]="form.city" 
+            name="city" 
+            required 
+            placeholder="Paris"
+            (input)="onAddressFieldChange()"
+          />
         </div>
       </div>
+
+      @if (addressValidationMessage) {
+        <div 
+          class="validation-message inline"
+          [class.success]="addressValidated"
+          [class.error]="!addressValidated && !isValidatingAddress"
+          [class.validating]="isValidatingAddress"
+        >
+          {{ addressValidationMessage }}
+        </div>
+      }
 
       <div class="field">
         <label>Téléphone</label>
@@ -182,9 +202,13 @@
         </div>
       }
 
-      <button type="submit" [disabled]="isSubmitting">
+      <button type="submit" [disabled]="isSubmitting || !addressValidated">
         {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
       </button>
+      
+      @if (!addressValidated) {
+        <p class="submit-hint">Veuillez vérifier l'adresse avant de soumettre le formulaire.</p>
+      }
     </form>
   </div>
 </section>
