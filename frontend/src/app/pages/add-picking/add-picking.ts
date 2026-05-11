@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -52,13 +52,13 @@ export class AddCueilletteComponent implements OnInit {
   isValidatingAddress = false;
   addressValidationMessage = '';
   coordinates: { lat: number; lng: number } | null = null;
-  private addressValidationTimeout: any = null;
 
   constructor(
     private authService: AuthService,
     private pickingService: PickingService,
     private geolocationService: GeolocationService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -97,40 +97,58 @@ export class AddCueilletteComponent implements OnInit {
     this.addressValidated = false;
     this.addressValidationMessage = '';
     this.coordinates = null;
+  }
 
-    if (this.addressValidationTimeout) {
-      clearTimeout(this.addressValidationTimeout);
-    }
-
-    if (!this.form.address || !this.form.postalCode || !this.form.city) {
+  verifyAddress(): void {
+    if (this.isValidatingAddress) {
       return;
     }
+    if (!this.hasCompleteAddressInput()) {
+      this.addressValidationMessage =
+        'Veuillez compléter l’adresse, le code postal et la ville avant de vérifier.';
+      this.cdr.markForCheck();
+      return;
+    }
+    // Zoneless Angular: defer one tick so ngModel catches the last keystroke before validate.
+    void Promise.resolve().then(() => void this.validateAddress());
+  }
 
-    this.addressValidationTimeout = setTimeout(() => {
-      this.validateAddress();
-    }, 1500);
+  private hasCompleteAddressInput(): boolean {
+    return !!(
+      this.form.address?.trim() &&
+      this.form.postalCode?.trim() &&
+      this.form.city?.trim()
+    );
   }
 
   private async validateAddress(): Promise<void> {
-    if (!this.form.address || !this.form.postalCode || !this.form.city) {
+    if (!this.hasCompleteAddressInput() || this.isValidatingAddress) {
       return;
     }
 
     this.isValidatingAddress = true;
-    this.addressValidationMessage = '🔍 Vérification de l\'adresse...';
+    this.cdr.markForCheck();
 
-    const fullAddress = `${this.form.address}, ${this.form.postalCode} ${this.form.city}, France`;
-    const location = await this.geolocationService.geocodeAddress(fullAddress);
+    const addr = this.form.address.trim();
+    const postal = this.form.postalCode.trim();
+    const city = this.form.city.trim();
+    const fullAddress = `${addr}, ${postal} ${city}, France`;
 
-    this.isValidatingAddress = false;
+    try {
+      const location = await this.geolocationService.geocodeAddress(fullAddress);
 
-    if (location) {
-      this.coordinates = location;
-      this.addressValidated = true;
-      this.addressValidationMessage = `✓ Adresse valide`;
-    } else {
-      this.addressValidationMessage = '⚠ Adresse introuvable. Vérifiez votre saisie.';
-      this.addressValidated = false;
+      if (location) {
+        this.coordinates = location;
+        this.addressValidated = true;
+        this.addressValidationMessage = 'Adresse valide.';
+      } else {
+        this.addressValidationMessage = 'Adresse introuvable. Vérifiez votre saisie.';
+        this.addressValidated = false;
+      }
+    } finally {
+      this.isValidatingAddress = false;
+      // fetch()/Promise continuations run outside Angular’s zoneless CD — refresh the view here.
+      this.cdr.detectChanges();
     }
   }
 

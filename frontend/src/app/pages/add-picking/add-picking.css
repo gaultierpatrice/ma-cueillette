@@ -256,10 +256,47 @@
   border: 1px solid rgba(244, 67, 54, 0.4);
 }
 
-.validation-message.validating {
-  background: rgba(2, 136, 209, 0.15);
-  color: #0277bd;
-  border: 1px solid rgba(2, 136, 209, 0.4);
+.address-check-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 10px 0;
+  padding: 12px 16px;
+  background: rgba(2, 136, 209, 0.1);
+  border: 1px solid rgba(2, 136, 209, 0.35);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #01579b;
+}
+
+.address-check-spinner {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(2, 136, 209, 0.28);
+  border-top-color: #0277bd;
+  border-radius: 50%;
+  animation: address-check-spin 0.65s linear infinite;
+}
+
+.address-check-copy {
+  line-height: 1.4;
+}
+
+@keyframes address-check-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .address-check-spinner {
+    animation: none;
+    border-color: rgba(2, 136, 209, 0.35);
+    border-top-color: #0277bd;
+    opacity: 0.95;
+  }
 }
 
 .submit-hint {

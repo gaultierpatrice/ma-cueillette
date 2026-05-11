@@ -26,6 +26,7 @@
           name="address"
           required
           placeholder="123 Rue de la Ferme"
+          [attr.aria-busy]="isValidatingAddress"
           (input)="onAddressFieldChange()"
         />
       </div>
@@ -39,6 +40,7 @@
             name="postalCode"
             required
             placeholder="75001"
+            [attr.aria-busy]="isValidatingAddress"
             (input)="onAddressFieldChange()"
           />
         </div>
@@ -51,17 +53,40 @@
             name="city" 
             required 
             placeholder="Paris"
+            [attr.aria-busy]="isValidatingAddress"
             (input)="onAddressFieldChange()"
           />
         </div>
       </div>
 
-      @if (addressValidationMessage) {
+      <div class="field">
+        <button
+          type="button"
+          class="btn-verify"
+          (click)="verifyAddress()"
+          [disabled]="isValidatingAddress || !form.address?.trim() || !form.postalCode?.trim() || !form.city?.trim()"
+        >
+          {{ isValidatingAddress ? 'Vérification…' : 'Vérifier l’adresse' }}
+        </button>
+      </div>
+
+      @if (isValidatingAddress) {
+        <div
+          class="address-check-banner"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <span class="address-check-spinner" aria-hidden="true"></span>
+          <span class="address-check-copy">Vérification de l’adresse en cours…</span>
+        </div>
+      }
+
+      @if (addressValidationMessage && !isValidatingAddress) {
         <div 
           class="validation-message inline"
           [class.success]="addressValidated"
-          [class.error]="!addressValidated && !isValidatingAddress"
-          [class.validating]="isValidatingAddress"
+          [class.error]="!addressValidated"
         >
           {{ addressValidationMessage }}
         </div>
@@ -207,7 +232,9 @@
       </button>
       
       @if (!addressValidated) {
-        <p class="submit-hint">Veuillez vérifier l'adresse avant de soumettre le formulaire.</p>
+        <p class="submit-hint">
+          Cliquez sur « Vérifier l’adresse », puis validez le formulaire une fois l’adresse reconnue.
+        </p>
       }
     </form>
   </div>
