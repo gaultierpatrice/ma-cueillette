@@ -1,16 +1,1 @@
-# Backend
-backend/target/
-backend/.mvn/
-backend/*.iml
-backend/.idea/
-
-# Frontend
-frontend/node_modules/
-frontend/.angular/
-frontend/dist/
-frontend/assets/images/illustration
-
-# System
-.DS_Store
-Thumbs.db
-terminal-cueillette.txt
+.env
