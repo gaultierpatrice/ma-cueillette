@@ -99,6 +99,64 @@ export class AddCueilletteComponent implements OnInit {
     this.coordinates = null;
   }
 
+  onAddressBlur(): void {
+    const prevAddress = this.form.address;
+    const prevPostal = this.form.postalCode;
+    const prevCity = this.form.city;
+    this.sanitizeAddressInputs();
+    if (
+      prevAddress !== this.form.address ||
+      prevPostal !== this.form.postalCode ||
+      prevCity !== this.form.city
+    ) {
+      this.addressValidated = false;
+      this.addressValidationMessage = '';
+      this.coordinates = null;
+    }
+    this.cdr.markForCheck();
+  }
+
+  /** Trim, collapse spaces; normalize postal (FR 5 digits); title-case ville (fr-FR). */
+  sanitizeAddressInputs(): void {
+    this.form.address = this.normalizeWhitespace(this.form.address ?? '');
+    this.form.postalCode = this.normalizeFrenchPostalCode(this.form.postalCode ?? '');
+    const cityWs = this.normalizeWhitespace(this.form.city ?? '');
+    this.form.city = cityWs ? this.capitalizeFrenchPlaceWords(cityWs) : '';
+  }
+
+  private normalizeWhitespace(value: string): string {
+    return value.trim().replace(/\s+/g, ' ');
+  }
+
+  /** Keeps digits only and caps length at 5 ( métropolitain / DOM métropolitain-like ). */
+  private normalizeFrenchPostalCode(value: string): string {
+    const digits = value.replace(/\D/g, '');
+    return digits.slice(0, 5);
+  }
+
+  /**
+   * Words separated by spaces or hyphens: first letter upper, rest lower (locale fr).
+   * Heuristic only — no garantee pour les noms officiels complexes (Saint-Jean-d’Angély, etc.).
+   */
+  private capitalizeFrenchPlaceWords(value: string): string {
+    return value
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) =>
+        word
+          .split('-')
+          .map((part) => {
+            if (!part.length) {
+              return part;
+            }
+            const lower = part.toLocaleLowerCase('fr-FR');
+            return lower.charAt(0).toLocaleUpperCase('fr-FR') + lower.slice(1);
+          })
+          .join('-')
+      )
+      .join(' ');
+  }
+
   verifyAddress(): void {
     if (this.isValidatingAddress) {
       return;
@@ -126,12 +184,24 @@ export class AddCueilletteComponent implements OnInit {
       return;
     }
 
+    this.sanitizeAddressInputs();
+    this.cdr.markForCheck();
+
+    if (!this.hasCompleteAddressInput()) {
+      this.addressValidationMessage =
+        'Veuillez vérifier l’adresse : champs remplis et code postal à 5 chiffres.';
+      this.addressValidated = false;
+      this.coordinates = null;
+      this.cdr.detectChanges();
+      return;
+    }
+
     this.isValidatingAddress = true;
     this.cdr.markForCheck();
 
-    const addr = this.form.address.trim();
-    const postal = this.form.postalCode.trim();
-    const city = this.form.city.trim();
+    const addr = this.form.address;
+    const postal = this.form.postalCode;
+    const city = this.form.city;
     const fullAddress = `${addr}, ${postal} ${city}, France`;
 
     try {
@@ -155,6 +225,9 @@ export class AddCueilletteComponent implements OnInit {
   onSubmit(): void {
     this.errorMessage = '';
     this.successMessage = '';
+
+    this.sanitizeAddressInputs();
+    this.cdr.markForCheck();
 
     if (!this.addressValidated || !this.coordinates) {
       this.errorMessage = 'Veuillez d\'abord vérifier l\'adresse avant de soumettre le formulaire.';

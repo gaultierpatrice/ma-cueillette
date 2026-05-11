@@ -28,6 +28,7 @@
           placeholder="123 Rue de la Ferme"
           [attr.aria-busy]="isValidatingAddress"
           (input)="onAddressFieldChange()"
+          (blur)="onAddressBlur()"
         />
       </div>
 
@@ -42,6 +43,7 @@
             placeholder="75001"
             [attr.aria-busy]="isValidatingAddress"
             (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
           />
         </div>
 
@@ -55,6 +57,7 @@
             placeholder="Paris"
             [attr.aria-busy]="isValidatingAddress"
             (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
           />
         </div>
       </div>
