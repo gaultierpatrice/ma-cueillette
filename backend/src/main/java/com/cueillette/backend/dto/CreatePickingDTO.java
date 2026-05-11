@@ -14,6 +14,8 @@ public class CreatePickingDTO {
     private String website;
     private String openingHours;
     private String description;
+    private Double lat;
+    private Double lng;
     private CategoriesDTO categories;
     private List<ProductDTO> products;
 

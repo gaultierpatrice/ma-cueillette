@@ -2,7 +2,7 @@
   <div class="container">
     <h2>Proposer ma Cueillette</h2>
 
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" (keydown)="onFormKeydown($event)">
       <div class="field">
         <label>Nom de l'exploitation *</label>
         <input
@@ -26,6 +26,9 @@
           name="address"
           required
           placeholder="123 Rue de la Ferme"
+          [attr.aria-busy]="isValidatingAddress"
+          (input)="onAddressFieldChange()"
+          (blur)="onAddressBlur()"
         />
       </div>
 
@@ -38,14 +41,59 @@
             name="postalCode"
             required
             placeholder="75001"
+            [attr.aria-busy]="isValidatingAddress"
+            (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
           />
         </div>
 
         <div class="field">
           <label>Ville *</label>
-          <input type="text" [(ngModel)]="form.city" name="city" required placeholder="Paris" />
+          <input 
+            type="text" 
+            [(ngModel)]="form.city" 
+            name="city" 
+            required 
+            placeholder="Paris"
+            [attr.aria-busy]="isValidatingAddress"
+            (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
+          />
         </div>
       </div>
+
+      <div class="field">
+        <button
+          type="button"
+          class="btn-verify"
+          (click)="verifyAddress()"
+          [disabled]="isValidatingAddress || !form.address?.trim() || !form.postalCode?.trim() || !form.city?.trim()"
+        >
+          {{ isValidatingAddress ? 'Vérification…' : 'Vérifier l’adresse' }}
+        </button>
+      </div>
+
+      @if (isValidatingAddress) {
+        <div
+          class="address-check-banner"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <span class="address-check-spinner" aria-hidden="true"></span>
+          <span class="address-check-copy">Vérification de l’adresse en cours…</span>
+        </div>
+      }
+
+      @if (addressValidationMessage && !isValidatingAddress) {
+        <div 
+          class="validation-message inline"
+          [class.success]="addressValidated"
+          [class.error]="!addressValidated"
+        >
+          {{ addressValidationMessage }}
+        </div>
+      }
 
       <div class="field">
         <label>Téléphone</label>
@@ -176,15 +224,27 @@
         </div>
       }
 
-      @if (successMessage) {
-        <div class="success-box">
-          <p>{{ successMessage }}</p>
-        </div>
-      }
-
-      <button type="submit" [disabled]="isSubmitting">
+      <button type="submit" [disabled]="isSubmitting || !addressValidated">
         {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
       </button>
+      
+      @if (!addressValidated) {
+        <p class="submit-hint">
+          Cliquez sur « Vérifier l’adresse », puis validez le formulaire une fois l’adresse reconnue.
+        </p>
+      }
     </form>
   </div>
 </section>
+
+@if (isSuccessModalVisible) {
+  <div class="modal-overlay" (click)="dismissSuccessModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Cueillette créée</h3>
+      <p>Votre cueillette a été ajoutée avec succès.</p>
+      <div class="modal-buttons">
+        <button type="button" class="btn-confirm" (click)="dismissSuccessModal()">OK</button>
+      </div>
+    </div>
+  </div>
+}
