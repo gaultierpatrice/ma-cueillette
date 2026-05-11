@@ -60,4 +60,12 @@ export class PickingService {
     });
     return this.http.get<{ isFavorite: boolean }>(`${this.favoritesUrl}/check/${pickingId}`, { headers });
   }
+
+  createPicking(pickingData: any, token: string): Observable<Picking> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<Picking>(this.apiUrl, pickingData, { headers });
+  }
 }
