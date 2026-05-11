@@ -46,7 +46,7 @@ export class AddCueilletteComponent implements OnInit {
 
   isSubmitting = false;
   errorMessage = '';
-  successMessage = '';
+  isSuccessModalVisible = false;
   
   addressValidated = false;
   isValidatingAddress = false;
@@ -65,6 +65,27 @@ export class AddCueilletteComponent implements OnInit {
     const farmName = this.authService.getFarmName();
     if (farmName) {
       this.form.name = farmName;
+    }
+  }
+
+  /**
+   * Prevents implicit HTML form submission on Enter while typing in inputs (checkboxes, text…).
+   * Textareas, selects, and buttons keep normal Enter behavior (new line, choose option, activate button).
+   */
+  onFormKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Enter' && event.key !== 'NumpadEnter') {
+      return;
+    }
+    const t = event.target;
+    if (
+      t instanceof HTMLTextAreaElement ||
+      t instanceof HTMLButtonElement ||
+      t instanceof HTMLSelectElement
+    ) {
+      return;
+    }
+    if (t instanceof HTMLInputElement) {
+      event.preventDefault();
     }
   }
 
@@ -224,7 +245,6 @@ export class AddCueilletteComponent implements OnInit {
 
   onSubmit(): void {
     this.errorMessage = '';
-    this.successMessage = '';
 
     this.sanitizeAddressInputs();
     this.cdr.markForCheck();
@@ -252,18 +272,25 @@ export class AddCueilletteComponent implements OnInit {
     };
 
     this.pickingService.createPicking(submissionData, token).subscribe({
-      next: (response) => {
-        this.successMessage = 'Votre cueillette a été ajoutée avec succès!';
+      next: () => {
         this.isSubmitting = false;
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2000);
+        this.isSuccessModalVisible = true;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error creating picking:', error);
         this.errorMessage = 'Une erreur est survenue lors de l\'ajout de votre cueillette. Veuillez réessayer.';
         this.isSubmitting = false;
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  dismissSuccessModal(): void {
+    if (!this.isSuccessModalVisible) {
+      return;
+    }
+    this.isSuccessModalVisible = false;
+    void this.router.navigate(['/dashboard']);
   }
 }

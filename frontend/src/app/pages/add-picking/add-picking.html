@@ -2,7 +2,7 @@
   <div class="container">
     <h2>Proposer ma Cueillette</h2>
 
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" (keydown)="onFormKeydown($event)">
       <div class="field">
         <label>Nom de l'exploitation *</label>
         <input
@@ -224,12 +224,6 @@
         </div>
       }
 
-      @if (successMessage) {
-        <div class="success-box">
-          <p>{{ successMessage }}</p>
-        </div>
-      }
-
       <button type="submit" [disabled]="isSubmitting || !addressValidated">
         {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
       </button>
@@ -242,3 +236,15 @@
     </form>
   </div>
 </section>
+
+@if (isSuccessModalVisible) {
+  <div class="modal-overlay" (click)="dismissSuccessModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Cueillette créée</h3>
+      <p>Votre cueillette a été ajoutée avec succès.</p>
+      <div class="modal-buttons">
+        <button type="button" class="btn-confirm" (click)="dismissSuccessModal()">OK</button>
+      </div>
+    </div>
+  </div>
+}
