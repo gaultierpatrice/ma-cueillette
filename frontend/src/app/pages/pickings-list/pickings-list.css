@@ -386,7 +386,7 @@ h3 {
 
 .favorite-btn,
 .gps-btn {
-  background: rgba(168, 208, 141, 0.95);
+  background: rgb(46, 125, 50);
   color: white;
   border: none;
   cursor: pointer;
@@ -406,7 +406,7 @@ h3 {
 
 .favorite-btn:hover,
 .gps-btn:hover {
-  background: rgba(168, 208, 141, 1);
+  background: rgb(46, 125, 50, 0.8);
   transform: scale(1.05);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
