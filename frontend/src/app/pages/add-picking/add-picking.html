@@ -49,11 +49,11 @@
 
         <div class="field">
           <label>Ville *</label>
-          <input 
-            type="text" 
-            [(ngModel)]="form.city" 
-            name="city" 
-            required 
+          <input
+            type="text"
+            [(ngModel)]="form.city"
+            name="city"
+            required
             placeholder="Paris"
             [attr.aria-busy]="isValidatingAddress"
             (input)="onAddressFieldChange()"
@@ -67,26 +67,26 @@
           type="button"
           class="btn-verify"
           (click)="verifyAddress()"
-          [disabled]="isValidatingAddress || !form.address?.trim() || !form.postalCode?.trim() || !form.city?.trim()"
+          [disabled]="
+            isValidatingAddress ||
+            !form.address?.trim() ||
+            !form.postalCode?.trim() ||
+            !form.city?.trim()
+          "
         >
           {{ isValidatingAddress ? 'Vérification…' : 'Vérifier l’adresse' }}
         </button>
       </div>
 
       @if (isValidatingAddress) {
-        <div
-          class="address-check-banner"
-          role="status"
-          aria-live="polite"
-          aria-busy="true"
-        >
+        <div class="address-check-banner" role="status" aria-live="polite" aria-busy="true">
           <span class="address-check-spinner" aria-hidden="true"></span>
           <span class="address-check-copy">Vérification de l’adresse en cours…</span>
         </div>
       }
 
       @if (addressValidationMessage && !isValidatingAddress) {
-        <div 
+        <div
           class="validation-message inline"
           [class.success]="addressValidated"
           [class.error]="!addressValidated"
@@ -171,9 +171,7 @@
               @if (product.harvestSeason) {
                 <span class="product-season">{{ product.harvestSeason }}</span>
               }
-              <button type="button" class="btn-remove" (click)="removeProduct($index)">
-                ✕
-              </button>
+              <button type="button" class="btn-remove" (click)="removeProduct($index)">✕</button>
             </div>
           }
         </div>
@@ -210,29 +208,20 @@
           </div>
         </div>
       </div>
-
-      <div class="info-box">
-        <p>
-          <strong>Note:</strong> La fonctionnalité d'ajout sera bientôt disponible. Le formulaire
-          est prêt à être utilisé.
-        </p>
-      </div>
-
       @if (errorMessage) {
         <div class="error-box">
           <p>{{ errorMessage }}</p>
         </div>
       }
-
+      @if (!addressValidated) {
+        <p class="submit-hint">
+          Cliquez sur « Vérifier l’adresse », puis validez le formulaire une fois l’adresse
+          reconnue.
+        </p>
+      }
       <button type="submit" [disabled]="isSubmitting || !addressValidated">
         {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
       </button>
-      
-      @if (!addressValidated) {
-        <p class="submit-hint">
-          Cliquez sur « Vérifier l’adresse », puis validez le formulaire une fois l’adresse reconnue.
-        </p>
-      }
     </form>
   </div>
 </section>
