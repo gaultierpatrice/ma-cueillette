@@ -107,4 +107,13 @@ public class PickingService {
 
         return pickingRepository.save(picking);
     }
+
+    @Transactional
+    public boolean deletePicking(Long id) {
+        if (!pickingRepository.existsById(id)) {
+            return false;
+        }
+        pickingRepository.deleteById(id);
+        return true;
+    }
 }

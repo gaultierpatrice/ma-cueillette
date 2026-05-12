@@ -68,4 +68,11 @@ export class PickingService {
     });
     return this.http.post<Picking>(this.apiUrl, pickingData, { headers });
   }
+
+  deletePicking(pickingId: string | number, token: string): Observable<void> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.delete<void>(`${this.apiUrl}/${pickingId}`, { headers });
+  }
 }

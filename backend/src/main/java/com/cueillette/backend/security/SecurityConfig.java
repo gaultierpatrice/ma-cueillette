@@ -2,6 +2,7 @@ package com.cueillette.backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,6 +32,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/pickings/*/reviews/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pickings/*").hasRole("ADMIN")
                         .requestMatchers("/api/pickings", "/api/pickings/**").permitAll()
                         .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
                         .requestMatchers("/api/favorites/**").authenticated()
