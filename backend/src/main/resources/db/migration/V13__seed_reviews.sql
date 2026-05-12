@@ -1,10 +1,18 @@
 -- Seed reviews data
--- This assumes at least one user exists in the database
--- Reviews will be created for pickings 1-35, one review each
+-- First, create a test user if none exists
 
--- First, we'll insert reviews using the first user in the database
--- If you have multiple users, feel free to adjust the user_id references
+-- Insert a test user (password is 'password123' hashed with BCrypt)
+INSERT INTO users (name, email, password, subscription_date, role)
+VALUES (
+    'Test User',
+    'test@example.com',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', -- BCrypt hash for 'password123'
+    NOW() - interval '30 days',
+    'USER'
+)
+ON CONFLICT (email) DO NOTHING; -- Don't insert if user already exists
 
+-- Now insert reviews using the test user
 INSERT INTO reviews (rating, comment, published_at, user_id, picking_id)
 SELECT 
     (ARRAY[3, 4, 5])[floor(random() * 3 + 1)],
