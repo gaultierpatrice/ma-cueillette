@@ -55,4 +55,12 @@ public class PickingController {
         Picking picking = pickingService.createPicking(createPickingDTO, producer);
         return ResponseEntity.status(HttpStatus.CREATED).body(picking);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePicking(@PathVariable Long id) {
+        if (!pickingService.deletePicking(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

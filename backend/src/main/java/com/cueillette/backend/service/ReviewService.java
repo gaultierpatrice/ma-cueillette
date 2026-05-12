@@ -7,6 +7,7 @@ import com.cueillette.backend.repository.PickingRepository;
 import com.cueillette.backend.repository.ReviewRepository;
 import com.cueillette.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,5 +44,16 @@ public class ReviewService {
         review.setPicking(picking);
 
         return reviewRepository.save(review);
+    }
+
+    @Transactional
+    public boolean deleteReview(Long pickingId, Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .filter(review -> review.getPicking().getId().equals(pickingId))
+                .map(review -> {
+                    reviewRepository.delete(review);
+                    return true;
+                })
+                .orElse(false);
     }
 }
