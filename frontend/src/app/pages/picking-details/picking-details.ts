@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
@@ -22,9 +22,11 @@ export class CueilletteDetailsComponent implements OnInit {
   favoritePickingIds: Set<number> = new Set();
   isLoginModalVisible = false;
   loginModalMessage = '';
+  removePickingInProgress = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private pickingService: PickingService,
     private authService: AuthService,
     private ngZone: NgZone,
@@ -218,5 +220,40 @@ export class CueilletteDetailsComponent implements OnInit {
 
   hideLoginModal() {
     this.isLoginModalVisible = false;
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
+  }
+
+  confirmRemovePicking(): void {
+    if (!this.isAdmin || this.removePickingInProgress || !this.pickingId) {
+      return;
+    }
+    const name = this.picking?.name ?? 'cette cueillette';
+    if (
+      !confirm(
+        `Supprimer définitivement « ${name} » ? Cette action est irréversible (avis, favoris, etc.).`,
+      )
+    ) {
+      return;
+    }
+    const token = this.authService.getToken();
+    if (!token) {
+      return;
+    }
+    this.removePickingInProgress = true;
+    this.pickingService.deletePicking(this.pickingId, token).subscribe({
+      next: () => {
+        this.router.navigate(['/pickings']);
+      },
+      error: () => {
+        this.removePickingInProgress = false;
+        this.loginModalMessage =
+          'Impossible de supprimer la cueillette. Vérifiez vos droits administrateur ou réessayez plus tard.';
+        this.isLoginModalVisible = true;
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

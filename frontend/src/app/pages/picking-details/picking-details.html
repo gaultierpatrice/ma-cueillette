@@ -44,6 +44,16 @@
               <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps">
                 Itinéraire GPS
               </a>
+              <button
+                *ngIf="isAdmin"
+                type="button"
+                class="btn btn-remove-picking"
+                [disabled]="removePickingInProgress"
+                (click)="confirmRemovePicking()"
+                title="Supprimer cette cueillette (administrateur)"
+              >
+                {{ removePickingInProgress ? 'Suppression…' : 'Supprimer la cueillette' }}
+              </button>
             </div>
 
             <div class="info-section">

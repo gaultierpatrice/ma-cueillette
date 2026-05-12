@@ -24,6 +24,9 @@ public class UserService {
     }
 
     public User createUser(String name, String email, String password, Role role, String farmName) {
+        if (role == Role.ADMIN) {
+            throw new RuntimeException("Admin accounts cannot be created through registration");
+        }
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already in use");
         }
