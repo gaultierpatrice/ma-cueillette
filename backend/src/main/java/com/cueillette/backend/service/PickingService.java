@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class PickingService {
 
+    private static final String DEFAULT_PICKING_IMAGE_URL = "/assets/images/illustration/strawberry.jpg";
+
     private final PickingRepository pickingRepository;
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
@@ -97,6 +99,10 @@ public class PickingService {
                 products.add(product);
             }
             picking.setProducts(products);
+        }
+
+        if (picking.getImageUrl() == null || picking.getImageUrl().isBlank()) {
+            picking.setImageUrl(DEFAULT_PICKING_IMAGE_URL);
         }
 
         return pickingRepository.save(picking);

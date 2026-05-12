@@ -8,15 +8,7 @@
       <div class="details-card">
         <div class="card-header">
           <div class="image-container">
-            <img
-              *ngIf="picking.imageUrl"
-              [src]="picking.imageUrl"
-              [alt]="picking.name"
-              class="picking-image"
-            />
-            <div *ngIf="!picking.imageUrl" class="image-placeholder">
-              <span class="placeholder-icon">🌾</span>
-            </div>
+            <img [src]="pickingImageSrc" [alt]="picking.name" class="picking-image" />
           </div>
 
           <div class="header-info">
@@ -70,26 +62,6 @@
                 }}</span>
               </div>
             </div>
-
-            <div *ngIf="picking.products && picking.products.length > 0">
-              <div class="info-section" *ngIf="vegetables.length > 0">
-                <h3>Légumes:</h3>
-                <div class="products-list">
-                  <span *ngFor="let product of vegetables" class="product-badge vegetable">
-                    {{ product.name }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="info-section" *ngIf="fruits.length > 0">
-                <h3>Fruits:</h3>
-                <div class="products-list">
-                  <span *ngFor="let product of fruits" class="product-badge fruit">{{
-                    product.name
-                  }}</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -114,6 +86,25 @@
           <div class="info-section" *ngIf="picking.openingHours">
             <h3>Horaires:</h3>
             <p>{{ picking.openingHours }}</p>
+          </div>
+          <div *ngIf="picking.products && picking.products.length > 0">
+            <div class="info-section" *ngIf="vegetables.length > 0">
+              <h3>Légumes:</h3>
+              <div class="products-list">
+                <span *ngFor="let product of vegetables" class="product-badge vegetable">
+                  {{ product.name }}
+                </span>
+              </div>
+            </div>
+
+            <div class="info-section" *ngIf="fruits.length > 0">
+              <h3>Fruits:</h3>
+              <div class="products-list">
+                <span *ngFor="let product of fruits" class="product-badge fruit">{{
+                  product.name
+                }}</span>
+              </div>
+            </div>
           </div>
 
           <div class="info-section" *ngIf="picking.labels && picking.labels.length > 0">

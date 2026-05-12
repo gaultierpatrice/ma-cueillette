@@ -9,9 +9,10 @@ import { Picking, Review } from '../../services/picking.types';
   selector: 'app-cueillette-details',
   imports: [RouterModule, CommonModule],
   templateUrl: './picking-details.html',
-  styleUrls: ['./picking-details.css']
+  styleUrls: ['./picking-details.css'],
 })
 export class CueilletteDetailsComponent implements OnInit {
+  readonly defaultPickingImageUrl = '/assets/images/illustration/strawberry.jpg';
   picking: Picking | null = null;
   reviews: Review[] = [];
   allReviews: Review[] = [];
@@ -27,7 +28,7 @@ export class CueilletteDetailsComponent implements OnInit {
     private pickingService: PickingService,
     private authService: AuthService,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.pickingId = idParam ? parseInt(idParam, 10) : 0;
@@ -59,7 +60,7 @@ export class CueilletteDetailsComponent implements OnInit {
           this.loading = false;
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 
@@ -71,18 +72,18 @@ export class CueilletteDetailsComponent implements OnInit {
       },
       error: (err) => {
         // Silent fail - reviews are optional
-      }
+      },
     });
   }
 
   get vegetables() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'VEGETABLE' || !p.type);
+    return this.picking.products.filter((p) => !p.type || p.type.toUpperCase() === 'VEGETABLE');
   }
 
   get fruits() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'FRUIT');
+    return this.picking.products.filter((p) => p.type?.toUpperCase() === 'FRUIT');
   }
 
   get averageRating(): number | null {
@@ -101,44 +102,54 @@ export class CueilletteDetailsComponent implements OnInit {
   }
 
   getStarArray(rating: number): boolean[] {
-    return Array(5).fill(false).map((_, i) => i < rating);
+    return Array(5)
+      .fill(false)
+      .map((_, i) => i < rating);
   }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
   translateDay(day: string): string {
     const days: { [key: string]: string } = {
-      'MONDAY': 'Lundi',
-      'TUESDAY': 'Mardi',
-      'WEDNESDAY': 'Mercredi',
-      'THURSDAY': 'Jeudi',
-      'FRIDAY': 'Vendredi',
-      'SATURDAY': 'Samedi',
-      'SUNDAY': 'Dimanche'
+      MONDAY: 'Lundi',
+      TUESDAY: 'Mardi',
+      WEDNESDAY: 'Mercredi',
+      THURSDAY: 'Jeudi',
+      FRIDAY: 'Vendredi',
+      SATURDAY: 'Samedi',
+      SUNDAY: 'Dimanche',
     };
     return days[day] || day;
   }
 
   translateLabel(label: string): string {
     const labels: { [key: string]: string } = {
-      'ORGANIC': 'Bio',
-      'LOCAL': 'Local',
-      'FAIR_TRADE': 'Commerce équitable',
-      'BIO': 'Bio',
-      'ZERO_PESTICIDE': 'Zéro pesticide'
+      ORGANIC: 'Bio',
+      LOCAL: 'Local',
+      FAIR_TRADE: 'Commerce équitable',
+      BIO: 'Bio',
+      ZERO_PESTICIDE: 'Zéro pesticide',
     };
     return labels[label] || label;
   }
 
   isFavorite(pickingId: number): boolean {
     return this.favoritePickingIds.has(pickingId);
+  }
+
+  get pickingImageSrc(): string {
+    if (!this.picking) {
+      return this.defaultPickingImageUrl;
+    }
+    const u = this.picking.imageUrl?.trim();
+    return u ? u : this.defaultPickingImageUrl;
   }
 
   loadUserFavorites() {
@@ -153,12 +164,12 @@ export class CueilletteDetailsComponent implements OnInit {
 
     this.pickingService.getUserFavorites(token).subscribe({
       next: (favorites) => {
-        this.favoritePickingIds = new Set(favorites.map(p => p.id));
+        this.favoritePickingIds = new Set(favorites.map((p) => p.id));
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading favorites:', err);
-      }
+      },
     });
   }
 
@@ -187,7 +198,7 @@ export class CueilletteDetailsComponent implements OnInit {
           console.error('Error removing favorite:', err);
           this.loginModalMessage = 'Erreur lors de la suppression du favori';
           this.isLoginModalVisible = true;
-        }
+        },
       });
     } else {
       this.pickingService.addToFavorites(this.pickingId, token).subscribe({
@@ -198,9 +209,9 @@ export class CueilletteDetailsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error adding favorite:', err);
-          this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
+          this.loginModalMessage = "Erreur lors de l'ajout du favori";
           this.isLoginModalVisible = true;
-        }
+        },
       });
     }
   }
