@@ -77,12 +77,14 @@ export class CueilletteDetailsComponent implements OnInit {
 
   get vegetables() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'VEGETABLE' || !p.type);
+    return this.picking.products.filter(
+      (p) => !p.type || p.type.toUpperCase() === 'VEGETABLE'
+    );
   }
 
   get fruits() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'FRUIT');
+    return this.picking.products.filter((p) => p.type?.toUpperCase() === 'FRUIT');
   }
 
   get averageRating(): number | null {
