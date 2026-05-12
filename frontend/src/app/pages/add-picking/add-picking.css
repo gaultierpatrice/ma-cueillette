@@ -299,6 +299,11 @@
   }
 }
 
+.hero .container form > button[type='submit'] {
+  display: block;
+  margin-inline: auto;
+}
+
 .submit-hint {
   text-align: center;
   color: #ff6f00;

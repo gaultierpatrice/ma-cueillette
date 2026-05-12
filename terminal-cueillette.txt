@@ -12,11 +12,14 @@ Pour lancer le front : ng serve
 
 
 
-Lancer le conteneur :
+Lancer le conteneur pour dev:
 
 podman compose start
-
-End of day:
-
 podman compose stop
 
+Reset de DB : 
+podman compose down
+podman volume rm ma_cueillette_postgres_data
+podman compose up -d
+
+recrée le test user : testGot , test@test.fr , test1234
