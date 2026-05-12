@@ -198,7 +198,7 @@ h3 {
   margin-top: 30px;
 }
 
-.header-actions img {
+.picking-header-buttons .heart-icon {
   filter: invert(1);
 }
 
@@ -388,6 +388,15 @@ h3 {
   flex-wrap: wrap;
 }
 
+.picking-header-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .favorite-btn,
 .gps-btn {
   background: rgb(46, 125, 50);
@@ -495,13 +504,16 @@ h3 {
 
   .picking-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .gps-distance {
-    display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 

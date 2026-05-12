@@ -133,33 +133,33 @@
                         <span class="distance">{{ picking.distance }} km</span>
                       </div>
                     }
-                    <button
-                      class="gps-btn"
-                      (click)="openGoogleMaps($event, picking)"
-                      title="Itinéraire GPS"
-                    >
-                      Itineraire
-                    </button>
-                  </div>
-                  <div class="header-actions">
-                    <button
-                      class="favorite-btn"
-                      [class.favorited]="isFavorite(picking.id)"
-                      (click)="toggleFavorite($event, picking.id)"
-                      title="{{
-                        isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
-                      }}"
-                    >
-                      <img
-                        [src]="
-                          isFavorite(picking.id)
-                            ? 'assets/images/icons/heart-solid.png'
-                            : 'assets/images/icons/heart-regular.png'
-                        "
-                        [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
-                        class="heart-icon"
-                      />
-                    </button>
+                    <div class="picking-header-buttons">
+                      <button
+                        class="gps-btn"
+                        (click)="openGoogleMaps($event, picking)"
+                        title="Itinéraire GPS"
+                      >
+                        Itineraire
+                      </button>
+                      <button
+                        class="favorite-btn"
+                        [class.favorited]="isFavorite(picking.id)"
+                        (click)="toggleFavorite($event, picking.id)"
+                        title="{{
+                          isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
+                        }}"
+                      >
+                        <img
+                          [src]="
+                            isFavorite(picking.id)
+                              ? 'assets/images/icons/heart-solid.png'
+                              : 'assets/images/icons/heart-regular.png'
+                          "
+                          [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
+                          class="heart-icon"
+                        />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
