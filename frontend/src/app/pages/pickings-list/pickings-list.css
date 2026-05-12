@@ -198,6 +198,10 @@ h3 {
   margin-top: 30px;
 }
 
+.header-actions img {
+  filter: invert(1);
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;

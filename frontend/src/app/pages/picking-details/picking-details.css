@@ -272,6 +272,9 @@
   padding: 10px;
   margin-bottom: 8px;
 }
+.btn-favorite img {
+  filter: invert(1);
+}
 
 .btn-favorite:hover {
   background-color: rgb(46, 125, 50, 0.8);
