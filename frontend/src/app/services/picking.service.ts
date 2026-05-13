@@ -7,8 +7,8 @@ import { Picking, Review } from './picking.types';
   providedIn: 'root'
 })
 export class PickingService {
-  private apiUrl = 'http://localhost:8080/api/pickings';
-  private favoritesUrl = 'http://localhost:8080/api/favorites';
+  private readonly apiUrl = '/api/pickings';
+  private readonly favoritesUrl = '/api/favorites';
 
   constructor(private http: HttpClient) {}
 
