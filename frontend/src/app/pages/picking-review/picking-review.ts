@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { Review, Picking } from '../../services/picking.types';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-cueillette-review',
@@ -64,10 +65,10 @@ export class CueilletteReviewComponent implements OnInit {
       },
       error: (err) => {
         this.ngZone.run(() => {
-          this.error = 'Erreur lors du chargement de la cueillette';
+          this.error = getApiErrorMessage(err, 'Erreur lors du chargement de la cueillette');
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 
@@ -114,17 +115,11 @@ export class CueilletteReviewComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    if (!token) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     this.submitting = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.pickingService.addReview(this.pickingId, this.rating, this.comment, token).subscribe({
+    this.pickingService.addReview(this.pickingId, this.rating, this.comment).subscribe({
       next: (review) => {
         this.ngZone.run(() => {
           this.successMessage = 'Votre avis a été publié avec succès !';
@@ -142,11 +137,14 @@ export class CueilletteReviewComponent implements OnInit {
       },
       error: (err) => {
         this.ngZone.run(() => {
-          this.errorMessage = 'Erreur lors de la publication de l\'avis. Veuillez réessayer.';
+          this.errorMessage = getApiErrorMessage(
+            err,
+            "Erreur lors de la publication de l'avis. Veuillez réessayer.",
+          );
           this.submitting = false;
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { getApiRoot } from './api-config';
+
 export interface ContactPayload {
   name: string;
   email: string;
@@ -10,7 +12,7 @@ export interface ContactPayload {
 
 @Injectable({ providedIn: 'root' })
 export class ContactApiService {
-  private readonly apiUrl = '/api/contact';
+  private readonly apiUrl = `${getApiRoot()}/contact`;
 
   constructor(private http: HttpClient) {}
 

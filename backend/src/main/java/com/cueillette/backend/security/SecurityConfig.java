@@ -33,9 +33,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickings/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pickings/*/reviews").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/pickings").hasRole("PRODUCER")
                         .requestMatchers(HttpMethod.DELETE, "/api/pickings/*/reviews/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/pickings/*").hasRole("ADMIN")
-                        .requestMatchers("/api/pickings", "/api/pickings/**").permitAll()
                         .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
                         .requestMatchers("/api/favorites/**").authenticated()
                         .anyRequest().authenticated()

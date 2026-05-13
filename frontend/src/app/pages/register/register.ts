@@ -1,7 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-register',
@@ -67,8 +69,11 @@ export class RegisterComponent {
         this.success = 'Account created! Redirecting...';
         setTimeout(() => this.router.navigate(['/login']), 1500);
       },
-      error: () => {
-        this.errorMessage = 'Échec de l\'inscription. Cet email est peut-être déjà utilisé.';
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = getApiErrorMessage(
+          err,
+          "Échec de l'inscription. Cet email est peut-être déjà utilisé.",
+        );
         this.showErrorModal();
       },
     });

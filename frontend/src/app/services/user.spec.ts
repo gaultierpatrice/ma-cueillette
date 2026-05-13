@@ -1,16 +1,32 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { describe, expect, it, afterEach } from 'vitest';
 
-import { User } from './user';
+import { UserService } from './user';
 
-describe('User', () => {
-  let service: User;
+describe('UserService', () => {
+  let service: UserService;
+  let httpMock: HttpTestingController;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(User);
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('posts login to /api/users/login', () => {
+    TestBed.configureTestingModule({
+      providers: [UserService, provideHttpClient(), provideHttpClientTesting()],
+    });
+
+    service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
+
+    service.login({ email: 'a@b.com', password: 'secret' }).subscribe((res) => {
+      expect(res.token).toBe('t');
+    });
+
+    const req = httpMock.expectOne('/api/users/login');
+    expect(req.request.method).toBe('POST');
+    req.flush({ token: 't' });
   });
 });

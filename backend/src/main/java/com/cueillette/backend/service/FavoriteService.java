@@ -1,6 +1,8 @@
 package com.cueillette.backend.service;
 
 import com.cueillette.backend.dto.PickingWithRatingDTO;
+import com.cueillette.backend.exception.ConflictException;
+import com.cueillette.backend.exception.NotFoundException;
 import com.cueillette.backend.model.Favorite;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.model.User;
@@ -23,7 +25,7 @@ public class FavoriteService {
     private final PickingRepository pickingRepository;
     private final ReviewRepository reviewRepository;
 
-    public FavoriteService(FavoriteRepository favoriteRepository, 
+    public FavoriteService(FavoriteRepository favoriteRepository,
                           UserRepository userRepository,
                           PickingRepository pickingRepository,
                           ReviewRepository reviewRepository) {
@@ -36,13 +38,13 @@ public class FavoriteService {
     @Transactional
     public Favorite addFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         Picking picking = pickingRepository.findById(pickingId)
-                .orElseThrow(() -> new RuntimeException("Picking not found"));
+                .orElseThrow(() -> new NotFoundException("Picking not found"));
 
         if (favoriteRepository.existsByUserAndPicking(user, picking)) {
-            throw new RuntimeException("Picking already in favorites");
+            throw new ConflictException("Picking already in favorites");
         }
 
         Favorite favorite = new Favorite();
@@ -56,17 +58,17 @@ public class FavoriteService {
     @Transactional
     public void removeFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         Picking picking = pickingRepository.findById(pickingId)
-                .orElseThrow(() -> new RuntimeException("Picking not found"));
+                .orElseThrow(() -> new NotFoundException("Picking not found"));
 
         favoriteRepository.deleteByUserAndPicking(user, picking);
     }
 
     public List<PickingWithRatingDTO> getUserFavorites(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         return favoriteRepository.findByUser(user)
                 .stream()
@@ -81,10 +83,10 @@ public class FavoriteService {
 
     public boolean isFavorite(String userEmail, Long pickingId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         Picking picking = pickingRepository.findById(pickingId)
-                .orElseThrow(() -> new RuntimeException("Picking not found"));
+                .orElseThrow(() -> new NotFoundException("Picking not found"));
 
         return favoriteRepository.existsByUserAndPicking(user, picking);
     }

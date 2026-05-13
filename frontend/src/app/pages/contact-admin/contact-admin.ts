@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ContactApiService } from '../../services/contact-api.service';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-contact-admin',
@@ -40,6 +41,11 @@ export class ContactAdminComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.submitting = false;
+        const fromApi = getApiErrorMessage(err, '');
+        if (fromApi) {
+          this.errorMessage = fromApi;
+          return;
+        }
         if (err.status === 400) {
           this.errorMessage =
             'Certains champs sont invalides. Vérifiez votre nom, e-mail et message.';
@@ -48,7 +54,7 @@ export class ContactAdminComponent {
             "L'envoi a échoué côté serveur (e-mail). Réessayez dans quelques minutes.";
         } else {
           this.errorMessage =
-            'Impossible d\'envoyer le message pour le moment. Réessayez plus tard.';
+            "Impossible d'envoyer le message pour le moment. Réessayez plus tard.";
         }
       },
     });

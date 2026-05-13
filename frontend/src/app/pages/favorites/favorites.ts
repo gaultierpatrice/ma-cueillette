@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { PickingWithDistance } from '../../services/picking.types';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-favorites',
@@ -35,25 +36,14 @@ export class FavoritesComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    
-    if (!token) {
-      this.error = 'Vous devez être connecté pour voir vos favoris';
-      this.loading = false;
-      return;
-    }
-
-    this.loading = true;
-    this.error = null;
-
-    this.pickingService.getUserFavorites(token).subscribe({
+    this.pickingService.getUserFavorites().subscribe({
       next: (data) => {
         this.favoritePickings = data.map((p) => ({ ...p, distance: undefined }));
         this.loading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = 'Erreur lors du chargement de vos favoris';
+        this.error = getApiErrorMessage(err, 'Erreur lors du chargement de vos favoris');
         this.loading = false;
       },
     });
@@ -63,18 +53,13 @@ export class FavoritesComponent implements OnInit {
     event.stopPropagation();
     event.preventDefault();
 
-    const token = this.authService.getToken();
-    if (!token) {
-      return;
-    }
-
-    this.pickingService.removeFromFavorites(pickingId, token).subscribe({
+    this.pickingService.removeFromFavorites(pickingId).subscribe({
       next: () => {
         this.favoritePickings = this.favoritePickings.filter(p => p.id !== pickingId);
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.loginModalMessage = 'Erreur lors de la suppression du favori';
+        this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
         this.isLoginModalVisible = true;
       }
     });

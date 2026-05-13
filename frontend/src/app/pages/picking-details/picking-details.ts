@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { Picking, Review } from '../../services/picking.types';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-cueillette-details',
@@ -58,7 +59,7 @@ export class CueilletteDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.ngZone.run(() => {
-          this.error = 'Erreur lors du chargement de la cueillette';
+          this.error = getApiErrorMessage(err, 'Erreur lors du chargement de la cueillette');
           this.loading = false;
           this.cdr.detectChanges();
         });
@@ -159,12 +160,7 @@ export class CueilletteDetailsComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    if (!token) {
-      return;
-    }
-
-    this.pickingService.getUserFavorites(token).subscribe({
+    this.pickingService.getUserFavorites().subscribe({
       next: (favorites) => {
         this.favoritePickingIds = new Set(favorites.map((p) => p.id));
         this.cdr.detectChanges();
@@ -182,36 +178,25 @@ export class CueilletteDetailsComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    if (!token) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
     if (this.favoritePickingIds.has(this.pickingId)) {
-      this.pickingService.removeFromFavorites(this.pickingId, token).subscribe({
+      this.pickingService.removeFromFavorites(this.pickingId).subscribe({
         next: () => {
           this.favoritePickingIds.delete(this.pickingId);
-          console.log('Removed from favorites:', this.pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error removing favorite:', err);
-          this.loginModalMessage = 'Erreur lors de la suppression du favori';
+          this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
           this.isLoginModalVisible = true;
         },
       });
     } else {
-      this.pickingService.addToFavorites(this.pickingId, token).subscribe({
+      this.pickingService.addToFavorites(this.pickingId).subscribe({
         next: () => {
           this.favoritePickingIds.add(this.pickingId);
-          console.log('Added to favorites:', this.pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error adding favorite:', err);
-          this.loginModalMessage = "Erreur lors de l'ajout du favori";
+          this.loginModalMessage = getApiErrorMessage(err, "Erreur lors de l'ajout du favori");
           this.isLoginModalVisible = true;
         },
       });
@@ -238,19 +223,17 @@ export class CueilletteDetailsComponent implements OnInit {
     ) {
       return;
     }
-    const token = this.authService.getToken();
-    if (!token) {
-      return;
-    }
     this.removePickingInProgress = true;
-    this.pickingService.deletePicking(this.pickingId, token).subscribe({
+    this.pickingService.deletePicking(this.pickingId).subscribe({
       next: () => {
         this.router.navigate(['/pickings']);
       },
-      error: () => {
+      error: (err) => {
         this.removePickingInProgress = false;
-        this.loginModalMessage =
-          'Impossible de supprimer la cueillette. Vérifiez vos droits administrateur ou réessayez plus tard.';
+        this.loginModalMessage = getApiErrorMessage(
+          err,
+          'Impossible de supprimer la cueillette. Vérifiez vos droits administrateur ou réessayez plus tard.',
+        );
         this.isLoginModalVisible = true;
         this.cdr.detectChanges();
       },

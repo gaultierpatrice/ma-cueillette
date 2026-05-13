@@ -62,8 +62,7 @@ services:
       SPRING_FLYWAY_URL: jdbc:postgresql://db:5432/${DB_NAME:-cueillette_db}
       SPRING_FLYWAY_USER: ${DB_USERNAME:-postgres}
       SPRING_FLYWAY_PASSWORD: ${DB_PASSWORD:-change_me}
-      JWT_SECRET: ${JWT_SECRET:-change_this_secret}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_FLYWAY_ENABLED: true
     ports:
       - "8080:8080"

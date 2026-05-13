@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { PickingService } from '../../services/picking.service';
 import { GeolocationService } from '../../services/geolocation.service';
+import { getApiErrorMessage } from '../../utils/api-error';
 import { CommonModule } from '@angular/common';
 
 interface ProductForm {
@@ -272,18 +273,20 @@ export class AddCueilletteComponent implements OnInit {
       products: this.products
     };
 
-    this.pickingService.createPicking(submissionData, token).subscribe({
+    this.pickingService.createPicking(submissionData).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.isSuccessModalVisible = true;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error creating picking:', error);
-        this.errorMessage = 'Une erreur est survenue lors de l\'ajout de votre cueillette. Veuillez réessayer.';
+        this.errorMessage = getApiErrorMessage(
+          error,
+          "Une erreur est survenue lors de l'ajout de votre cueillette. Veuillez réessayer.",
+        );
         this.isSubmitting = false;
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
