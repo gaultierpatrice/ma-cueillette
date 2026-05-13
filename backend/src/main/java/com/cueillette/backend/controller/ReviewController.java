@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pickings/{pickingId}/reviews")
-@CrossOrigin(origins = "*")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -32,11 +31,6 @@ public class ReviewController {
             @PathVariable Long pickingId,
             @RequestBody ReviewRequest reviewRequest,
             Authentication authentication) {
-        
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
         String userEmail = authentication.getName();
         Review review = reviewService.createReview(pickingId, userEmail, reviewRequest.getRating(), reviewRequest.getComment());
         return ResponseEntity.status(HttpStatus.CREATED).body(review);

@@ -1,2 +1,26 @@
 .env
 terminal-cueillette.txt
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/**/*.tsbuildinfo
+
+# Backend / JVM
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# OS
+Thumbs.db
+.DS_Store

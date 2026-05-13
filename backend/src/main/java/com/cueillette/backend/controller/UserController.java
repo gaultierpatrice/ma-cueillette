@@ -1,34 +1,28 @@
 package com.cueillette.backend.controller;
 
+import com.cueillette.backend.dto.UserResponse;
 import com.cueillette.backend.model.Role;
 import com.cueillette.backend.model.User;
-import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, JwtUtil jwtUtil) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
-        System.out.println("DEBUG - Register request received:");
-        System.out.println("  Name: " + request.name());
-        System.out.println("  Email: " + request.email());
-        System.out.println("  Role: " + request.role());
-        System.out.println("  FarmName: " + request.farmName());
-        
+    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest request) {
         User created = userService.createUser(
                 request.name(),
                 request.email(),
@@ -36,7 +30,7 @@ public class UserController {
                 request.role() != null ? request.role() : Role.USER,
                 request.farmName()
         );
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(UserResponse.fromUser(created));
     }
 
     @PostMapping("/login")
@@ -46,11 +40,11 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Map<String, String>> deleteAccount(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        String email = jwtUtil.extractEmail(token);
-
-        userService.deleteUserAccount(email);
+    public ResponseEntity<Map<String, String>> deleteAccount(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        userService.deleteUserAccount(authentication.getName());
         return ResponseEntity.ok(Map.of("message", "Account deleted successfully"));
     }
 

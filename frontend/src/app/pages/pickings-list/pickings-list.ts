@@ -6,6 +6,7 @@ import { PickingService } from '../../services/picking.service';
 import { GeolocationService } from '../../services/geolocation.service';
 import { AuthService } from '../../services/auth';
 import { PickingWithDistance, UserLocation } from '../../services/picking.types';
+import { getApiErrorMessage } from '../../utils/api-error';
 
 @Component({
   selector: 'app-cueillettes-list',
@@ -65,7 +66,7 @@ export class CueillettesListComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.error = 'Erreur lors du chargement des cueillettes';
+        this.error = getApiErrorMessage(err, 'Erreur lors du chargement des cueillettes');
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -191,12 +192,7 @@ export class CueillettesListComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    if (!token) {
-      return;
-    }
-
-    this.pickingService.getUserFavorites(token).subscribe({
+    this.pickingService.getUserFavorites().subscribe({
       next: (favorites) => {
         this.favoritePickingIds = new Set(favorites.map(p => p.id));
       },
@@ -215,34 +211,27 @@ export class CueillettesListComponent implements OnInit {
       return;
     }
 
-    const token = this.authService.getToken();
-    if (!token) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
     if (this.favoritePickingIds.has(pickingId)) {
-      this.pickingService.removeFromFavorites(pickingId, token).subscribe({
+      this.pickingService.removeFromFavorites(pickingId).subscribe({
         next: () => {
           this.favoritePickingIds.delete(pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.loginModalMessage = 'Erreur lors de la suppression du favori';
+          this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
           this.isLoginModalVisible = true;
-        }
+        },
       });
     } else {
-      this.pickingService.addToFavorites(pickingId, token).subscribe({
+      this.pickingService.addToFavorites(pickingId).subscribe({
         next: () => {
           this.favoritePickingIds.add(pickingId);
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
+          this.loginModalMessage = getApiErrorMessage(err, "Erreur lors de l'ajout du favori");
           this.isLoginModalVisible = true;
-        }
+        },
       });
     }
   }

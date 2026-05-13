@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { RegisterPayload, LoginPayload, LoginResponse } from './user.types';
+import { getApiRoot } from './api-config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = '/api/users';
+  private readonly apiUrl = `${getApiRoot()}/users`;
 
   constructor(private http: HttpClient) {}
 
-  register(payload: RegisterPayload): Observable<any> {
+  register(payload: RegisterPayload): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/register`, payload);
   }
 
@@ -18,11 +19,7 @@ export class UserService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, payload);
   }
 
-  deleteAccount(): Observable<any> {
-    const token = localStorage.getItem('auth_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.delete(`${this.apiUrl}/delete`, { headers });
+  deleteAccount(): Observable<unknown> {
+    return this.http.delete(`${this.apiUrl}/delete`);
   }
 }

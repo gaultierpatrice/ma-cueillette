@@ -24,7 +24,7 @@
   <div class="modal-overlay" (click)="hideErrorModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h3>Erreur de connexion</h3>
-      <p>L'email ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.</p>
+      <p>{{ loginErrorMessage }}</p>
       <div class="modal-buttons">
         <button class="btn-confirm" (click)="hideErrorModal()">OK</button>
       </div>

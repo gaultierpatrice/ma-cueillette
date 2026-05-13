@@ -1,78 +1,56 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Picking, Review } from './picking.types';
+import { getApiRoot } from './api-config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PickingService {
-  private readonly apiUrl = '/api/pickings';
-  private readonly favoritesUrl = '/api/favorites';
+  private readonly apiBase = getApiRoot();
+  private readonly pickingsUrl = `${this.apiBase}/pickings`;
+  private readonly favoritesUrl = `${this.apiBase}/favorites`;
 
   constructor(private http: HttpClient) {}
 
   getAllPickings(): Observable<Picking[]> {
-    return this.http.get<Picking[]>(this.apiUrl);
+    return this.http.get<Picking[]>(this.pickingsUrl);
   }
 
   getPickingById(id: string | number): Observable<Picking> {
-    return this.http.get<Picking>(`${this.apiUrl}/${id}`);
+    return this.http.get<Picking>(`${this.pickingsUrl}/${id}`);
   }
 
   getPickingReviews(id: string | number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.apiUrl}/${id}/reviews`);
+    return this.http.get<Review[]>(`${this.pickingsUrl}/${id}/reviews`);
   }
 
-  addReview(pickingId: string | number, rating: number, comment: string, token: string): Observable<Review> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    const body = { rating, comment };
-    return this.http.post<Review>(`${this.apiUrl}/${pickingId}/reviews`, body, { headers });
+  addReview(pickingId: string | number, rating: number, comment: string): Observable<Review> {
+    return this.http.post<Review>(`${this.pickingsUrl}/${pickingId}/reviews`, { rating, comment });
   }
 
-  addToFavorites(pickingId: string | number, token: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post(`${this.favoritesUrl}/${pickingId}`, {}, { headers });
+  addToFavorites(pickingId: string | number): Observable<{ message: string; favoriteId: string }> {
+    return this.http.post<{ message: string; favoriteId: string }>(`${this.favoritesUrl}/${pickingId}`, {});
   }
 
-  removeFromFavorites(pickingId: string | number, token: string): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.delete(`${this.favoritesUrl}/${pickingId}`, { headers });
+  removeFromFavorites(pickingId: string | number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.favoritesUrl}/${pickingId}`);
   }
 
-  getUserFavorites(token: string): Observable<Picking[]> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<Picking[]>(this.favoritesUrl, { headers });
+  getUserFavorites(): Observable<Picking[]> {
+    return this.http.get<Picking[]>(this.favoritesUrl);
   }
 
-  checkFavorite(pickingId: string | number, token: string): Observable<{ isFavorite: boolean }> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<{ isFavorite: boolean }>(`${this.favoritesUrl}/check/${pickingId}`, { headers });
+  checkFavorite(pickingId: string | number): Observable<{ isFavorite: boolean }> {
+    return this.http.get<{ isFavorite: boolean }>(`${this.favoritesUrl}/check/${pickingId}`);
   }
 
-  createPicking(pickingData: any, token: string): Observable<Picking> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-    return this.http.post<Picking>(this.apiUrl, pickingData, { headers });
+  createPicking(pickingData: unknown): Observable<Picking> {
+    return this.http.post<Picking>(this.pickingsUrl, pickingData);
   }
 
-  deletePicking(pickingId: string | number, token: string): Observable<void> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.delete<void>(`${this.apiUrl}/${pickingId}`, { headers });
+  deletePicking(pickingId: string | number): Observable<void> {
+    return this.http.delete<void>(`${this.pickingsUrl}/${pickingId}`);
   }
 }

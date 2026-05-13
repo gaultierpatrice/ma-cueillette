@@ -2,6 +2,7 @@ package com.cueillette.backend.controller;
 
 import com.cueillette.backend.dto.CreatePickingDTO;
 import com.cueillette.backend.dto.PickingWithRatingDTO;
+import com.cueillette.backend.exception.NotFoundException;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.model.User;
 import com.cueillette.backend.repository.UserRepository;
@@ -15,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pickings")
-@CrossOrigin(origins = "*")
 public class PickingController {
 
     private final PickingService pickingService;
@@ -43,14 +43,9 @@ public class PickingController {
     public ResponseEntity<?> createPicking(
             @RequestBody CreatePickingDTO createPickingDTO,
             Authentication authentication) {
-        
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User must be authenticated");
-        }
-
         String userEmail = authentication.getName();
         User producer = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         Picking picking = pickingService.createPicking(createPickingDTO, producer);
         return ResponseEntity.status(HttpStatus.CREATED).body(picking);
