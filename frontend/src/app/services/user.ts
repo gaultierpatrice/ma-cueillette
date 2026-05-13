@@ -6,7 +6,7 @@ import { RegisterPayload, LoginPayload, LoginResponse } from './user.types';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/api/users';
+  private readonly apiUrl = '/api/users';
 
   constructor(private http: HttpClient) {}
 
