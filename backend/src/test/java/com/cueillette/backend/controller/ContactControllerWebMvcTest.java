@@ -2,6 +2,7 @@ package com.cueillette.backend.controller;
 
 import com.cueillette.backend.dto.ContactMessageRequest;
 import com.cueillette.backend.exception.RestExceptionHandler;
+import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.ContactService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ class ContactControllerWebMvcTest {
 
     @MockBean
     private ContactService contactService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void invalidPayloadReturns400WithMessage() throws Exception {

@@ -2,6 +2,7 @@ package com.cueillette.backend.controller;
 
 import com.cueillette.backend.exception.RestExceptionHandler;
 import com.cueillette.backend.repository.UserRepository;
+import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.PickingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ class PickingControllerWebMvcTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void listPickingsReturnsJsonArray() throws Exception {

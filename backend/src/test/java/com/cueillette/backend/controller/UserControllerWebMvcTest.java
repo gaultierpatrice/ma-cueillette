@@ -6,6 +6,7 @@ import com.cueillette.backend.exception.InvalidCredentialsException;
 import com.cueillette.backend.exception.RestExceptionHandler;
 import com.cueillette.backend.model.Role;
 import com.cueillette.backend.model.User;
+import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ class UserControllerWebMvcTest {
 
     @MockBean
     private UserService userService;
+
+    /** Required so {@code JwtAuthenticationFilter} can be created when security config loads in the slice. */
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void registerReturnsPayloadWithoutPassword() throws Exception {
