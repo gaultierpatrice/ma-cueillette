@@ -10,7 +10,7 @@ export interface ContactPayload {
 
 @Injectable({ providedIn: 'root' })
 export class ContactApiService {
-  private readonly apiUrl = 'http://localhost:8080/api/contact';
+  private readonly apiUrl = '/api/contact';
 
   constructor(private http: HttpClient) {}
 
