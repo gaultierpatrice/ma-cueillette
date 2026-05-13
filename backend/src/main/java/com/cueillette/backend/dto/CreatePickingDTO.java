@@ -10,6 +10,7 @@ public class CreatePickingDTO {
     private String postalCode;
     private String city;
     private String phone;
+    private String phoneSecondary;
     private String email;
     private String website;
     private String openingHours;

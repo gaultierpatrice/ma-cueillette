@@ -7,6 +7,8 @@ export interface Picking {
   postalCode?: string;
   city?: string;
   phone?: string;
+  /** Second number (e.g. mobile when phone is fixe) */
+  phoneSecondary?: string;
   email?: string;
   website?: string;
   openingHours?: string;

@@ -25,6 +25,7 @@ export class AddCueilletteComponent implements OnInit {
     postalCode: '',
     city: '',
     phone: '',
+    phoneSecondary: '',
     email: '',
     website: '',
     openingHours: '',
