@@ -170,9 +170,17 @@
                   <div class="picking-city-postal">
                     {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
                   </div>
-                  @if (picking.phone) {
+                  @if (picking.phone || picking.phoneSecondary) {
                     <div class="picking-phone">
-                      {{ picking.phone }}
+                      @if (picking.phone) {
+                        <span>{{ picking.phone }}</span>
+                      }
+                      @if (picking.phone && picking.phoneSecondary) {
+                        <span class="phone-sep"> · </span>
+                      }
+                      @if (picking.phoneSecondary) {
+                        <span>{{ picking.phoneSecondary }}</span>
+                      }
                     </div>
                   }
                   @if (picking.website) {

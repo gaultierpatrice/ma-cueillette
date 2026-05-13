@@ -96,8 +96,18 @@
       }
 
       <div class="field">
-        <label>Téléphone</label>
+        <label>Téléphone (fixe ou principal)</label>
         <input type="tel" [(ngModel)]="form.phone" name="phone" placeholder="01 23 45 67 89" />
+      </div>
+
+      <div class="field">
+        <label>Second numéro (optionnel)</label>
+        <input
+          type="tel"
+          [(ngModel)]="form.phoneSecondary"
+          name="phoneSecondary"
+          placeholder="Fixe ou mobile supplémentaire"
+        />
       </div>
 
       <div class="field">

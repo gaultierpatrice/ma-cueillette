@@ -28,6 +28,10 @@ public class Picking {
     private String city;
     private String email;
     private String phone;
+
+    @Column(name = "phone_secondary")
+    private String phoneSecondary;
+
     private String imageUrl;
 
     @ElementCollection(targetClass = DayOfWeek.class)

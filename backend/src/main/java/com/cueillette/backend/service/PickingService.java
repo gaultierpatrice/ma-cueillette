@@ -62,6 +62,7 @@ public class PickingService {
         picking.setPostalCode(dto.getPostalCode());
         picking.setCity(dto.getCity());
         picking.setPhone(dto.getPhone());
+        picking.setPhoneSecondary(dto.getPhoneSecondary());
         picking.setEmail(dto.getEmail());
         picking.setWebsite(dto.getWebsite());
         picking.setOpeningHours(dto.getOpeningHours());

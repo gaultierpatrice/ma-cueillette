@@ -76,9 +76,25 @@
         </div>
 
         <div class="card-body">
-          <div class="contact-item" *ngIf="picking.phone">
-            <span class="label">Téléphone:</span>
+          <div class="contact-item" *ngIf="picking.phone && picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
             <a [href]="'tel:' + picking.phone" class="contact-link">{{ picking.phone }}</a>
+          </div>
+          <div class="contact-item" *ngIf="picking.phone && picking.phoneSecondary">
+            <span class="label">Second numéro :</span>
+            <a [href]="'tel:' + picking.phoneSecondary" class="contact-link">{{
+              picking.phoneSecondary
+            }}</a>
+          </div>
+          <div class="contact-item" *ngIf="picking.phone && !picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
+            <a [href]="'tel:' + picking.phone" class="contact-link">{{ picking.phone }}</a>
+          </div>
+          <div class="contact-item" *ngIf="!picking.phone && picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
+            <a [href]="'tel:' + picking.phoneSecondary" class="contact-link">{{
+              picking.phoneSecondary
+            }}</a>
           </div>
 
           <div class="contact-item" *ngIf="picking.email">
