@@ -10,7 +10,7 @@ podman run -d --name postgres_c --pod cueillette -e POSTGRES_DB=cueillette_db -e
 Pour lancer le back : run BackendApplication
 Pour lancer le front : ng serve
 
-
+Admin creds :  admin@ma-cueillette.local / admin1234
 
 Lancer le conteneur pour dev:
 
@@ -23,3 +23,7 @@ podman volume rm ma_cueillette_postgres_data
 podman compose up -d
 
 recrée le test user : testGot , test@test.fr , test1234
+
+Commande pour mettre a jour le front :
+podman compose build frontend
+podman compose up -d frontend
