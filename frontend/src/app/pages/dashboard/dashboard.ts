@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 export class DashboardComponent implements OnInit {
   username: string = '';
   isAuthenticated: boolean = false;
+  isProducer: boolean = false;
   isLogoutModalVisible: boolean = false;
 
   constructor(
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.isAuthenticated = this.authService.isLoggedIn();
     this.username = this.authService.getUsername();
+    this.isProducer = this.authService.isProducer();
   }
 
   showLogoutModal(): void {
@@ -35,6 +37,7 @@ export class DashboardComponent implements OnInit {
   confirmLogout(): void {
     this.authService.logout();
     this.isAuthenticated = false;
+    this.isProducer = false;
     this.username = '';
     this.isLogoutModalVisible = false;
   }

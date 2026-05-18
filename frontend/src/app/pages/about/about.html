@@ -169,7 +169,11 @@
             ajouter votre lieu de production sur Ma Cueillette. Créez votre profil, renseignez vos
             horaires et les produits disponibles, et commencez à accueillir des cueilleurs !
           </p>
-          <a routerLink="/add-picking">Proposer ma cueillette</a>
+          @if (isProducer) {
+            <a routerLink="/add-picking">Proposer ma cueillette</a>
+          } @else {
+            <a routerLink="/register">Créer un compte producteur</a>
+          }
         </div>
 
         <div class="contact-box">

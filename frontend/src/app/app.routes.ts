@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { producerGuard } from './guards/producer.guard';
 import { RegisterComponent } from './pages/register/register';
 import { LoginComponent } from './pages/login/login';
 import { DashboardComponent } from './pages/dashboard/dashboard';
@@ -22,7 +23,7 @@ export const routes: Routes = [
   { path: 'pickings/:id/review', component: CueilletteReviewComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: 'contact-admin', component: ContactAdminComponent },
-  { path: 'add-picking', component: AddCueilletteComponent },
+  { path: 'add-picking', component: AddCueilletteComponent, canActivate: [producerGuard] },
   { path: 'legal', component: LegalComponent },
   { path: 'about', component: AboutComponent },
   { path: 'delete-account', component: DeleteAccountComponent },
