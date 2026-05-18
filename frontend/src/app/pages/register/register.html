@@ -29,16 +29,30 @@
       }
       <button type="submit">Creer mon compte</button>
     </form>
-    <p class="success">{{ success }}</p>
     <p><a routerLink="/login">Vous avez déjà un compte? Se connecter</a></p>
   </div>
 </section>
 
-@if (isErrorModalVisible) {
+@if (isSuccessModalVisible()) {
+  <div class="modal-overlay modal-overlay--blocking">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Compte créé</h3>
+      <p>Votre compte a bien été créé. Que souhaitez-vous faire&nbsp;?</p>
+      <div class="modal-buttons modal-buttons--split">
+        <button type="button" class="btn-secondary" (click)="goToLandingAfterRegister()">
+          Page d'accueil
+        </button>
+        <button type="button" class="btn-confirm" (click)="goToLoginAfterRegister()">Se connecter</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (isErrorModalVisible()) {
   <div class="modal-overlay" (click)="hideErrorModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h3>Erreur d'inscription</h3>
-      <p>{{ errorMessage }}</p>
+      <p>{{ errorMessage() }}</p>
       <div class="modal-buttons">
         <button class="btn-confirm" (click)="hideErrorModal()">OK</button>
       </div>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { ApplicationRef, Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,17 +12,15 @@ import { getApiErrorMessage } from '../../utils/api-error';
   styleUrls: ['./register.css'],
 })
 export class RegisterComponent {
+  private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
+  private readonly appRef = inject(ApplicationRef);
+
   form = { name: '', email: '', password: '', role: 'USER' as 'USER' | 'PRODUCER', farmName: '' };
   error = '';
-  success = '';
-  isErrorModalVisible: boolean = false;
-  errorMessage: string = '';
-
-  constructor(
-    private userService: UserService,
-    private router: Router,
-    private cdr: ChangeDetectorRef,
-  ) {}
+  readonly isErrorModalVisible = signal(false);
+  readonly isSuccessModalVisible = signal(false);
+  readonly errorMessage = signal('');
 
   validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,26 +33,30 @@ export class RegisterComponent {
     }
 
     if (!this.validateEmail(this.form.email)) {
-      this.errorMessage = 'Veuillez entrer une adresse email valide (exemple: nom@domaine.com)';
+      this.errorMessage.set(
+        'Veuillez entrer une adresse email valide (exemple: nom@domaine.com)',
+      );
       this.showErrorModal();
       return;
     }
 
     if (this.form.password.length < 8) {
-      this.errorMessage = 'Le mot de passe doit contenir au moins 8 caractères pour assurer la sécurité de votre compte.';
+      this.errorMessage.set(
+        'Le mot de passe doit contenir au moins 8 caractères pour assurer la sécurité de votre compte.',
+      );
       this.showErrorModal();
       return;
     }
 
     if (this.form.role === 'PRODUCER' && !this.form.farmName.trim()) {
-      this.errorMessage = 'Veuillez entrer le nom de votre exploitation agricole.';
+      this.errorMessage.set('Veuillez entrer le nom de votre exploitation agricole.');
       this.showErrorModal();
       return;
     }
 
     this.error = '';
-    this.success = '';
-    this.isErrorModalVisible = false;
+    this.isErrorModalVisible.set(false);
+    this.isSuccessModalVisible.set(false);
     
     const payload = {
       name: this.form.name,
@@ -66,13 +68,15 @@ export class RegisterComponent {
     
     this.userService.register(payload).subscribe({
       next: () => {
-        this.success = 'Account created! Redirecting...';
-        setTimeout(() => this.router.navigate(['/login']), 1500);
+        this.isSuccessModalVisible.set(true);
+        this.appRef.tick();
       },
       error: (err: HttpErrorResponse) => {
-        this.errorMessage = getApiErrorMessage(
-          err,
-          "Échec de l'inscription. Cet email est peut-être déjà utilisé.",
+        this.errorMessage.set(
+          getApiErrorMessage(
+            err,
+            "Échec de l'inscription. Cet email est peut-être déjà utilisé.",
+          ),
         );
         this.showErrorModal();
       },
@@ -80,11 +84,21 @@ export class RegisterComponent {
   }
 
   showErrorModal(): void {
-    this.isErrorModalVisible = true;
-    this.cdr.detectChanges();
+    this.isErrorModalVisible.set(true);
+    this.appRef.tick();
   }
 
   hideErrorModal(): void {
-    this.isErrorModalVisible = false;
+    this.isErrorModalVisible.set(false);
+  }
+
+  goToLoginAfterRegister(): void {
+    this.isSuccessModalVisible.set(false);
+    void this.router.navigate(['/login']);
+  }
+
+  goToLandingAfterRegister(): void {
+    this.isSuccessModalVisible.set(false);
+    void this.router.navigate(['/']);
   }
 }
