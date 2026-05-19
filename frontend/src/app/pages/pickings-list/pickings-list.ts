@@ -7,10 +7,11 @@ import { GeolocationService } from '../../services/geolocation.service';
 import { AuthService } from '../../services/auth';
 import { PickingWithDistance, UserLocation } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-cueillettes-list',
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, ModalComponent],
   templateUrl: './pickings-list.html',
   styleUrls: ['./pickings-list.css'],
 })

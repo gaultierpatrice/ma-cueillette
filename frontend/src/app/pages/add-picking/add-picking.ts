@@ -6,6 +6,7 @@ import { PickingService } from '../../services/picking.service';
 import { GeolocationService } from '../../services/geolocation.service';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../../shared/modal/modal';
 
 interface ProductForm {
   name: string;
@@ -15,7 +16,7 @@ interface ProductForm {
 
 @Component({
   selector: 'app-add-cueillette',
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, ModalComponent],
   templateUrl: './add-picking.html',
   styleUrls: ['./add-picking.css'],
 })
