@@ -1,0 +1,58 @@
+<div class="picking-card" [routerLink]="['/pickings', picking.id]">
+  <div class="picking-info">
+    <div class="picking-header">
+      <div class="name-rating-container">
+        <h4 class="picking-name">{{ picking.name }}</h4>
+        <app-rating-display
+          [rating]="picking.averageRating"
+          [reviewCount]="picking.reviewCount"
+        />
+      </div>
+      <div class="gps-distance">
+        @if (showDistance && picking.distance !== undefined) {
+          <div class="picking-distance">
+            <span class="distance">{{ picking.distance }} km</span>
+          </div>
+        }
+        <app-picking-actions
+          layout="card"
+          [isFavorite]="isFavorite"
+          [favoriteMode]="favoriteMode"
+          [gpsLink]="gpsLink"
+          (favoriteClick)="favoriteClick.emit($event)"
+          (gpsClick)="gpsClick.emit($event)"
+        />
+      </div>
+    </div>
+
+    <div class="picking-details">
+      <div class="picking-address">
+        {{ picking.address }}
+      </div>
+      <div class="picking-city-postal">
+        {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
+      </div>
+      @if (picking.phone || picking.phoneSecondary) {
+        <div class="picking-phone">
+          @if (picking.phone) {
+            <span>{{ picking.phone }}</span>
+          }
+          @if (picking.phone && picking.phoneSecondary) {
+            <span class="phone-sep"> · </span>
+          }
+          @if (picking.phoneSecondary) {
+            <span>{{ picking.phoneSecondary }}</span>
+          }
+        </div>
+      }
+      @if (picking.website) {
+        <div class="picking-website">
+          <a [href]="picking.website" target="_blank" (click)="$event.stopPropagation()">
+            {{ picking.website }}
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="picking-arrow">→</div>
+</div>

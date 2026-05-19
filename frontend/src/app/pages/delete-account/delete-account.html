@@ -17,7 +17,7 @@
       </p>
     </div>
 
-    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <app-async-state [error]="error || null" />
 
     <div *ngIf="!showConfirmation" class="button-group">
       <button class="btn-danger" (click)="showConfirmDialog()">Supprimer mon compte</button>

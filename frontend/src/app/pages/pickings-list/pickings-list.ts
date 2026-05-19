@@ -2,16 +2,19 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PickingService } from '../../services/picking.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { AuthService } from '../../services/auth';
+import { FavoritesService } from '../../services/favorites.service';
+import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { PickingWithDistance, UserLocation } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { PickingService } from '../../services/picking.service';
 import { ModalComponent } from '../../shared/modal/modal';
+import { PickingCardComponent } from '../../shared/picking-card/picking-card';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-cueillettes-list',
-  imports: [RouterModule, CommonModule, FormsModule, ModalComponent],
+  imports: [RouterModule, CommonModule, FormsModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './pickings-list.html',
   styleUrls: ['./pickings-list.css'],
 })
@@ -26,14 +29,13 @@ export class CueillettesListComponent implements OnInit {
   sortBy: 'distance' | 'alphabetical' | 'postal_code' = 'alphabetical';
   locationSource = '';
   displayedPickingsCount = 10;
-  favoritePickingIds: Set<number> = new Set();
   isLoginModalVisible = false;
   loginModalMessage = '';
 
   constructor(
     private pickingService: PickingService,
     private geolocationService: GeolocationService,
-    private authService: AuthService,
+    private favoritesService: FavoritesService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -185,56 +187,24 @@ export class CueillettesListComponent implements OnInit {
   }
 
   isFavorite(pickingId: number): boolean {
-    return this.favoritePickingIds.has(pickingId);
+    return this.favoritesService.isFavorite(pickingId);
   }
 
   loadUserFavorites() {
-    if (!this.authService.isLoggedIn()) {
-      return;
-    }
-
-    this.pickingService.getUserFavorites().subscribe({
-      next: (favorites) => {
-        this.favoritePickingIds = new Set(favorites.map(p => p.id));
-      },
-      error: (err) => {
-      }
+    this.favoritesService.loadUserFavorites().subscribe(() => {
+      this.cdr.detectChanges();
     });
   }
 
-  toggleFavorite(event: Event, pickingId: number) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    if (!this.authService.isLoggedIn()) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
-    if (this.favoritePickingIds.has(pickingId)) {
-      this.pickingService.removeFromFavorites(pickingId).subscribe({
-        next: () => {
-          this.favoritePickingIds.delete(pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
-          this.isLoginModalVisible = true;
-        },
-      });
-    } else {
-      this.pickingService.addToFavorites(pickingId).subscribe({
-        next: () => {
-          this.favoritePickingIds.add(pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loginModalMessage = getApiErrorMessage(err, "Erreur lors de l'ajout du favori");
-          this.isLoginModalVisible = true;
-        },
-      });
-    }
+  toggleFavorite(_event: Event, pickingId: number) {
+    this.favoritesService.toggleFavorite(pickingId).subscribe((result) => {
+      const message = getFavoriteModalMessage(result);
+      if (message) {
+        this.loginModalMessage = message;
+        this.isLoginModalVisible = true;
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   hideLoginModal() {

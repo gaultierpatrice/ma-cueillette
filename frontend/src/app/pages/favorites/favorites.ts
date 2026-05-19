@@ -1,15 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
+import { FavoritesService } from '../../services/favorites.service';
+import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { PickingWithDistance } from '../../services/picking.types';
-import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalButton } from '../../shared/modal/modal.types';
 import { ModalComponent } from '../../shared/modal/modal';
+import { PickingCardComponent } from '../../shared/picking-card/picking-card';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterModule, CommonModule, ModalComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './favorites.html',
   styleUrls: ['./favorites.css'],
 })
@@ -19,11 +22,18 @@ export class FavoritesComponent implements OnInit {
   error: string | null = null;
   isLoginModalVisible = false;
   loginModalMessage = '';
+  isRemoveConfirmModalVisible = false;
+  pendingRemovePicking: PickingWithDistance | null = null;
+  removeConfirmMessage = '';
+  readonly removeConfirmButtons: ModalButton[] = [
+    { label: 'Annuler', variant: 'cancel' },
+    { label: 'Retirer', variant: 'primary' },
+  ];
 
   constructor(
-    private pickingService: PickingService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private favoritesService: FavoritesService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -37,32 +47,51 @@ export class FavoritesComponent implements OnInit {
       return;
     }
 
-    this.pickingService.getUserFavorites().subscribe({
-      next: (data) => {
-        this.favoritePickings = data.map((p) => ({ ...p, distance: undefined }));
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.error = getApiErrorMessage(err, 'Erreur lors du chargement de vos favoris');
-        this.loading = false;
-      },
+    this.favoritesService.loadUserFavoritesWithError().subscribe(({ favorites, error }) => {
+      this.favoritePickings = favorites.map((p) => ({ ...p, distance: undefined }));
+      this.error = error;
+      this.loading = false;
+      this.cdr.detectChanges();
     });
   }
 
-  removeFavorite(event: Event, pickingId: number) {
-    event.stopPropagation();
-    event.preventDefault();
+  requestRemoveFavorite(_event: Event, picking: PickingWithDistance) {
+    this.pendingRemovePicking = picking;
+    this.removeConfirmMessage = `Êtes-vous sûr de vouloir retirer « ${picking.name} » de vos favoris ?`;
+    this.isRemoveConfirmModalVisible = true;
+  }
 
-    this.pickingService.removeFromFavorites(pickingId).subscribe({
-      next: () => {
-        this.favoritePickings = this.favoritePickings.filter(p => p.id !== pickingId);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
+  hideRemoveConfirmModal() {
+    this.isRemoveConfirmModalVisible = false;
+    this.pendingRemovePicking = null;
+  }
+
+  onRemoveConfirmButton(index: number) {
+    if (index === 0) {
+      this.hideRemoveConfirmModal();
+      return;
+    }
+
+    this.confirmRemoveFavorite();
+  }
+
+  confirmRemoveFavorite() {
+    const pickingId = this.pendingRemovePicking?.id;
+    if (pickingId === undefined) {
+      return;
+    }
+
+    this.hideRemoveConfirmModal();
+
+    this.favoritesService.removeFavorite(pickingId).subscribe((result) => {
+      const message = getFavoriteModalMessage(result);
+      if (message) {
+        this.loginModalMessage = message;
         this.isLoginModalVisible = true;
+      } else if (result.status === 'removed') {
+        this.favoritePickings = this.favoritePickings.filter((p) => p.id !== pickingId);
       }
+      this.cdr.detectChanges();
     });
   }
 

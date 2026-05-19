@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.picking-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.picking-actions--card {
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.picking-actions--details {
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.picking-actions--card .gps-btn,
+.picking-actions--card .btn-favorite {
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  line-height: 1;
+}
+
+.gps-btn {
+  background: rgb(46, 125, 50);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0 12px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+}
+
+.gps-btn:hover {
+  background: rgb(46, 125, 50, 0.8);
+  transform: scale(1.05);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.gps-btn:active {
+  transform: scale(0.95);
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.picking-actions--card .btn {
+  padding: 0;
+  font-size: 16px;
+}
+
+.picking-actions--details .btn {
+  padding: 12px;
+  font-size: 16px;
+}
+
+.btn-gps {
+  background-color: #2e7d32;
+  color: white;
+  min-height: 48px;
+  max-width: 200px;
+}
+
+.btn-gps:hover {
+  background-color: rgb(46, 125, 50, 0.8);
+}
+
+.btn-favorite {
+  background-color: rgb(46, 125, 50);
+  color: inherit;
+  gap: 8px;
+}
+
+.picking-actions--card .btn-favorite {
+  width: 48px;
+}
+
+.picking-actions--details .btn-favorite {
+  min-height: 48px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.btn-favorite img {
+  filter: invert(1);
+}
+
+.btn-favorite:hover {
+  background-color: rgb(46, 125, 50, 0.8);
+}
+
+.btn-favorite:hover .heart-icon {
+  opacity: 0.85;
+}
+
+.btn-favorite .heart-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin: 0;
+  display: block;
+}
+
+.btn-remove-picking {
+  background-color: #c62828;
+  color: white;
+  min-height: 48px;
+  padding: 12px 16px;
+}
+
+.btn-remove-picking:hover:not(:disabled) {
+  background-color: #b71c1c;
+}
+
+.btn-remove-picking:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .picking-actions--details {
+    flex-direction: row;
+  }
+
+  .picking-actions--details .btn {
+    width: 100%;
+  }
+
+  .picking-actions--details .btn-favorite {
+    width: auto;
+    align-self: flex-start;
+  }
+}

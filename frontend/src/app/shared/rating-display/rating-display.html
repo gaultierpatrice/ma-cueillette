@@ -1,0 +1,7 @@
+@if (shouldDisplay) {
+  <div class="rating-display" [class.rating-display--lg]="size === 'lg'">
+    <span class="stars">★</span>
+    <span class="rating-value">{{ rating | number: '1.1-1' }}</span>
+    <span class="review-count">({{ reviewCount }})</span>
+  </div>
+}

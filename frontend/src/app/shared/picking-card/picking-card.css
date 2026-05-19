@@ -1,0 +1,159 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.picking-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  border: 2px solid #ecf0f1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+
+.picking-card:hover {
+  border-color: #27ae60;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.picking-info {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.picking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.name-rating-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.picking-name {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.picking-details {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.picking-address {
+  font-weight: 500;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-city-postal {
+  color: #7f8c8d;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-phone {
+  color: #3498db;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-website {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.picking-website a {
+  color: #3498db;
+  text-decoration: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.picking-website a:hover {
+  text-decoration: underline;
+}
+
+.gps-distance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.picking-distance {
+  font-size: 0.95em;
+}
+
+.distance {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.picking-arrow {
+  font-size: 24px;
+  color: #bdc3c7;
+  transition: all 0.3s;
+}
+
+.picking-card:hover .picking-arrow {
+  color: #27ae60;
+  transform: translateX(5px);
+}
+
+@media (max-width: 600px) {
+  .picking-card {
+    padding: 15px;
+  }
+
+  .picking-name {
+    font-size: 1.1em;
+  }
+
+  .picking-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .gps-distance {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

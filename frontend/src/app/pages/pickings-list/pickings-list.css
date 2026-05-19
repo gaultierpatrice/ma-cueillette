@@ -178,28 +178,8 @@ h3 {
   background-color: #2980b9;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #7f8c8d;
-}
-
-.error-message {
-  padding: 15px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 6px;
-  margin-bottom: 20px;
-}
-
 .pickings-section {
   margin-top: 30px;
-}
-
-.picking-header-buttons .heart-icon {
-  filter: invert(1);
 }
 
 .section-header {
@@ -280,201 +260,6 @@ h3 {
   width: 100%;
 }
 
-.picking-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  background-color: white;
-  border: 2px solid #ecf0f1;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-sizing: border-box;
-  width: 100%;
-  overflow: hidden;
-}
-
-.picking-card:hover {
-  border-color: #27ae60;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.picking-info {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-}
-
-.picking-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-
-.name-rating-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex: 1;
-  min-width: 0;
-}
-
-.picking-name {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.2em;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9em;
-}
-
-.stars {
-  color: #f39c12;
-  font-size: 1.2em;
-}
-
-.rating-value {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.review-count {
-  color: #7f8c8d;
-  font-size: 0.95em;
-}
-.picking-details {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.picking-address,
-.picking-city-postal,
-.picking-phone {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-
-.picking-website {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-
-.picking-website a {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  display: inline-block;
-  max-width: 100%;
-}
-
-.gps-distance {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.picking-header-buttons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.favorite-btn,
-.gps-btn {
-  background: rgb(46, 125, 50);
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  padding: 8px 12px;
-  min-height: 40px;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-  font-size: 14px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  font-weight: 500;
-}
-
-.favorite-btn:hover,
-.gps-btn:hover {
-  background: rgb(46, 125, 50, 0.8);
-  transform: scale(1.05);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.favorite-btn:active,
-.gps-btn:active {
-  transform: scale(0.95);
-}
-
-.heart-icon {
-  width: 20px;
-  height: 20px;
-  transition: all 0.2s;
-  object-fit: contain;
-  flex-shrink: 0;
-  margin: auto;
-}
-
-.favorite-text {
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.picking-distance {
-  font-size: 0.95em;
-}
-
-.distance {
-  color: #27ae60;
-  font-weight: 600;
-}
-
-.postal-code {
-  color: #3498db;
-  font-weight: 600;
-}
-
-.no-distance {
-  color: #95a5a6;
-  font-style: italic;
-}
-
-.picking-arrow {
-  font-size: 24px;
-  color: #bdc3c7;
-  transition: all 0.3s;
-}
-
-.picking-card:hover .picking-arrow {
-  color: #27ae60;
-  transform: translateX(5px);
-}
-
 @media (max-width: 600px) {
   .container {
     padding: 15px;
@@ -482,14 +267,6 @@ h3 {
 
   .address-search {
     flex-direction: column;
-  }
-
-  .picking-card {
-    padding: 15px;
-  }
-
-  .picking-name {
-    font-size: 1.1em;
   }
 
   .section-header {
@@ -500,19 +277,5 @@ h3 {
   .sort-controls {
     width: 100%;
     flex-wrap: wrap;
-  }
-
-  .picking-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .gps-distance {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    justify-content: flex-start;
   }
 }

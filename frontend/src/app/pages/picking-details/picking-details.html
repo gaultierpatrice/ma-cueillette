@@ -1,8 +1,10 @@
 <section class="hero">
   <div class="container">
-    <div *ngIf="loading" class="loading">Chargement des détails...</div>
-
-    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement des détails..."
+    />
 
     <div *ngIf="picking && !loading">
       <div class="details-card">
@@ -14,48 +16,11 @@
           <div class="header-info">
             <div class="name-rating-section">
               <h2 class="picking-name">{{ picking.name }}</h2>
-              <div *ngIf="averageRating !== null && totalReviews > 0" class="rating-display-large">
-                <span class="stars">★</span>
-                <span class="rating-value">{{ averageRating | number: '1.1-1' }}</span>
-                <span class="review-count">({{ totalReviews }})</span>
-              </div>
               <div class="info-section" *ngIf="picking.description">
                 <p class="description">{{ picking.description }}</p>
               </div>
+              <app-rating-display [rating]="averageRating" [reviewCount]="totalReviews" size="lg" />
             </div>
-
-            <div class="actions">
-              <button
-                class="btn btn-favorite"
-                [class.favorited]="isFavorite(pickingId)"
-                (click)="toggleFavorite()"
-                title="{{ isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}"
-              >
-                <img
-                  [src]="
-                    isFavorite(pickingId)
-                      ? 'assets/images/icons/heart-solid.png'
-                      : 'assets/images/icons/heart-regular.png'
-                  "
-                  [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
-                  class="heart-icon"
-                />
-              </button>
-              <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps">
-                Itinéraire GPS
-              </a>
-              <button
-                *ngIf="isAdmin"
-                type="button"
-                class="btn btn-remove-picking"
-                [disabled]="removePickingInProgress"
-                (click)="confirmRemovePicking()"
-                title="Supprimer cette cueillette (administrateur)"
-              >
-                {{ removePickingInProgress ? 'Suppression…' : 'Supprimer la cueillette' }}
-              </button>
-            </div>
-
             <div class="info-section">
               <h3>Adresse:</h3>
               <p>{{ picking.address }}</p>
@@ -63,6 +28,15 @@
                 {{ picking.postalCode }} {{ picking.city }}
               </p>
             </div>
+            <app-picking-actions
+              layout="details"
+              [isFavorite]="isFavorite(pickingId)"
+              [gpsLink]="getGoogleMapsLink()"
+              [showAdminRemove]="isAdmin"
+              [removeInProgress]="removePickingInProgress"
+              (favoriteClick)="toggleFavorite()"
+              (adminRemoveClick)="confirmRemovePicking()"
+            />
 
             <div class="info-section" *ngIf="picking.daysOpen && picking.daysOpen.length > 0">
               <h3>Jours d'ouverture:</h3>

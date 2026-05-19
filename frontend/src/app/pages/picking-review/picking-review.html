@@ -60,7 +60,7 @@
   <div class="reviews-section">
     <h3>Tous les avis ({{ reviews.length }})</h3>
 
-    <div *ngIf="loading" class="loading">Chargement des avis...</div>
+    <app-async-state [loading]="loading" loadingMessage="Chargement des avis..." />
 
     <p *ngIf="!loading && reviews.length === 0" class="no-reviews">
       Aucun avis pour le moment. Soyez le premier à en laisser un !

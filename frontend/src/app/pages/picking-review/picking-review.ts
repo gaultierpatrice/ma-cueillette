@@ -6,10 +6,11 @@ import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { Review, Picking } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-cueillette-review',
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent],
   templateUrl: './picking-review.html',
   styleUrls: ['./picking-review.css']
 })
