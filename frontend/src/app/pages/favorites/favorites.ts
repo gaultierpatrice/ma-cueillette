@@ -6,10 +6,11 @@ import { AuthService } from '../../services/auth';
 import { PickingWithDistance } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { ModalComponent } from '../../shared/modal/modal';
+import { PickingCardComponent } from '../../shared/picking-card/picking-card';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterModule, CommonModule, ModalComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingCardComponent],
   templateUrl: './favorites.html',
   styleUrls: ['./favorites.css'],
 })

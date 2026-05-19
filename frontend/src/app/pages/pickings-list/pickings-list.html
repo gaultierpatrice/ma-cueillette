@@ -107,97 +107,14 @@
 
         <div class="pickings-list">
           @for (picking of displayedPickings; track picking.id) {
-            <div class="picking-card" [routerLink]="['/pickings', picking.id]">
-              <div class="picking-info">
-                <div class="picking-header">
-                  <div class="name-rating-container">
-                    <h4 class="picking-name">{{ picking.name }}</h4>
-                    @if (
-                      picking.averageRating !== null &&
-                      picking.averageRating !== undefined &&
-                      picking.reviewCount &&
-                      picking.reviewCount > 0
-                    ) {
-                      <div class="rating-display">
-                        <span class="stars">★</span>
-                        <span class="rating-value">{{
-                          picking.averageRating | number: '1.1-1'
-                        }}</span>
-                        <span class="review-count">({{ picking.reviewCount }})</span>
-                      </div>
-                    }
-                  </div>
-                  <div class="gps-distance">
-                    @if (picking.distance !== undefined && sortBy === 'distance') {
-                      <div class="picking-distance">
-                        <span class="distance">{{ picking.distance }} km</span>
-                      </div>
-                    }
-                    <div class="picking-header-buttons">
-                      <button
-                        class="gps-btn"
-                        (click)="openGoogleMaps($event, picking)"
-                        title="Itinéraire GPS"
-                      >
-                        Itineraire
-                      </button>
-                      <button
-                        class="favorite-btn"
-                        [class.favorited]="isFavorite(picking.id)"
-                        (click)="toggleFavorite($event, picking.id)"
-                        title="{{
-                          isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
-                        }}"
-                      >
-                        <img
-                          [src]="
-                            isFavorite(picking.id)
-                              ? 'assets/images/icons/heart-solid.png'
-                              : 'assets/images/icons/heart-regular.png'
-                          "
-                          [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
-                          class="heart-icon"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="picking-details">
-                  <div class="picking-address">
-                    {{ picking.address }}
-                  </div>
-                  <div class="picking-city-postal">
-                    {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
-                  </div>
-                  @if (picking.phone || picking.phoneSecondary) {
-                    <div class="picking-phone">
-                      @if (picking.phone) {
-                        <span>{{ picking.phone }}</span>
-                      }
-                      @if (picking.phone && picking.phoneSecondary) {
-                        <span class="phone-sep"> · </span>
-                      }
-                      @if (picking.phoneSecondary) {
-                        <span>{{ picking.phoneSecondary }}</span>
-                      }
-                    </div>
-                  }
-                  @if (picking.website) {
-                    <div class="picking-website">
-                      <a
-                        [href]="picking.website"
-                        target="_blank"
-                        (click)="$event.stopPropagation()"
-                      >
-                        {{ picking.website }}
-                      </a>
-                    </div>
-                  }
-                </div>
-              </div>
-              <div class="picking-arrow">→</div>
-            </div>
+            <app-picking-card
+              [picking]="picking"
+              [isFavorite]="isFavorite(picking.id)"
+              [showDistance]="picking.distance !== undefined && sortBy === 'distance'"
+              favoriteMode="toggle"
+              (favoriteClick)="toggleFavorite($event, picking.id)"
+              (gpsClick)="openGoogleMaps($event, picking)"
+            />
           }
         </div>
 

@@ -8,10 +8,11 @@ import { AuthService } from '../../services/auth';
 import { PickingWithDistance, UserLocation } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { ModalComponent } from '../../shared/modal/modal';
+import { PickingCardComponent } from '../../shared/picking-card/picking-card';
 
 @Component({
   selector: 'app-cueillettes-list',
-  imports: [RouterModule, CommonModule, FormsModule, ModalComponent],
+  imports: [RouterModule, CommonModule, FormsModule, ModalComponent, PickingCardComponent],
   templateUrl: './pickings-list.html',
   styleUrls: ['./pickings-list.css'],
 })
