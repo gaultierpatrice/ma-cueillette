@@ -8,10 +8,11 @@ import { PickingWithDistance } from '../../services/picking.types';
 import { ModalButton } from '../../shared/modal/modal.types';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingCardComponent } from '../../shared/picking-card/picking-card';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterModule, CommonModule, ModalComponent, PickingCardComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './favorites.html',
   styleUrls: ['./favorites.css'],
 })

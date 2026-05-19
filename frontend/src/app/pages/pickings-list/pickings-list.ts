@@ -10,10 +10,11 @@ import { getApiErrorMessage } from '../../utils/api-error';
 import { PickingService } from '../../services/picking.service';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingCardComponent } from '../../shared/picking-card/picking-card';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-cueillettes-list',
-  imports: [RouterModule, CommonModule, FormsModule, ModalComponent, PickingCardComponent],
+  imports: [RouterModule, CommonModule, FormsModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './pickings-list.html',
   styleUrls: ['./pickings-list.css'],
 })

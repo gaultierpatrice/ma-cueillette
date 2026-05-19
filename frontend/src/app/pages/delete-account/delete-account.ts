@@ -6,10 +6,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user';
 import { AuthService } from '../../services/auth';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-delete-account',
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent],
   templateUrl: './delete-account.html',
   styleUrl: './delete-account.css',
 })

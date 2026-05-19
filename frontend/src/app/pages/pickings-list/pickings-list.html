@@ -50,13 +50,11 @@
       }
     </div>
 
-    @if (loading) {
-      <div class="loading">Chargement des cueillettes...</div>
-    }
-
-    @if (error) {
-      <div class="error-message">{{ error }}</div>
-    }
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement des cueillettes..."
+    />
 
     @if (!loading && !error) {
       <div class="pickings-section">

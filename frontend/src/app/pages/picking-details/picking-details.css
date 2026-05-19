@@ -20,22 +20,6 @@
   box-sizing: border-box;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 18px;
-  color: #7f8c8d;
-}
-
-.error-message {
-  padding: 15px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 6px;
-  margin-bottom: 20px;
-}
-
 .details-card {
   background-color: white;
   border-radius: 12px;

@@ -1,8 +1,10 @@
 <section class="hero">
   <div class="container">
-    <div *ngIf="loading" class="loading">Chargement des détails...</div>
-
-    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement des détails..."
+    />
 
     <div *ngIf="picking && !loading">
       <div class="details-card">

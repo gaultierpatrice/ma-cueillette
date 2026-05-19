@@ -5,13 +5,11 @@
     </div>
     <h2>Mes favoris</h2>
 
-    @if (loading) {
-      <div class="loading">Chargement de vos favoris...</div>
-    }
-
-    @if (error) {
-      <div class="error-message">{{ error }}</div>
-    }
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement de vos favoris..."
+    />
 
     @if (!loading && !error) {
       @if (favoritePickings.length === 0) {

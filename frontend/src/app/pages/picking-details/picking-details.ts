@@ -10,10 +10,11 @@ import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
 import { RatingDisplayComponent } from '../../shared/rating-display/rating-display';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent, RatingDisplayComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent, RatingDisplayComponent, AsyncStateComponent],
   templateUrl: './picking-details.html',
   styleUrls: ['./picking-details.css'],
 })
