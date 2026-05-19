@@ -19,6 +19,6 @@ describe('FavoritesService', () => {
   });
 
   it('should report unknown pickings as not favorite', () => {
-    expect(service.isFavorite(42)).toBeFalse();
+    expect(service.isFavorite(42)).toBe(false);
   });
 });

@@ -23,12 +23,12 @@ describe('RatingDisplayComponent', () => {
   it('should hide when there are no reviews', () => {
     component.rating = 4.5;
     component.reviewCount = 0;
-    expect(component.shouldDisplay).toBeFalse();
+    expect(component.shouldDisplay).toBe(false);
   });
 
   it('should show when rating and reviews are available', () => {
     component.rating = 4.5;
     component.reviewCount = 3;
-    expect(component.shouldDisplay).toBeTrue();
+    expect(component.shouldDisplay).toBe(true);
   });
 });
