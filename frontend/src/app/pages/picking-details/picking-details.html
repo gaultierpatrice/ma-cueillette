@@ -14,16 +14,18 @@
           <div class="header-info">
             <div class="name-rating-section">
               <h2 class="picking-name">{{ picking.name }}</h2>
-              <div *ngIf="averageRating !== null && totalReviews > 0" class="rating-display-large">
-                <span class="stars">★</span>
-                <span class="rating-value">{{ averageRating | number: '1.1-1' }}</span>
-                <span class="review-count">({{ totalReviews }})</span>
-              </div>
               <div class="info-section" *ngIf="picking.description">
                 <p class="description">{{ picking.description }}</p>
               </div>
+              <app-rating-display [rating]="averageRating" [reviewCount]="totalReviews" size="lg" />
             </div>
-
+            <div class="info-section">
+              <h3>Adresse:</h3>
+              <p>{{ picking.address }}</p>
+              <p *ngIf="picking.postalCode && picking.city">
+                {{ picking.postalCode }} {{ picking.city }}
+              </p>
+            </div>
             <app-picking-actions
               layout="details"
               [isFavorite]="isFavorite(pickingId)"
@@ -33,14 +35,6 @@
               (favoriteClick)="toggleFavorite()"
               (adminRemoveClick)="confirmRemovePicking()"
             />
-
-            <div class="info-section">
-              <h3>Adresse:</h3>
-              <p>{{ picking.address }}</p>
-              <p *ngIf="picking.postalCode && picking.city">
-                {{ picking.postalCode }} {{ picking.city }}
-              </p>
-            </div>
 
             <div class="info-section" *ngIf="picking.daysOpen && picking.daysOpen.length > 0">
               <h3>Jours d'ouverture:</h3>

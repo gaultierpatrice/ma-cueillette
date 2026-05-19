@@ -9,10 +9,11 @@ import { getApiErrorMessage } from '../../utils/api-error';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
+import { RatingDisplayComponent } from '../../shared/rating-display/rating-display';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent, RatingDisplayComponent],
   templateUrl: './picking-details.html',
   styleUrls: ['./picking-details.css'],
 })

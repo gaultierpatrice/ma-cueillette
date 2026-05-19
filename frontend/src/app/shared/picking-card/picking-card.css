@@ -56,28 +56,6 @@
   overflow-wrap: break-word;
 }
 
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.9em;
-}
-
-.stars {
-  color: #f39c12;
-  font-size: 1.2em;
-}
-
-.rating-value {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.review-count {
-  color: #7f8c8d;
-  font-size: 0.95em;
-}
-
 .picking-details {
   color: #555;
   font-size: 14px;

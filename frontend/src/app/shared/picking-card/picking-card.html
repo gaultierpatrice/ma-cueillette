@@ -3,13 +3,10 @@
     <div class="picking-header">
       <div class="name-rating-container">
         <h4 class="picking-name">{{ picking.name }}</h4>
-        @if (hasRating) {
-          <div class="rating-display">
-            <span class="stars">★</span>
-            <span class="rating-value">{{ picking.averageRating | number: '1.1-1' }}</span>
-            <span class="review-count">({{ picking.reviewCount }})</span>
-          </div>
-        }
+        <app-rating-display
+          [rating]="picking.averageRating"
+          [reviewCount]="picking.reviewCount"
+        />
       </div>
       <div class="gps-distance">
         @if (showDistance && picking.distance !== undefined) {
