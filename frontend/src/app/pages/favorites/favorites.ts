@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
+import { FavoritesService } from '../../services/favorites.service';
+import {
+  getFavoriteModalMessage,
+} from '../../services/favorites.types';
 import { PickingWithDistance } from '../../services/picking.types';
-import { getApiErrorMessage } from '../../utils/api-error';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingCardComponent } from '../../shared/picking-card/picking-card';
 
@@ -22,9 +24,9 @@ export class FavoritesComponent implements OnInit {
   loginModalMessage = '';
 
   constructor(
-    private pickingService: PickingService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private favoritesService: FavoritesService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -38,32 +40,24 @@ export class FavoritesComponent implements OnInit {
       return;
     }
 
-    this.pickingService.getUserFavorites().subscribe({
-      next: (data) => {
-        this.favoritePickings = data.map((p) => ({ ...p, distance: undefined }));
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.error = getApiErrorMessage(err, 'Erreur lors du chargement de vos favoris');
-        this.loading = false;
-      },
+    this.favoritesService.loadUserFavoritesWithError().subscribe(({ favorites, error }) => {
+      this.favoritePickings = favorites.map((p) => ({ ...p, distance: undefined }));
+      this.error = error;
+      this.loading = false;
+      this.cdr.detectChanges();
     });
   }
 
-  removeFavorite(event: Event, pickingId: number) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    this.pickingService.removeFromFavorites(pickingId).subscribe({
-      next: () => {
-        this.favoritePickings = this.favoritePickings.filter(p => p.id !== pickingId);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
+  removeFavorite(_event: Event, pickingId: number) {
+    this.favoritesService.removeFavorite(pickingId).subscribe((result) => {
+      const message = getFavoriteModalMessage(result);
+      if (message) {
+        this.loginModalMessage = message;
         this.isLoginModalVisible = true;
+      } else if (result.status === 'removed') {
+        this.favoritePickings = this.favoritePickings.filter((p) => p.id !== pickingId);
       }
+      this.cdr.detectChanges();
     });
   }
 

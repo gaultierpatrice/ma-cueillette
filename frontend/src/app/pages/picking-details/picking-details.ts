@@ -3,8 +3,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
+import { FavoritesService } from '../../services/favorites.service';
 import { Picking, Review } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
@@ -21,7 +23,6 @@ export class CueilletteDetailsComponent implements OnInit {
   loading = true;
   error: string | null = null;
   pickingId: number;
-  favoritePickingIds: Set<number> = new Set();
   isLoginModalVisible = false;
   loginModalMessage = '';
   removePickingInProgress = false;
@@ -31,6 +32,7 @@ export class CueilletteDetailsComponent implements OnInit {
     private router: Router,
     private pickingService: PickingService,
     private authService: AuthService,
+    private favoritesService: FavoritesService,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
   ) {
@@ -145,7 +147,7 @@ export class CueilletteDetailsComponent implements OnInit {
   }
 
   isFavorite(pickingId: number): boolean {
-    return this.favoritePickingIds.has(pickingId);
+    return this.favoritesService.isFavorite(pickingId);
   }
 
   get pickingImageSrc(): string {
@@ -157,51 +159,20 @@ export class CueilletteDetailsComponent implements OnInit {
   }
 
   loadUserFavorites() {
-    if (!this.authService.isLoggedIn()) {
-      return;
-    }
-
-    this.pickingService.getUserFavorites().subscribe({
-      next: (favorites) => {
-        this.favoritePickingIds = new Set(favorites.map((p) => p.id));
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading favorites:', err);
-      },
+    this.favoritesService.loadUserFavorites().subscribe(() => {
+      this.cdr.detectChanges();
     });
   }
 
   toggleFavorite() {
-    if (!this.authService.isLoggedIn()) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
-    if (this.favoritePickingIds.has(this.pickingId)) {
-      this.pickingService.removeFromFavorites(this.pickingId).subscribe({
-        next: () => {
-          this.favoritePickingIds.delete(this.pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loginModalMessage = getApiErrorMessage(err, 'Erreur lors de la suppression du favori');
-          this.isLoginModalVisible = true;
-        },
-      });
-    } else {
-      this.pickingService.addToFavorites(this.pickingId).subscribe({
-        next: () => {
-          this.favoritePickingIds.add(this.pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          this.loginModalMessage = getApiErrorMessage(err, "Erreur lors de l'ajout du favori");
-          this.isLoginModalVisible = true;
-        },
-      });
-    }
+    this.favoritesService.toggleFavorite(this.pickingId).subscribe((result) => {
+      const message = getFavoriteModalMessage(result);
+      if (message) {
+        this.loginModalMessage = message;
+        this.isLoginModalVisible = true;
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   hideLoginModal() {
