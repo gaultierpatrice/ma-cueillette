@@ -17,19 +17,14 @@
             <span class="distance">{{ picking.distance }} km</span>
           </div>
         }
-        <div class="picking-header-buttons">
-          <button class="gps-btn" (click)="onGpsClick($event)" title="Itinéraire GPS">
-            Itineraire
-          </button>
-          <button
-            class="btn btn-favorite"
-            [class.favorited]="favoriteMode === 'remove' || isFavorite"
-            (click)="onFavoriteClick($event)"
-            [title]="favoriteTitle"
-          >
-            <img [src]="favoriteIconSrc" [alt]="favoriteTitle" class="heart-icon" />
-          </button>
-        </div>
+        <app-picking-actions
+          layout="card"
+          [isFavorite]="isFavorite"
+          [favoriteMode]="favoriteMode"
+          [gpsLink]="gpsLink"
+          (favoriteClick)="favoriteClick.emit($event)"
+          (gpsClick)="gpsClick.emit($event)"
+        />
       </div>
     </div>
 

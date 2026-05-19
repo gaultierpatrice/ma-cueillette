@@ -24,37 +24,15 @@
               </div>
             </div>
 
-            <div class="actions">
-              <button
-                class="btn btn-favorite"
-                [class.favorited]="isFavorite(pickingId)"
-                (click)="toggleFavorite()"
-                title="{{ isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}"
-              >
-                <img
-                  [src]="
-                    isFavorite(pickingId)
-                      ? 'assets/images/icons/heart-solid.png'
-                      : 'assets/images/icons/heart-regular.png'
-                  "
-                  [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
-                  class="heart-icon"
-                />
-              </button>
-              <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps">
-                Itinéraire GPS
-              </a>
-              <button
-                *ngIf="isAdmin"
-                type="button"
-                class="btn btn-remove-picking"
-                [disabled]="removePickingInProgress"
-                (click)="confirmRemovePicking()"
-                title="Supprimer cette cueillette (administrateur)"
-              >
-                {{ removePickingInProgress ? 'Suppression…' : 'Supprimer la cueillette' }}
-              </button>
-            </div>
+            <app-picking-actions
+              layout="details"
+              [isFavorite]="isFavorite(pickingId)"
+              [gpsLink]="getGoogleMapsLink()"
+              [showAdminRemove]="isAdmin"
+              [removeInProgress]="removePickingInProgress"
+              (favoriteClick)="toggleFavorite()"
+              (adminRemoveClick)="confirmRemovePicking()"
+            />
 
             <div class="info-section">
               <h3>Adresse:</h3>

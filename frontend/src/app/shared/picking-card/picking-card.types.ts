@@ -1,1 +1,1 @@
-export type PickingCardFavoriteMode = 'toggle' | 'remove';
+export type { PickingActionsFavoriteMode as PickingCardFavoriteMode } from '../picking-actions/picking-actions.types';

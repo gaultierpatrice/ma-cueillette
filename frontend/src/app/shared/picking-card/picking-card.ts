@@ -3,10 +3,11 @@ import { DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PickingWithDistance } from '../../services/picking.types';
 import { PickingCardFavoriteMode } from './picking-card.types';
+import { PickingActionsComponent } from '../picking-actions/picking-actions';
 
 @Component({
   selector: 'app-picking-card',
-  imports: [RouterModule, DecimalPipe],
+  imports: [RouterModule, DecimalPipe, PickingActionsComponent],
   templateUrl: './picking-card.html',
   styleUrl: './picking-card.css',
 })
@@ -28,31 +29,7 @@ export class PickingCardComponent {
     );
   }
 
-  get favoriteTitle(): string {
-    if (this.favoriteMode === 'remove') {
-      return 'Retirer des favoris';
-    }
-
-    return this.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris';
-  }
-
-  get favoriteIconSrc(): string {
-    if (this.favoriteMode === 'remove' || this.isFavorite) {
-      return 'assets/images/icons/heart-solid.png';
-    }
-
-    return 'assets/images/icons/heart-regular.png';
-  }
-
-  onFavoriteClick(event: Event): void {
-    event.stopPropagation();
-    event.preventDefault();
-    this.favoriteClick.emit(event);
-  }
-
-  onGpsClick(event: Event): void {
-    event.stopPropagation();
-    event.preventDefault();
-    this.gpsClick.emit(event);
+  get gpsLink(): string {
+    return `https://www.google.com/maps/dir/?api=1&destination=${this.picking.lat},${this.picking.lng}`;
   }
 }

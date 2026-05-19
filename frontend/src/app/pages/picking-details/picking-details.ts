@@ -8,10 +8,11 @@ import { Picking, Review } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
+import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule, ModalComponent],
+  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent],
   templateUrl: './picking-details.html',
   styleUrls: ['./picking-details.css'],
 })

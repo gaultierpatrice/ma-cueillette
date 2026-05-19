@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
-import { FavoritesService } from '../../services/favorites.service';
-import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { PickingWithDistance } from '../../services/picking.types';
 import { ModalButton } from '../../shared/modal/modal.types';
 import { ModalComponent } from '../../shared/modal/modal';
@@ -33,8 +31,6 @@ export class FavoritesComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private favoritesService: FavoritesService,
-    private cdr: ChangeDetectorRef,
     private favoritesService: FavoritesService,
     private cdr: ChangeDetectorRef,
   ) {}
@@ -93,10 +89,7 @@ export class FavoritesComponent implements OnInit {
         this.isLoginModalVisible = true;
       } else if (result.status === 'removed') {
         this.favoritePickings = this.favoritePickings.filter((p) => p.id !== pickingId);
-      } else if (result.status === 'removed') {
-        this.favoritePickings = this.favoritePickings.filter((p) => p.id !== pickingId);
       }
-      this.cdr.detectChanges();
       this.cdr.detectChanges();
     });
   }
