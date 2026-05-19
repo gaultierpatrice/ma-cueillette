@@ -4,10 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalButton } from '../../shared/modal/modal.types';
+import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, ModalComponent],
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
@@ -21,6 +23,10 @@ export class RegisterComponent {
   readonly isErrorModalVisible = signal(false);
   readonly isSuccessModalVisible = signal(false);
   readonly errorMessage = signal('');
+  readonly registerSuccessButtons: ModalButton[] = [
+    { label: "Page d'accueil", variant: 'secondary' },
+    { label: 'Se connecter', variant: 'primary' },
+  ];
 
   validateEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,6 +96,15 @@ export class RegisterComponent {
 
   hideErrorModal(): void {
     this.isErrorModalVisible.set(false);
+  }
+
+  onRegisterSuccessButton(index: number): void {
+    if (index === 0) {
+      this.goToLandingAfterRegister();
+      return;
+    }
+
+    this.goToLoginAfterRegister();
   }
 
   goToLoginAfterRegister(): void {

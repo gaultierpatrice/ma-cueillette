@@ -127,14 +127,10 @@
   </div>
 </section>
 
-@if (isLoginModalVisible) {
-  <div class="modal-overlay" (click)="hideLoginModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Information</h3>
-      <p>{{ loginModalMessage }}</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" (click)="hideLoginModal()">OK</button>
-      </div>
-    </div>
-  </div>
-}
+<app-modal
+  [visible]="isLoginModalVisible"
+  title="Information"
+  [message]="loginModalMessage"
+  (closed)="hideLoginModal()"
+  (buttonClick)="hideLoginModal()"
+/>

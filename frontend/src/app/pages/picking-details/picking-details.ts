@@ -5,10 +5,11 @@ import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { Picking, Review } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, ModalComponent],
   templateUrl: './picking-details.html',
   styleUrls: ['./picking-details.css'],
 })

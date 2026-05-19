@@ -5,10 +5,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user';
 import { AuthService } from '../../services/auth';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalButton } from '../../shared/modal/modal.types';
+import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, ModalComponent],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
@@ -17,6 +19,11 @@ export class LoginComponent {
   /** Shown in the modal; server message when available (e.g. English API text). */
   loginErrorMessage = '';
   isErrorModalVisible: boolean = false;
+  isSuccessModalVisible = false;
+  readonly loginSuccessButtons: ModalButton[] = [
+    { label: 'Tableau de bord', variant: 'secondary' },
+    { label: 'Liste des cueillettes', variant: 'primary' },
+  ];
 
   private readonly defaultLoginError =
     "L'email ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.";
@@ -35,10 +42,12 @@ export class LoginComponent {
 
     this.loginErrorMessage = this.defaultLoginError;
     this.isErrorModalVisible = false;
+    this.isSuccessModalVisible = false;
     this.userService.login(this.form).subscribe({
       next: (response) => {
         this.authService.saveToken(response.token);
-        this.router.navigate(['/dashboard']);
+        this.isSuccessModalVisible = true;
+        this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
         this.loginErrorMessage = getApiErrorMessage(err, this.defaultLoginError);
@@ -54,5 +63,16 @@ export class LoginComponent {
 
   hideErrorModal(): void {
     this.isErrorModalVisible = false;
+  }
+
+  onLoginSuccessButton(index: number): void {
+    this.isSuccessModalVisible = false;
+
+    if (index === 0) {
+      void this.router.navigate(['/dashboard']);
+      return;
+    }
+
+    void this.router.navigate(['/pickings']);
   }
 }

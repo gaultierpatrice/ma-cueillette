@@ -236,14 +236,10 @@
   </div>
 </section>
 
-@if (isSuccessModalVisible) {
-  <div class="modal-overlay" (click)="dismissSuccessModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Cueillette créée</h3>
-      <p>Votre cueillette a été ajoutée avec succès.</p>
-      <div class="modal-buttons">
-        <button type="button" class="btn-confirm" (click)="dismissSuccessModal()">OK</button>
-      </div>
-    </div>
-  </div>
-}
+<app-modal
+  [visible]="isSuccessModalVisible"
+  title="Cueillette créée"
+  message="Votre cueillette a été ajoutée avec succès."
+  (closed)="dismissSuccessModal()"
+  (buttonClick)="dismissSuccessModal()"
+/>

@@ -5,10 +5,11 @@ import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { PickingWithDistance } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, ModalComponent],
   templateUrl: './favorites.html',
   styleUrls: ['./favorites.css'],
 })
