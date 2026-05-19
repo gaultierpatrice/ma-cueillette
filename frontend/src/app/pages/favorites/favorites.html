@@ -1,125 +1,129 @@
 <section class="hero">
   <div class="container">
+    <div class="navigation">
+      <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
+    </div>
     <h2>Mes favoris</h2>
 
-  @if (loading) {
-    <div class="loading">Chargement de vos favoris...</div>
-  }
+    @if (loading) {
+      <div class="loading">Chargement de vos favoris...</div>
+    }
 
-  @if (error) {
-    <div class="error-message">{{ error }}</div>
-  }
+    @if (error) {
+      <div class="error-message">{{ error }}</div>
+    }
 
-  @if (!loading && !error) {
-    @if (favoritePickings.length === 0) {
-      <div class="no-favorites">
-        <p>Vous n'avez pas encore de favoris.</p>
-        <p>
-          Explorez les cueillettes et ajoutez-les à vos favoris pour les retrouver facilement ici !
-        </p>
-        <a routerLink="/pickings" class="btn btn-primary">Découvrir les cueillettes</a>
-      </div>
-    } @else {
-      <div class="pickings-section">
-        <div class="section-header">
-          <h3>
-            {{ favoritePickings.length }} cueillette{{
-              favoritePickings.length > 1 ? 's' : ''
-            }}
-            favorite{{ favoritePickings.length > 1 ? 's' : '' }}
-          </h3>
+    @if (!loading && !error) {
+      @if (favoritePickings.length === 0) {
+        <div class="no-favorites">
+          <p>Vous n'avez pas encore de favoris.</p>
+          <p>
+            Explorez les cueillettes et ajoutez-les à vos favoris pour les retrouver facilement ici
+            !
+          </p>
+          <a routerLink="/pickings" class="btn btn-primary">Découvrir les cueillettes</a>
         </div>
+      } @else {
+        <div class="pickings-section">
+          <div class="section-header">
+            <h3>
+              {{ favoritePickings.length }} cueillette{{
+                favoritePickings.length > 1 ? 's' : ''
+              }}
+              favorite{{ favoritePickings.length > 1 ? 's' : '' }}
+            </h3>
+          </div>
 
-        <div class="pickings-list">
-          @for (picking of favoritePickings; track picking.id) {
-            <div class="picking-card" [routerLink]="['/pickings', picking.id]">
-              <div class="picking-info">
-                <div class="picking-header">
-                  <div class="name-rating-container">
-                    <h4 class="picking-name">{{ picking.name }}</h4>
-                    @if (
-                      picking.averageRating !== null &&
-                      picking.averageRating !== undefined &&
-                      picking.reviewCount &&
-                      picking.reviewCount > 0
-                    ) {
-                      <div class="rating-display">
-                        <span class="stars">★</span>
-                        <span class="rating-value">{{
-                          picking.averageRating | number: '1.1-1'
-                        }}</span>
-                        <span class="review-count">({{ picking.reviewCount }})</span>
+          <div class="pickings-list">
+            @for (picking of favoritePickings; track picking.id) {
+              <div class="picking-card" [routerLink]="['/pickings', picking.id]">
+                <div class="picking-info">
+                  <div class="picking-header">
+                    <div class="name-rating-container">
+                      <h4 class="picking-name">{{ picking.name }}</h4>
+                      @if (
+                        picking.averageRating !== null &&
+                        picking.averageRating !== undefined &&
+                        picking.reviewCount &&
+                        picking.reviewCount > 0
+                      ) {
+                        <div class="rating-display">
+                          <span class="stars">★</span>
+                          <span class="rating-value">{{
+                            picking.averageRating | number: '1.1-1'
+                          }}</span>
+                          <span class="review-count">({{ picking.reviewCount }})</span>
+                        </div>
+                      }
+                    </div>
+                    <div class="gps-distance">
+                      <button
+                        class="gps-btn"
+                        (click)="openGoogleMaps($event, picking)"
+                        title="Itinéraire GPS"
+                      >
+                        Itineraire
+                      </button>
+                    </div>
+                    <div class="header-actions">
+                      <button
+                        class="favorite-btn favorited"
+                        (click)="removeFavorite($event, picking.id)"
+                        title="Retirer des favoris"
+                      >
+                        <img
+                          src="assets/images/icons/heart-solid.png"
+                          alt="Retirer des favoris"
+                          class="heart-icon"
+                        />
+                        <span class="favorite-text">Retirer des favoris</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="picking-details">
+                    <div class="picking-address">
+                      {{ picking.address }}
+                    </div>
+                    <div class="picking-city-postal">
+                      {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
+                    </div>
+                    @if (picking.phone || picking.phoneSecondary) {
+                      <div class="picking-phone">
+                        @if (picking.phone) {
+                          <span>{{ picking.phone }}</span>
+                        }
+                        @if (picking.phone && picking.phoneSecondary) {
+                          <span class="phone-sep"> · </span>
+                        }
+                        @if (picking.phoneSecondary) {
+                          <span>{{ picking.phoneSecondary }}</span>
+                        }
+                      </div>
+                    }
+                    @if (picking.website) {
+                      <div class="picking-website">
+                        <a
+                          [href]="picking.website"
+                          target="_blank"
+                          (click)="$event.stopPropagation()"
+                        >
+                          {{ picking.website }}
+                        </a>
                       </div>
                     }
                   </div>
-                  <div class="gps-distance">
-                    <button
-                      class="gps-btn"
-                      (click)="openGoogleMaps($event, picking)"
-                      title="Itinéraire GPS"
-                    >
-                      Itineraire
-                    </button>
-                  </div>
-                  <div class="header-actions">
-                    <button
-                      class="favorite-btn favorited"
-                      (click)="removeFavorite($event, picking.id)"
-                      title="Retirer des favoris"
-                    >
-                      <img
-                        src="assets/images/icons/heart-solid.png"
-                        alt="Retirer des favoris"
-                        class="heart-icon"
-                      />
-                      <span class="favorite-text">Retirer des favoris</span>
-                    </button>
-                  </div>
                 </div>
-
-                <div class="picking-details">
-                  <div class="picking-address">
-                    {{ picking.address }}
-                  </div>
-                  <div class="picking-city-postal">
-                    {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
-                  </div>
-                  @if (picking.phone || picking.phoneSecondary) {
-                    <div class="picking-phone">
-                      @if (picking.phone) {
-                        <span>{{ picking.phone }}</span>
-                      }
-                      @if (picking.phone && picking.phoneSecondary) {
-                        <span class="phone-sep"> · </span>
-                      }
-                      @if (picking.phoneSecondary) {
-                        <span>{{ picking.phoneSecondary }}</span>
-                      }
-                    </div>
-                  }
-                  @if (picking.website) {
-                    <div class="picking-website">
-                      <a
-                        [href]="picking.website"
-                        target="_blank"
-                        (click)="$event.stopPropagation()"
-                      >
-                        {{ picking.website }}
-                      </a>
-                    </div>
-                  }
-                </div>
+                <div class="picking-arrow">→</div>
               </div>
-              <div class="picking-arrow">→</div>
-            </div>
-          }
+            }
+          </div>
         </div>
-      </div>
+      }
     }
-  }
-  <div class="navigation">
-    <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
-  </div>
+    <div class="navigation">
+      <a routerLink="/pickings" class="link">← Retour à la liste des cueillettes</a>
+    </div>
   </div>
 </section>
 
