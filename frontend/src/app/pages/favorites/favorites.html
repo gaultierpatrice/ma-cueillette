@@ -40,7 +40,7 @@
                 [picking]="picking"
                 [isFavorite]="true"
                 favoriteMode="remove"
-                (favoriteClick)="removeFavorite($event, picking.id)"
+                (favoriteClick)="requestRemoveFavorite($event, picking)"
                 (gpsClick)="openGoogleMaps($event, picking)"
               />
             }
@@ -53,6 +53,15 @@
     </div>
   </div>
 </section>
+
+<app-modal
+  [visible]="isRemoveConfirmModalVisible"
+  title="Confirmation"
+  [message]="removeConfirmMessage"
+  [buttons]="removeConfirmButtons"
+  (closed)="hideRemoveConfirmModal()"
+  (buttonClick)="onRemoveConfirmButton($event)"
+/>
 
 <app-modal
   [visible]="isLoginModalVisible"
