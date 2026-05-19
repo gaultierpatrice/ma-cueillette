@@ -4,7 +4,11 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { AuthService } from './auth';
-import { FAVORITE_ADD_ERROR_MESSAGE, FAVORITE_LOAD_ERROR_MESSAGE } from './favorites.types';
+import {
+  FAVORITE_ADD_ERROR_MESSAGE,
+  FAVORITE_LOAD_ERROR_MESSAGE,
+  FAVORITE_REMOVE_ERROR_MESSAGE,
+} from './favorites.types';
 import { FavoritesService } from './favorites.service';
 import { PickingService } from './picking.service';
 import { Picking } from './picking.types';
@@ -79,6 +83,26 @@ describe('FavoritesService', () => {
     expect(service.isFavorite(42)).toBe(false);
   });
 
+  it('loadUserFavoritesWithError returns favorites when logged in', () => {
+    auth.saveToken('token');
+
+    service.loadUserFavoritesWithError().subscribe((result) => {
+      expect(result).toEqual({ favorites: [picking], error: null });
+    });
+
+    const req = httpMock.expectOne('/api/favorites');
+    req.flush([picking]);
+
+    expect(service.isFavorite(42)).toBe(true);
+  });
+
+  it('loadUserFavoritesWithError returns empty when not logged in', () => {
+    service.loadUserFavoritesWithError().subscribe((result) => {
+      expect(result).toEqual({ favorites: [], error: null });
+    });
+    httpMock.expectNone('/api/favorites');
+  });
+
   it('loadUserFavoritesWithError returns an error message on failure', () => {
     auth.saveToken('token');
 
@@ -141,6 +165,55 @@ describe('FavoritesService', () => {
 
     const req = httpMock.expectOne('/api/favorites/99');
     req.flush({}, { status: 409, statusText: 'Conflict' });
+  });
+
+  it('toggleFavorite returns an error message when remove fails', () => {
+    auth.saveToken('token');
+
+    service.loadUserFavorites().subscribe();
+    httpMock.expectOne('/api/favorites').flush([picking]);
+
+    service.toggleFavorite(42).subscribe((result) => {
+      expect(result).toEqual({
+        status: 'error',
+        message: FAVORITE_REMOVE_ERROR_MESSAGE,
+      });
+    });
+
+    const req = httpMock.expectOne('/api/favorites/42');
+    expect(req.request.method).toBe('DELETE');
+    req.flush({}, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('removeFavorite removes via the API when logged in', () => {
+    auth.saveToken('token');
+
+    service.loadUserFavorites().subscribe();
+    httpMock.expectOne('/api/favorites').flush([picking]);
+
+    service.removeFavorite(42).subscribe((result) => {
+      expect(result).toEqual({ status: 'removed' });
+    });
+
+    const req = httpMock.expectOne('/api/favorites/42');
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ message: 'removed' });
+
+    expect(service.isFavorite(42)).toBe(false);
+  });
+
+  it('removeFavorite returns an error message when delete fails', () => {
+    auth.saveToken('token');
+
+    service.removeFavorite(42).subscribe((result) => {
+      expect(result).toEqual({
+        status: 'error',
+        message: FAVORITE_REMOVE_ERROR_MESSAGE,
+      });
+    });
+
+    const req = httpMock.expectOne('/api/favorites/42');
+    req.flush({}, { status: 500, statusText: 'Server Error' });
   });
 
   it('removeFavorite returns login_required when not logged in', () => {
