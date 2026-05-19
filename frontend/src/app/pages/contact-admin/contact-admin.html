@@ -53,7 +53,6 @@
           </button>
         </div>
 
-        <p class="msg success" *ngIf="sent">Message envoyé. Merci&nbsp;!</p>
         <p class="msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
       </form>
 
@@ -61,3 +60,13 @@
     </div>
   </div>
 </section>
+
+<app-modal
+  [visible]="isSuccessModalVisible"
+  title="Message envoyé"
+  message="Votre message a bien été transmis à l'administrateur. Vous recevrez une réponse à l'adresse e-mail indiquée."
+  [closeOnOverlay]="false"
+  [splitButtons]="true"
+  [buttons]="successModalButtons"
+  (buttonClick)="onSuccessModalButton($event)"
+/>
