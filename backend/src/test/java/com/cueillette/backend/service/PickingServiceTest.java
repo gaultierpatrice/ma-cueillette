@@ -127,13 +127,13 @@ class PickingServiceTest {
         CreatePickingDTO dto = baseDto();
         dto.setLat(1.0);
         dto.setLng(2.0);
-        dto.setLabels(List.of(Label.ORGANIC, Label.LOCAL));
+        dto.setLabels(List.of(Label.AB, Label.BIO_EUROPEEN));
 
         when(pickingRepository.save(any(Picking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Picking result = pickingService.createPicking(dto, new User());
 
-        assertThat(result.getLabels()).containsExactly(Label.ORGANIC, Label.LOCAL);
+        assertThat(result.getLabels()).containsExactly(Label.AB, Label.BIO_EUROPEEN);
     }
 
     @Test
