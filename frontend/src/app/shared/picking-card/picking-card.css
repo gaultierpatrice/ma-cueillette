@@ -57,7 +57,7 @@
 }
 
 .picking-details {
-  color: #555;
+  color: #4a4a4a;
   font-size: 14px;
   line-height: 1.6;
   word-wrap: break-word;
@@ -73,7 +73,7 @@
 }
 
 .picking-city-postal {
-  color: #7f8c8d;
+  color: #5c6b6d;
   margin-bottom: 4px;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -81,7 +81,7 @@
 }
 
 .picking-phone {
-  color: #3498db;
+  color: #2471a3;
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
@@ -94,7 +94,7 @@
 }
 
 .picking-website a {
-  color: #3498db;
+  color: #2471a3;
   text-decoration: none;
   word-wrap: break-word;
   overflow-wrap: break-word;

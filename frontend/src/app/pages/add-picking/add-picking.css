@@ -12,6 +12,20 @@
   padding: 20px;
 }
 
+.hero .container {
+  background: #c5ddb5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.hero .container h2 {
+  color: #143d18;
+}
+
+.hero .container .field-hint,
+.hero .container .info-box p {
+  color: #143d18;
+}
+
 .checkbox-group {
   display: flex;
   gap: 20px;
@@ -355,7 +369,7 @@
 
 .submit-hint {
   text-align: center;
-  color: #ff6f00;
+  color: #8b4000;
   font-size: 14px;
   margin-top: 12px;
   font-weight: 500;

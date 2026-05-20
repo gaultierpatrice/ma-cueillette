@@ -95,7 +95,7 @@
 
 .info-section p {
   margin: 5px 0;
-  color: #555;
+  color: #4a4a4a;
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -110,6 +110,11 @@
   gap: 8px;
 }
 
+.products-list,
+.labels-list {
+  margin-top: 5px;
+}
+
 .day-badge,
 .product-badge,
 .label-badge {
@@ -120,26 +125,26 @@
 }
 
 .day-badge {
-  background-color: #3498db;
+  background-color: #2980b9;
   color: white;
 }
 
 .product-badge {
   background-color: #e8f5e9;
-  color: #2e7d32;
+  color: #1b5e20;
   border: 1px solid #a5d6a7;
 }
 
 .product-badge.fruit {
   background-color: #fff3e0;
-  color: #e65100;
+  color: #c43e00;
   border: 1px solid #ffcc80;
 }
 
 .label-badge {
-  background-color: #fff9c4;
-  color: #f57c00;
-  border: 1px solid #ffeb3b;
+  background-color: #ffecb3;
+  color: #6d4200;
+  border: 1px solid #d4a017;
 }
 
 .card-body {
@@ -164,7 +169,7 @@
 }
 
 .contact-link {
-  color: #3498db;
+  color: #2471a3;
   text-decoration: none;
   transition: color 0.3s;
   word-wrap: break-word;
@@ -174,13 +179,13 @@
 }
 
 .contact-link:hover {
-  color: #2980b9;
+  color: #1a5f8a;
   text-decoration: underline;
 }
 
 .description {
   line-height: 1.8;
-  color: #555;
+  color: #4a4a4a;
   white-space: pre-wrap;
 }
 
@@ -198,23 +203,23 @@
 }
 
 .btn-back {
-  background-color: #95a5a6;
+  background-color: #546e7a;
   color: white;
 }
 
 .btn-back:hover {
-  background-color: #7f8c8d;
+  background-color: #4a5f68;
 }
 
 .btn-small {
   padding: 8px 16px;
   font-size: 14px;
-  background-color: #3498db;
+  background-color: #1f6fa8;
   color: white;
 }
 
 .btn-small:hover {
-  background-color: #2980b9;
+  background-color: #1a5f8a;
 }
 
 .reviews-section {
@@ -237,7 +242,7 @@
 }
 
 .no-reviews {
-  color: #7f8c8d;
+  color: #5c6b6d;
   font-style: italic;
   text-align: center;
   padding: 20px;
@@ -270,7 +275,7 @@
 
 .review-date {
   font-size: 0.9em;
-  color: #7f8c8d;
+  color: #5c6b6d;
 }
 
 .rating {
@@ -278,7 +283,7 @@
 }
 
 .star {
-  color: #ddd;
+  color: #bdbdbd;
   font-size: 20px;
   margin-right: 2px;
 }
@@ -288,7 +293,7 @@
 }
 
 .review-comment {
-  color: #555;
+  color: #4a4a4a;
   line-height: 1.6;
   margin: 0;
 }
@@ -297,14 +302,14 @@
   display: block;
   text-align: center;
   margin-top: 15px;
-  color: #3498db;
+  color: #2471a3;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s;
 }
 
 .view-all-reviews:hover {
-  color: #2980b9;
+  color: #1a5f8a;
   text-decoration: underline;
 }
 

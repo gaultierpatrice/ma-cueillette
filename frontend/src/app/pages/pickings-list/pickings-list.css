@@ -38,7 +38,7 @@ h3 {
 
 .link {
   color: white;
-  background-color: #3498db;
+  background-color: #1f6fa8;
   text-decoration: none;
   padding: 8px 16px;
   border: none;
@@ -50,7 +50,7 @@ h3 {
 
 .link:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 4px 8px rgba(31, 111, 168, 0.3);
 }
 
 .location-section {
@@ -64,7 +64,7 @@ h3 {
 }
 
 .location-hint {
-  color: #7f8c8d;
+  color: #5c6b6d;
   font-size: 0.95em;
   margin-top: 5px;
   margin-bottom: 15px;
@@ -95,21 +95,21 @@ h3 {
 }
 
 .btn-primary {
-  background-color: #27ae60;
+  background-color: #1e8449;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #229954;
+  background-color: #186a3b;
 }
 
 .btn-secondary {
-  background-color: #3498db;
+  background-color: #1f6fa8;
   color: white;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: #1a5f8a;
 }
 
 .btn-link {
@@ -168,14 +168,14 @@ h3 {
 }
 
 .btn-show-more {
-  background-color: #3498db;
+  background-color: #1f6fa8;
   color: white;
   font-size: 16px;
   padding: 12px 32px;
 }
 
 .btn-show-more:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: #1a5f8a;
 }
 
 .pickings-section {
@@ -201,7 +201,7 @@ h3 {
 .location-from {
   font-size: 0.75em;
   font-weight: normal;
-  color: #7f8c8d;
+  color: #5c6b6d;
   font-style: italic;
 }
 
@@ -229,13 +229,13 @@ h3 {
 }
 
 .sort-btn:hover:not(:disabled) {
-  border-color: #27ae60;
+  border-color: #1e8449;
   color: #2c3e50;
 }
 
 .sort-btn.active {
-  border-color: #27ae60;
-  background-color: #27ae60;
+  border-color: #1e8449;
+  background-color: #1e8449;
   color: white !important;
 }
 
@@ -243,13 +243,13 @@ h3 {
   opacity: 0.5;
   cursor: not-allowed;
   background-color: #ecf0f1;
-  color: #7f8c8d;
+  color: #5c6b6d;
 }
 
 .no-results {
   text-align: center;
   padding: 40px;
-  color: #7f8c8d;
+  color: #5c6b6d;
   font-size: 18px;
 }
 
