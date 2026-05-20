@@ -1,5 +1,6 @@
 package com.cueillette.backend.dto;
 
+import com.cueillette.backend.model.Label;
 import lombok.Data;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class CreatePickingDTO {
     private Double lng;
     private CategoriesDTO categories;
     private List<ProductDTO> products;
+    private List<Label> labels;
 
     @Data
     public static class CategoriesDTO {

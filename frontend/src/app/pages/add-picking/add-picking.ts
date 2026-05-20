@@ -7,6 +7,7 @@ import { GeolocationService } from '../../services/geolocation.service';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../shared/modal/modal';
+import { LABEL_OPTIONS, type PickingLabelValue } from '../../utils/picking-labels';
 
 interface ProductForm {
   name: string;
@@ -38,6 +39,9 @@ export class AddCueilletteComponent implements OnInit {
     fruits: false,
     vegetables: false
   };
+
+  readonly labelOptions = LABEL_OPTIONS;
+  selectedLabel: PickingLabelValue | '' = '';
 
   products: ProductForm[] = [];
 
@@ -271,7 +275,8 @@ export class AddCueilletteComponent implements OnInit {
       lat: this.coordinates.lat,
       lng: this.coordinates.lng,
       categories: this.categories,
-      products: this.products
+      products: this.products,
+      labels: this.selectedLabel ? [this.selectedLabel] : [],
     };
 
     this.pickingService.createPicking(submissionData).subscribe({

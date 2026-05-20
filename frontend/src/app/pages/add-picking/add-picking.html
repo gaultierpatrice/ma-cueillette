@@ -154,6 +154,20 @@
       </div>
 
       <div class="field">
+        <label>Label ou certification</label>
+        <select [(ngModel)]="selectedLabel" name="label" class="label-select">
+          <option value="">Aucun label</option>
+          @for (option of labelOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        <small class="field-hint"
+          >Indiquez si votre exploitation dispose d’un label ou d’une certification
+          reconnue.</small
+        >
+      </div>
+
+      <div class="field">
         <label>Type de production</label>
         <div class="checkbox-group">
           <label class="checkbox-label">

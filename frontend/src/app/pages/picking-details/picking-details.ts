@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { Picking, Review } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { translatePickingLabel } from '../../utils/picking-labels';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
@@ -139,14 +140,7 @@ export class CueilletteDetailsComponent implements OnInit {
   }
 
   translateLabel(label: string): string {
-    const labels: { [key: string]: string } = {
-      ORGANIC: 'Bio',
-      LOCAL: 'Local',
-      FAIR_TRADE: 'Commerce équitable',
-      BIO: 'Bio',
-      ZERO_PESTICIDE: 'Zéro pesticide',
-    };
-    return labels[label] || label;
+    return translatePickingLabel(label);
   }
 
   isFavorite(pickingId: number): boolean {

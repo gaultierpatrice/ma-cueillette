@@ -3,6 +3,7 @@ package com.cueillette.backend.service;
 import com.cueillette.backend.dto.CreatePickingDTO;
 import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.dto.ProductDTO;
+import com.cueillette.backend.model.Label;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.model.Product;
 import com.cueillette.backend.model.User;
@@ -119,6 +120,20 @@ class PickingServiceTest {
         assertThat(result.getProducts()).containsExactly(existing);
         assertThat(result.getProducer()).isSameAs(producer);
         verify(productRepository, never()).save(any());
+    }
+
+    @Test
+    void createPicking_persistsLabelsWhenProvided() {
+        CreatePickingDTO dto = baseDto();
+        dto.setLat(1.0);
+        dto.setLng(2.0);
+        dto.setLabels(List.of(Label.AB, Label.BIO_EUROPEEN));
+
+        when(pickingRepository.save(any(Picking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Picking result = pickingService.createPicking(dto, new User());
+
+        assertThat(result.getLabels()).containsExactly(Label.AB, Label.BIO_EUROPEEN);
     }
 
     @Test
