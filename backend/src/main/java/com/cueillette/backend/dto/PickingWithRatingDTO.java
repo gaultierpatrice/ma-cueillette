@@ -20,6 +20,8 @@ public class PickingWithRatingDTO {
     private String email;
     private String phone;
     private String phoneSecondary;
+    private boolean hasFruits;
+    private boolean hasVegetables;
     private String imageUrl;
     private List<DayOfWeek> daysOpen;
     private List<Label> labels;
@@ -41,6 +43,8 @@ public class PickingWithRatingDTO {
         this.email = picking.getEmail();
         this.phone = picking.getPhone();
         this.phoneSecondary = picking.getPhoneSecondary();
+        this.hasFruits = picking.isHasFruits();
+        this.hasVegetables = picking.isHasVegetables();
         this.imageUrl = picking.getImageUrl();
         this.daysOpen = picking.getDaysOpen();
         this.labels = picking.getLabels();

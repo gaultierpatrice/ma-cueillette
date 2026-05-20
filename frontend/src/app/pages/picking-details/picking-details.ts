@@ -7,6 +7,7 @@ import { FavoritesService } from '../../services/favorites.service';
 import { Picking, Review } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { translatePickingLabel } from '../../utils/picking-labels';
+import { isFruitType, isVegetableType } from '../../utils/product-type';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
@@ -88,12 +89,12 @@ export class CueilletteDetailsComponent implements OnInit {
 
   get vegetables() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter((p) => !p.type || p.type.toUpperCase() === 'VEGETABLE');
+    return this.picking.products.filter((p) => isVegetableType(p.type));
   }
 
   get fruits() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter((p) => p.type?.toUpperCase() === 'FRUIT');
+    return this.picking.products.filter((p) => isFruitType(p.type));
   }
 
   get averageRating(): number | null {
