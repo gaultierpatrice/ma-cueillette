@@ -154,17 +154,45 @@
       </div>
 
       <div class="field">
-        <label>Label ou certification</label>
-        <select [(ngModel)]="selectedLabel" name="label" class="label-select">
-          <option value="">Aucun label</option>
-          @for (option of labelOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
+        <label>Labels ou certifications</label>
         <small class="field-hint"
-          >Indiquez si votre exploitation dispose d’un label ou d’une certification
-          reconnue.</small
+          >Ajoutez un ou plusieurs labels reconnus pour votre exploitation (optionnel).</small
         >
+
+        @if (selectedLabels.length > 0) {
+          <div class="labels-selected-list">
+            @for (label of selectedLabels; track label) {
+              <div class="label-item">
+                <span class="label-item-name">{{ translateLabel(label) }}</span>
+                <button type="button" class="btn-remove" (click)="removeLabel($index)">✕</button>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="add-label-form">
+          <div class="form-row">
+            <select
+              [(ngModel)]="pendingLabel"
+              name="pendingLabel"
+              class="label-select"
+              [disabled]="availableLabelOptions.length === 0"
+            >
+              <option value="">Choisir un label</option>
+              @for (option of availableLabelOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+            <button
+              type="button"
+              class="btn-add"
+              (click)="addLabel()"
+              [disabled]="!pendingLabel"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="field">
