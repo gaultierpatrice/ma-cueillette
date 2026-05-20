@@ -72,30 +72,57 @@
             }
           </h3>
 
-          <div class="sort-controls">
-            <label>Trier par:</label>
-            <button
-              [class.active]="sortBy === 'distance'"
-              [disabled]="!userLocation"
-              (click)="setSortBy('distance')"
-              class="sort-btn"
-            >
-              Distance
-            </button>
-            <button
-              [class.active]="sortBy === 'alphabetical'"
-              (click)="setSortBy('alphabetical')"
-              class="sort-btn"
-            >
-              Alphabétique
-            </button>
-            <button
-              [class.active]="sortBy === 'postal_code'"
-              (click)="setSortBy('postal_code')"
-              class="sort-btn"
-            >
-              Code postal
-            </button>
+          <div class="section-controls">
+            <div class="filter-controls">
+              <label>Filtrer par:</label>
+              <button
+                [class.active]="productTypeFilter === 'all'"
+                (click)="setProductTypeFilter('all')"
+                class="filter-btn"
+              >
+                Tous
+              </button>
+              <button
+                [class.active]="productTypeFilter === 'fruit'"
+                (click)="setProductTypeFilter('fruit')"
+                class="filter-btn"
+              >
+                Fruits
+              </button>
+              <button
+                [class.active]="productTypeFilter === 'vegetable'"
+                (click)="setProductTypeFilter('vegetable')"
+                class="filter-btn"
+              >
+                Légumes
+              </button>
+            </div>
+
+            <div class="sort-controls">
+              <label>Trier par:</label>
+              <button
+                [class.active]="sortBy === 'distance'"
+                [disabled]="!userLocation"
+                (click)="setSortBy('distance')"
+                class="sort-btn"
+              >
+                Distance
+              </button>
+              <button
+                [class.active]="sortBy === 'alphabetical'"
+                (click)="setSortBy('alphabetical')"
+                class="sort-btn"
+              >
+                Alphabétique
+              </button>
+              <button
+                [class.active]="sortBy === 'postal_code'"
+                (click)="setSortBy('postal_code')"
+                class="sort-btn"
+              >
+                Code postal
+              </button>
+            </div>
           </div>
         </div>
 

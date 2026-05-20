@@ -106,11 +106,40 @@ public class PickingService {
             picking.setProducts(products);
         }
 
+        applyProductionCategories(picking, dto);
+
         if (picking.getImageUrl() == null || picking.getImageUrl().isBlank()) {
             picking.setImageUrl(DEFAULT_PICKING_IMAGE_URL);
         }
 
         return pickingRepository.save(picking);
+    }
+
+    private void applyProductionCategories(Picking picking, CreatePickingDTO dto) {
+        boolean hasFruits = dto.getCategories() != null && dto.getCategories().isFruits();
+        boolean hasVegetables = dto.getCategories() != null && dto.getCategories().isVegetables();
+
+        if (picking.getProducts() != null) {
+            for (Product product : picking.getProducts()) {
+                if (isFruitType(product.getType())) {
+                    hasFruits = true;
+                }
+                if (isVegetableType(product.getType())) {
+                    hasVegetables = true;
+                }
+            }
+        }
+
+        picking.setHasFruits(hasFruits);
+        picking.setHasVegetables(hasVegetables);
+    }
+
+    private static boolean isFruitType(String type) {
+        return type != null && type.trim().equalsIgnoreCase("fruit");
+    }
+
+    private static boolean isVegetableType(String type) {
+        return type != null && type.trim().equalsIgnoreCase("vegetable");
     }
 
     @Transactional

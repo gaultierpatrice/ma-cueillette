@@ -32,6 +32,12 @@ public class Picking {
     @Column(name = "phone_secondary")
     private String phoneSecondary;
 
+    @Column(name = "has_fruits", nullable = false)
+    private boolean hasFruits;
+
+    @Column(name = "has_vegetables", nullable = false)
+    private boolean hasVegetables;
+
     private String imageUrl;
 
     @ElementCollection(targetClass = DayOfWeek.class)

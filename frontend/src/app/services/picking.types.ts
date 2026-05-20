@@ -16,6 +16,8 @@ export interface Picking {
   imageUrl?: string;
   daysOpen?: string[];
   labels?: string[];
+  hasFruits?: boolean;
+  hasVegetables?: boolean;
   products?: Product[];
   averageRating?: number;
   reviewCount?: number;

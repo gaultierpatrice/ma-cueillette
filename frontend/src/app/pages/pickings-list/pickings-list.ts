@@ -7,6 +7,7 @@ import { FavoritesService } from '../../services/favorites.service';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
 import { PickingWithDistance, UserLocation } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
+import { matchesProductTypeFilter, type ProductTypeFilter } from '../../utils/product-type';
 import { PickingService } from '../../services/picking.service';
 import { ModalComponent } from '../../shared/modal/modal';
 import { PickingCardComponent } from '../../shared/picking-card/picking-card';
@@ -19,6 +20,7 @@ import { AsyncStateComponent } from '../../shared/async-state/async-state';
   styleUrls: ['./pickings-list.css'],
 })
 export class CueillettesListComponent implements OnInit {
+  private allPickings: PickingWithDistance[] = [];
   pickings: PickingWithDistance[] = [];
   loading = true;
   error: string | null = null;
@@ -27,6 +29,7 @@ export class CueillettesListComponent implements OnInit {
   addressInput = '';
   geolocating = false;
   sortBy: 'distance' | 'alphabetical' | 'postal_code' = 'alphabetical';
+  productTypeFilter: ProductTypeFilter = 'all';
   locationSource = '';
   displayedPickingsCount = 10;
   isLoginModalVisible = false;
@@ -63,8 +66,8 @@ export class CueillettesListComponent implements OnInit {
 
     this.pickingService.getAllPickings().subscribe({
       next: (data) => {
-        this.pickings = data.map((p) => ({ ...p, distance: undefined }));
-        this.sortPickings();
+        this.allPickings = data.map((p) => ({ ...p, distance: undefined }));
+        this.applyFiltersAndSort();
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -132,7 +135,7 @@ export class CueillettesListComponent implements OnInit {
       return;
     }
 
-    this.pickings = this.pickings.map((picking) => {
+    this.allPickings = this.allPickings.map((picking) => {
       const distance = this.geolocationService.calculateDistance(
         this.userLocation!.lat,
         this.userLocation!.lng,
@@ -147,6 +150,20 @@ export class CueillettesListComponent implements OnInit {
 
     this.sortBy = 'distance';
     this.resetDisplayCount();
+    this.applyFiltersAndSort();
+    this.cdr.detectChanges();
+  }
+
+  setProductTypeFilter(filter: ProductTypeFilter) {
+    this.productTypeFilter = filter;
+    this.resetDisplayCount();
+    this.applyFiltersAndSort();
+  }
+
+  applyFiltersAndSort() {
+    this.pickings = this.allPickings.filter((p) =>
+      matchesProductTypeFilter(p, this.productTypeFilter),
+    );
     this.sortPickings();
     this.cdr.detectChanges();
   }
@@ -172,7 +189,7 @@ export class CueillettesListComponent implements OnInit {
   setSortBy(sortType: 'distance' | 'alphabetical' | 'postal_code') {
     this.sortBy = sortType;
     this.resetDisplayCount();
-    this.sortPickings();
+    this.applyFiltersAndSort();
   }
 
   clearLocation() {
@@ -182,8 +199,8 @@ export class CueillettesListComponent implements OnInit {
     this.locationSource = '';
     this.sortBy = 'alphabetical';
     this.resetDisplayCount();
-    this.pickings = this.pickings.map((p) => ({ ...p, distance: undefined }));
-    this.sortPickings();
+    this.allPickings = this.allPickings.map((p) => ({ ...p, distance: undefined }));
+    this.applyFiltersAndSort();
   }
 
   isFavorite(pickingId: number): boolean {

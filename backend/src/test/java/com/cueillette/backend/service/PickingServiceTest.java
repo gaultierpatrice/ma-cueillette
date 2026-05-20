@@ -123,6 +123,40 @@ class PickingServiceTest {
     }
 
     @Test
+    void createPicking_persistsProductionCategoriesFromDto() {
+        CreatePickingDTO dto = baseDto();
+        dto.setLat(1.0);
+        dto.setLng(2.0);
+        CreatePickingDTO.CategoriesDTO categories = new CreatePickingDTO.CategoriesDTO();
+        categories.setFruits(true);
+        categories.setVegetables(true);
+        dto.setCategories(categories);
+
+        when(pickingRepository.save(any(Picking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Picking result = pickingService.createPicking(dto, new User());
+
+        assertThat(result.isHasFruits()).isTrue();
+        assertThat(result.isHasVegetables()).isTrue();
+    }
+
+    @Test
+    void createPicking_allowsNoProductionCategorySelected() {
+        CreatePickingDTO dto = baseDto();
+        dto.setLat(1.0);
+        dto.setLng(2.0);
+        CreatePickingDTO.CategoriesDTO categories = new CreatePickingDTO.CategoriesDTO();
+        dto.setCategories(categories);
+
+        when(pickingRepository.save(any(Picking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Picking result = pickingService.createPicking(dto, new User());
+
+        assertThat(result.isHasFruits()).isFalse();
+        assertThat(result.isHasVegetables()).isFalse();
+    }
+
+    @Test
     void createPicking_persistsLabelsWhenProvided() {
         CreatePickingDTO dto = baseDto();
         dto.setLat(1.0);
@@ -183,6 +217,9 @@ class PickingServiceTest {
         dto.setAddress("10 rue");
         dto.setPostalCode("H1H1H1");
         dto.setCity("Montreal");
+        CreatePickingDTO.CategoriesDTO categories = new CreatePickingDTO.CategoriesDTO();
+        categories.setFruits(true);
+        dto.setCategories(categories);
         return dto;
     }
 }
