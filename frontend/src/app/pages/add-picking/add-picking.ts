@@ -7,7 +7,11 @@ import { GeolocationService } from '../../services/geolocation.service';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../../shared/modal/modal';
-import { LABEL_OPTIONS, type PickingLabelValue } from '../../utils/picking-labels';
+import {
+  LABEL_OPTIONS,
+  translatePickingLabel,
+  type PickingLabelValue,
+} from '../../utils/picking-labels';
 
 interface ProductForm {
   name: string;
@@ -41,7 +45,8 @@ export class AddCueilletteComponent implements OnInit {
   };
 
   readonly labelOptions = LABEL_OPTIONS;
-  selectedLabel: PickingLabelValue | '' = '';
+  selectedLabels: PickingLabelValue[] = [];
+  pendingLabel: PickingLabelValue | '' = '';
 
   products: ProductForm[] = [];
 
@@ -119,6 +124,27 @@ export class AddCueilletteComponent implements OnInit {
 
   removeProduct(index: number): void {
     this.products.splice(index, 1);
+  }
+
+  get availableLabelOptions() {
+    const selected = new Set(this.selectedLabels);
+    return this.labelOptions.filter((option) => !selected.has(option.value));
+  }
+
+  translateLabel(value: PickingLabelValue): string {
+    return translatePickingLabel(value);
+  }
+
+  addLabel(): void {
+    if (!this.pendingLabel || this.selectedLabels.includes(this.pendingLabel)) {
+      return;
+    }
+    this.selectedLabels.push(this.pendingLabel);
+    this.pendingLabel = '';
+  }
+
+  removeLabel(index: number): void {
+    this.selectedLabels.splice(index, 1);
   }
 
   onAddressFieldChange(): void {
@@ -276,7 +302,7 @@ export class AddCueilletteComponent implements OnInit {
       lng: this.coordinates.lng,
       categories: this.categories,
       products: this.products,
-      labels: this.selectedLabel ? [this.selectedLabel] : [],
+      labels: [...this.selectedLabels],
     };
 
     this.pickingService.createPicking(submissionData).subscribe({
