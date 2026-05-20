@@ -11,3 +11,8 @@
   background-repeat: no-repeat;
   padding: 20px;
 }
+
+.field label select {
+  display: block;
+  margin-top: 6px;
+}

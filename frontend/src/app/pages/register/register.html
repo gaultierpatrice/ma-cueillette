@@ -3,28 +3,58 @@
     <h2>Creer un compte</h2>
     <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
       <div class="field">
-        <label>Type de compte</label>
-        <select [(ngModel)]="form.role" name="role" required>
-          <option value="USER">Utilisateur</option>
-          <option value="PRODUCER">Producteur</option>
-        </select>
+        <label>
+          Type de compte
+          <select [(ngModel)]="form.role" name="role" required>
+            <option value="USER">Utilisateur</option>
+            <option value="PRODUCER">Producteur</option>
+          </select>
+        </label>
       </div>
       <div class="field">
-        <label>Nom</label>
-        <input type="text" [(ngModel)]="form.name" name="name" required />
+        <label for="register-name">Nom</label>
+        <input
+          id="register-name"
+          type="text"
+          [(ngModel)]="form.name"
+          name="name"
+          autocomplete="name"
+          required
+        />
       </div>
       <div class="field">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
+        <label for="register-email">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          autocomplete="email"
+          required
+        />
       </div>
       <div class="field">
-        <label>Mot de Passe</label>
-        <input type="password" [(ngModel)]="form.password" name="password" autocomplete="new-password" required />
+        <label for="register-password">Mot de Passe</label>
+        <input
+          id="register-password"
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          autocomplete="new-password"
+          required
+        />
       </div>
       @if (form.role === 'PRODUCER') {
         <div class="field">
-          <label>Nom de l'exploitation</label>
-          <input type="text" [(ngModel)]="form.farmName" name="farmName" required />
+          <label for="register-farm-name">Nom de l'exploitation</label>
+          <input
+            id="register-farm-name"
+            type="text"
+            [(ngModel)]="form.farmName"
+            name="farmName"
+            autocomplete="organization"
+            required
+          />
         </div>
       }
       <button type="submit">Creer mon compte</button>
