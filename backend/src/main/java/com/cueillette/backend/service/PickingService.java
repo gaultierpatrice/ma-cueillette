@@ -85,6 +85,10 @@ public class PickingService {
             }
         }
 
+        if (dto.getLabels() != null && !dto.getLabels().isEmpty()) {
+            picking.setLabels(new ArrayList<>(dto.getLabels()));
+        }
+
         if (dto.getProducts() != null && !dto.getProducts().isEmpty()) {
             List<Product> products = new ArrayList<>();
             for (ProductDTO productDTO : dto.getProducts()) {
