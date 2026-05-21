@@ -70,10 +70,9 @@ Depuis la **racine** du dépôt, avec un `.env` valide :
 docker compose up --build
 ```
 
-- API : `http://localhost:8080`  
-- Frontend (Nginx) : `http://localhost:4200`  
-- PostgreSQL : port `5432`  
-- pgAdmin (optionnel dans le compose) : port `5050`
+- Frontend et API (Nginx, avec rate limiting) : `http://localhost:4200`  
+- API / PostgreSQL / pgAdmin (dev uniquement, `127.0.0.1`) : `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build`  
+  - API : `http://127.0.0.1:8080` — PostgreSQL : `127.0.0.1:5432` — pgAdmin : `http://127.0.0.1:5050`
 
 Cela valide la **containeurisation** (Dockerfiles `backend/` et `frontend/`) et une installation **reproductible** sans installer Java/Node localement.
 
@@ -149,7 +148,8 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) exécute sur 
 |---------|------|
 | `backend/` | API Spring Boot, migrations Flyway, tests JUnit |
 | `frontend/` | Application Angular |
-| `docker-compose.yml` | Postgres, backend, frontend (build image) |
+| `docker-compose.yml` | Postgres, backend, frontend (prod : pas de port 8080 exposé) |
+| `docker-compose.dev.yml` | Surcharge locale : API, PostgreSQL et pgAdmin sur `127.0.0.1` uniquement |
 | `.env.example` | Modèle non secret des variables |
 | `.github/workflows/` | Pipeline CI |
 

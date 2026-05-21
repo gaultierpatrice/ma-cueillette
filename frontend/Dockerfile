@@ -20,7 +20,11 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:1.27-alpine
 
+RUN mkdir -p /etc/nginx/snippets
+
 # Copy custom nginx configuration
+COPY nginx-rate-limit.conf /etc/nginx/conf.d/00-rate-limit.conf
+COPY proxy-api.conf /etc/nginx/snippets/proxy-api.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built application from build stage

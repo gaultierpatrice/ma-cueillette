@@ -102,9 +102,28 @@ Then deploy with kubectl or Helm charts.
 - Managed PostgreSQL database
 - Spaces for static assets
 
-### Production docker-compose.yml
+### Production Docker Compose
 
-Create a separate `docker-compose.prod.yml`:
+Use the base file only (do **not** merge `docker-compose.dev.yml`):
+
+```bash
+podman compose up -d --build
+```
+
+- Only the **frontend** is published on the host (port 4200 in Compose, or 80/443 behind your reverse proxy).
+- **Backend** (8080), **PostgreSQL** (5432), and **pgAdmin** are not published — they stay on the Docker network only.
+- Nginx rate limits public API routes (`frontend/nginx-rate-limit.conf`, `frontend/nginx.conf`).
+- Do not merge `docker-compose.dev.yml` in production (that file exposes admin ports on `127.0.0.1` for local tooling only).
+
+For local debugging with direct API access, use:
+
+```bash
+podman compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+```
+
+That binds backend to `127.0.0.1:8080` only (not reachable from other machines on the LAN).
+
+Optional `docker-compose.prod.yml` overrides (managed DB, image tags, etc.):
 
 ```yaml
 services:
@@ -113,9 +132,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: production
       SPRING_DATASOURCE_URL: jdbc:postgresql://your-managed-db-host:5432/cueillette_db
-      # Use secrets from your platform
     restart: always
-    
+
   frontend:
     image: your-registry.com/ma-cueillette-frontend:latest
     restart: always

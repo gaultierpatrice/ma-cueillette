@@ -24,15 +24,17 @@ Edit `.env` and set your actual values:
 
 ### 2. Build and start all services
 
-Simply run:
+**Production-style** (only the app on port 4200; DB, pgAdmin, and backend API are not published on the host):
+
 ```bash
 podman compose build
-podman compose up
+podman compose up -d
 ```
 
-Or in detached mode (background):
+**Local development** (PostgreSQL, pgAdmin, and API on `127.0.0.1` only — not exposed to the LAN):
+
 ```bash
-podman compose up -d
+podman compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
 The `.env` file will be automatically loaded by all services.
@@ -40,10 +42,10 @@ The `.env` file will be automatically loaded by all services.
 ### 3. Access the application
 
 Once all containers are running:
-- **Frontend**: http://localhost:4200
-- **Backend API**: http://localhost:8080
-- **pgAdmin**: http://localhost:5050
-- **PostgreSQL**: localhost:5432
+- **Frontend** (and API through Nginx rate limiting): http://localhost:4200
+- **Backend API direct** (dev override only): http://127.0.0.1:8080
+- **pgAdmin** (dev override only): http://127.0.0.1:5050
+- **PostgreSQL** (dev override only): `127.0.0.1:5432`
 
 ## Useful Commands
 
@@ -107,7 +109,11 @@ podman logs -f cueillette-backend
 - For a fresh start: `podman-compose down -v && podman-compose up`
 
 ### Port conflicts
-If ports 4200, 8080, 5432, or 5050 are already in use, edit `docker-compose.yml` to change the host port (left side of the port mapping).
+If port 4200 is already in use, edit `docker-compose.yml` to change the frontend host port (left side of the mapping). For 5432, 5050, or 8080, adjust `docker-compose.dev.yml` if you use the dev override.
+
+### API rate limiting
+
+Nginx enforces per-IP limits on public API routes (see `frontend/nginx-rate-limit.conf` and `frontend/nginx.conf`). Stricter limits apply to login, register, and contact; other `/api/` traffic uses a higher read limit. Exceeded limits return HTTP **429**.
 
 Example:
 ```yaml
@@ -117,7 +123,7 @@ ports:
 
 ### Frontend can't connect to backend
 - Check that backend is running: `podman-compose ps`
-- Verify backend health: `curl http://localhost:8080/actuator/health`
+- Verify backend health (via Nginx): `curl http://localhost:4200/api/` (or with dev override: `curl http://127.0.0.1:8080/actuator/health`)
 - Check browser console for CORS errors
 
 ## Development Workflow
