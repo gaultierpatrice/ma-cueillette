@@ -22,6 +22,8 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,6 +68,21 @@ class UserControllerWebMvcTest {
                 .andExpect(jsonPath("$.email").value("test@example.com"))
                 .andExpect(jsonPath("$.name").value("Test User"))
                 .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    void registerShortPasswordReturns400() throws Exception {
+        String body = """
+                {"name":"Test User","email":"test@example.com","password":"short","role":"USER"}""";
+
+        mockMvc.perform(post("/api/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("password: must contain at least 8 characters"));
+
+        verify(userService, never()).createUser(any(), any(), any(), any(), any());
     }
 
     @Test
