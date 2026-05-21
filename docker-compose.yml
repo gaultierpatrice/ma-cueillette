@@ -10,8 +10,7 @@ services:
       POSTGRES_DB: ${DB_NAME:-cueillette_db}
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me}
-    ports:
-      - "5432:5432"
+    # No host ports in production — reachable only as `db:5432` on the Docker network.
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,30 +18,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - cueillette-network
-
-  # pgAdmin
-  pgadmin:
-    image: docker.io/dpage/pgadmin4:latest
-    container_name: cueillette-pgadmin
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-      PGADMIN_DISABLE_POSTFIX: 'true'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
-      PGADMIN_CONFIG_WTF_CSRF_ENABLED: 'False'
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-      - ./pgadmin-servers.json:/pgadmin4/servers.json:ro
-    depends_on:
-      - db
     networks:
       - cueillette-network
 
@@ -67,8 +42,8 @@ services:
       APP_UPLOAD_PICKING_IMAGES_DIR: /app/uploads/pickings
     volumes:
       - picking_uploads:/app/uploads
-    ports:
-      - "8080:8080"
+    # No host ports: API is only reachable via the frontend/nginx proxy on the Docker network.
+    # For local direct access, use docker-compose.dev.yml (127.0.0.1 only).
     depends_on:
       db:
         condition: service_healthy
