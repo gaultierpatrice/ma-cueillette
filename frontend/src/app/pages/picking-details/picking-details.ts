@@ -1,34 +1,57 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
+import { FavoritesService } from '../../services/favorites.service';
 import { Picking, Review } from '../../services/picking.types';
+import { getApiErrorMessage } from '../../utils/api-error';
+import { translatePickingLabel } from '../../utils/picking-labels';
+import { isFruitType, isVegetableType } from '../../utils/product-type';
+import { getFavoriteModalMessage } from '../../services/favorites.types';
+import { ModalComponent } from '../../shared/modal/modal';
+import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
+import { RatingDisplayComponent } from '../../shared/rating-display/rating-display';
+import { AsyncStateComponent } from '../../shared/async-state/async-state';
+import { ReviewListComponent } from '../../shared/review-list/review-list';
+import { resolvePickingImageUrl } from '../../utils/picking-image';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule],
+  imports: [
+    RouterModule,
+    CommonModule,
+    ModalComponent,
+    PickingActionsComponent,
+    RatingDisplayComponent,
+    AsyncStateComponent,
+    ReviewListComponent,
+  ],
   templateUrl: './picking-details.html',
-  styleUrls: ['./picking-details.css']
+  styleUrls: ['./picking-details.css'],
 })
 export class CueilletteDetailsComponent implements OnInit {
   picking: Picking | null = null;
   reviews: Review[] = [];
+  allReviews: Review[] = [];
   loading = true;
   error: string | null = null;
-  pickingId: string;
-  favoritePickingIds: Set<string> = new Set();
+  pickingId: number;
   isLoginModalVisible = false;
   loginModalMessage = '';
+  removePickingInProgress = false;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private pickingService: PickingService,
     private authService: AuthService,
+    private favoritesService: FavoritesService,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
-    this.pickingId = this.route.snapshot.paramMap.get('id') ?? '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.pickingId = idParam ? parseInt(idParam, 10) : 0;
   }
 
   ngOnInit() {
@@ -53,33 +76,47 @@ export class CueilletteDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.ngZone.run(() => {
-          this.error = 'Erreur lors du chargement de la cueillette';
+          this.error = getApiErrorMessage(err, 'Erreur lors du chargement de la cueillette');
           this.loading = false;
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 
   loadReviews() {
     this.pickingService.getPickingReviews(this.pickingId).subscribe({
       next: (data) => {
-        this.reviews = data.slice(0, 3);
+        this.ngZone.run(() => {
+          this.allReviews = [...data];
+          this.reviews = [...data.slice(0, 3)];
+          this.cdr.detectChanges();
+        });
       },
-      error: (err) => {
+      error: () => {
         // Silent fail - reviews are optional
-      }
+      },
     });
   }
 
   get vegetables() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'VEGETABLE' || !p.type);
+    return this.picking.products.filter((p) => isVegetableType(p.type));
   }
 
   get fruits() {
     if (!this.picking?.products) return [];
-    return this.picking.products.filter(p => p.type === 'FRUIT');
+    return this.picking.products.filter((p) => isFruitType(p.type));
+  }
+
+  get averageRating(): number | null {
+    if (!this.allReviews || this.allReviews.length === 0) return null;
+    const sum = this.allReviews.reduce((acc, review) => acc + review.rating, 0);
+    return sum / this.allReviews.length;
+  }
+
+  get totalReviews(): number {
+    return this.allReviews ? this.allReviews.length : 0;
   }
 
   getGoogleMapsLink(): string {
@@ -87,112 +124,82 @@ export class CueilletteDetailsComponent implements OnInit {
     return `https://www.google.com/maps/dir/?api=1&destination=${this.picking.lat},${this.picking.lng}`;
   }
 
-  getStarArray(rating: number): boolean[] {
-    return Array(5).fill(false).map((_, i) => i < rating);
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  }
-
   translateDay(day: string): string {
     const days: { [key: string]: string } = {
-      'MONDAY': 'Lundi',
-      'TUESDAY': 'Mardi',
-      'WEDNESDAY': 'Mercredi',
-      'THURSDAY': 'Jeudi',
-      'FRIDAY': 'Vendredi',
-      'SATURDAY': 'Samedi',
-      'SUNDAY': 'Dimanche'
+      MONDAY: 'Lundi',
+      TUESDAY: 'Mardi',
+      WEDNESDAY: 'Mercredi',
+      THURSDAY: 'Jeudi',
+      FRIDAY: 'Vendredi',
+      SATURDAY: 'Samedi',
+      SUNDAY: 'Dimanche',
     };
     return days[day] || day;
   }
 
   translateLabel(label: string): string {
-    const labels: { [key: string]: string } = {
-      'ORGANIC': 'Bio',
-      'LOCAL': 'Local',
-      'FAIR_TRADE': 'Commerce équitable',
-      'BIO': 'Bio',
-      'ZERO_PESTICIDE': 'Zéro pesticide'
-    };
-    return labels[label] || label;
+    return translatePickingLabel(label);
   }
 
-  isFavorite(pickingId: string): boolean {
-    return this.favoritePickingIds.has(pickingId);
+  isFavorite(pickingId: number): boolean {
+    return this.favoritesService.isFavorite(pickingId);
+  }
+
+  get pickingImageSrc(): string {
+    return resolvePickingImageUrl(this.picking?.imageUrl);
   }
 
   loadUserFavorites() {
-    if (!this.authService.isLoggedIn()) {
-      return;
-    }
-
-    const token = this.authService.getToken();
-    if (!token) {
-      return;
-    }
-
-    this.pickingService.getUserFavorites(token).subscribe({
-      next: (favorites) => {
-        this.favoritePickingIds = new Set(favorites.map(p => p.id));
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading favorites:', err);
-      }
+    this.favoritesService.loadUserFavorites().subscribe(() => {
+      this.cdr.detectChanges();
     });
   }
 
   toggleFavorite() {
-    if (!this.authService.isLoggedIn()) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
-    const token = this.authService.getToken();
-    if (!token) {
-      this.loginModalMessage = 'Veuillez vous connecter pour ajouter des favoris';
-      this.isLoginModalVisible = true;
-      return;
-    }
-
-    if (this.favoritePickingIds.has(this.pickingId)) {
-      this.pickingService.removeFromFavorites(this.pickingId, token).subscribe({
-        next: () => {
-          this.favoritePickingIds.delete(this.pickingId);
-          console.log('Removed from favorites:', this.pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error removing favorite:', err);
-          this.loginModalMessage = 'Erreur lors de la suppression du favori';
-          this.isLoginModalVisible = true;
-        }
-      });
-    } else {
-      this.pickingService.addToFavorites(this.pickingId, token).subscribe({
-        next: () => {
-          this.favoritePickingIds.add(this.pickingId);
-          console.log('Added to favorites:', this.pickingId);
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error adding favorite:', err);
-          this.loginModalMessage = 'Erreur lors de l\'ajout du favori';
-          this.isLoginModalVisible = true;
-        }
-      });
-    }
+    this.favoritesService.toggleFavorite(this.pickingId).subscribe((result) => {
+      const message = getFavoriteModalMessage(result);
+      if (message) {
+        this.loginModalMessage = message;
+        this.isLoginModalVisible = true;
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   hideLoginModal() {
     this.isLoginModalVisible = false;
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
+  }
+
+  confirmRemovePicking(): void {
+    if (!this.isAdmin || this.removePickingInProgress || !this.pickingId) {
+      return;
+    }
+    const name = this.picking?.name ?? 'cette cueillette';
+    if (
+      !confirm(
+        `Supprimer définitivement « ${name} » ? Cette action est irréversible (avis, favoris, etc.).`,
+      )
+    ) {
+      return;
+    }
+    this.removePickingInProgress = true;
+    this.pickingService.deletePicking(this.pickingId).subscribe({
+      next: () => {
+        this.router.navigate(['/pickings']);
+      },
+      error: (err) => {
+        this.removePickingInProgress = false;
+        this.loginModalMessage = getApiErrorMessage(
+          err,
+          'Impossible de supprimer la cueillette. Vérifiez vos droits administrateur ou réessayez plus tard.',
+        );
+        this.isLoginModalVisible = true;
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

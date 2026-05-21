@@ -1,20 +1,22 @@
 <section class="hero">
-  <div class="container" style="background: transparent; padding: 0; max-width: 520px">
+  <div class="container" style="max-width: 900px">
     <div>
       <a routerLink="/pickings">Chercher une cueillette</a>
 
       @if (isAuthenticated) {
         <a routerLink="/favorites">Mes favoris</a>
-        <div>
-          <a routerLink="/dashboard">Mon Compte</a>
-        </div>
       } @else {
-        <div>
+        <div class="login-btn">
           <a routerLink="/login">Connexion</a>
           <a routerLink="/register">Inscription</a>
         </div>
       }
     </div>
+    @if (isAuthenticated) {
+      <div>
+        <a routerLink="/dashboard">Mon Compte</a>
+      </div>
+    }
     <div class="minor">
       <a routerLink="/legal">Mentions légales</a>
       <a routerLink="/about">A propos</a>

@@ -1,5 +1,5 @@
 export interface Picking {
-  id: string;
+  id: number;
   name: string;
   address: string;
   lat: number;
@@ -7,6 +7,8 @@ export interface Picking {
   postalCode?: string;
   city?: string;
   phone?: string;
+  /** Second number (e.g. mobile when phone is fixe) */
+  phoneSecondary?: string;
   email?: string;
   website?: string;
   openingHours?: string;
@@ -14,18 +16,22 @@ export interface Picking {
   imageUrl?: string;
   daysOpen?: string[];
   labels?: string[];
+  hasFruits?: boolean;
+  hasVegetables?: boolean;
   products?: Product[];
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   harvestSeason?: string;
   type?: string;
 }
 
 export interface Review {
-  id: string;
+  id: number;
   rating: number;
   comment?: string;
   publishedAt: string;

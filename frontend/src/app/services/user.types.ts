@@ -7,6 +7,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
   role: UserRole;
+  farmName?: string;
 }
 
 export interface LoginPayload {

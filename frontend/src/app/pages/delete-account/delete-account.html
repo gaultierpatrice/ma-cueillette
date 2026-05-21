@@ -1,62 +1,56 @@
-<div class="container delete-account-container">
-  <h2>Supprimer mon compte</h2>
+<section class="hero">
+  <div class="container delete-account-container">
+    <h2>Supprimer mon compte</h2>
 
-  <div class="warning-box">
-    <p class="warning-title"><strong>⚠️ Attention !</strong></p>
-    <p>La suppression de votre compte est définitive et irréversible.</p>
-    <p>Les données suivantes seront supprimées :</p>
-    <ul>
-      <li>Vos informations personnelles</li>
-      <li>Vos avis et commentaires</li>
-      <li>Vos favoris</li>
-      <li>Vos signalements</li>
-    </ul>
-    <p class="note">
-      Note : Vos cueillettes resteront visibles mais ne seront plus associées à
-      votre compte.
-    </p>
-  </div>
+    <div class="warning-box">
+      <p class="warning-title"><strong>⚠️ Attention !</strong></p>
+      <p>La suppression de votre compte est définitive et irréversible.</p>
+      <p>Les données suivantes seront supprimées :</p>
+      <ul>
+        <li>Vos informations personnelles</li>
+        <li>Vos avis et commentaires</li>
+        <li>Vos favoris</li>
+        <li>Vos signalements</li>
+      </ul>
+      <p class="note">
+        Note : Vos cueillettes resteront visibles mais ne seront plus associées à votre compte.
+      </p>
+    </div>
 
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+    <app-async-state [error]="error || null" />
 
-  <div *ngIf="!showConfirmation" class="button-group">
-    <button class="btn-danger" (click)="showConfirmDialog()">
-      Supprimer mon compte
-    </button>
-    <a routerLink="/dashboard" class="btn-secondary">Annuler</a>
-  </div>
+    <div *ngIf="!showConfirmation" class="button-group">
+      <button class="btn-danger" (click)="showConfirmDialog()">Supprimer mon compte</button>
+      <a routerLink="/dashboard" class="btn-secondary">Annuler</a>
+    </div>
 
-  <div *ngIf="showConfirmation" class="confirmation-dialog">
-    <h3>Êtes-vous sûr ?</h3>
-    <p>
-      Cette action est irréversible. Veuillez taper <strong>SUPPRIMER</strong>
-      pour confirmer.
-    </p>
+    <div *ngIf="showConfirmation" class="confirmation-dialog">
+      <h3>Êtes-vous sûr ?</h3>
+      <p>
+        Cette action est irréversible. Veuillez taper <strong>SUPPRIMER</strong>
+        pour confirmer.
+      </p>
 
-    <input
-      type="text"
-      [(ngModel)]="confirmationText"
-      placeholder="Tapez SUPPRIMER"
-      class="confirmation-input"
-      [disabled]="isDeleting"
-    />
-
-    <div class="button-group">
-      <button
-        class="btn-danger"
-        (click)="confirmDelete()"
-        [disabled]="isDeleting || confirmationText !== 'SUPPRIMER'"
-      >
-        {{ isDeleting ? 'Suppression en cours...' : 'Confirmer la suppression' }}
-      </button>
-      <button
-        class="btn-secondary"
-        (click)="cancelDelete()"
+      <input
+        type="text"
+        [(ngModel)]="confirmationText"
+        placeholder="Tapez SUPPRIMER"
+        class="confirmation-input"
         [disabled]="isDeleting"
-      >
-        Annuler
-      </button>
+      />
+
+      <div class="button-group">
+        <button
+          class="btn-danger"
+          (click)="confirmDelete()"
+          [disabled]="isDeleting || confirmationText !== 'SUPPRIMER'"
+        >
+          {{ isDeleting ? 'Suppression en cours...' : 'Confirmer la suppression' }}
+        </button>
+        <button class="btn-secondary" (click)="cancelDelete()" [disabled]="isDeleting">
+          Annuler
+        </button>
+      </div>
     </div>
   </div>
-</div>
-
+</section>

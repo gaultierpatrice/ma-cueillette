@@ -7,10 +7,23 @@ podman run -d --name pgadmin_c --pod cueillette -e PGADMIN_DEFAULT_EMAIL=gaultie
 
 podman run -d --name postgres_c --pod cueillette -e POSTGRES_DB=cueillette_db -e POSTGRES_PASSWORD=pgpicking -v cueillette_postgres_data:/var/lib/postgresql/data docker.io/library/postgres:16
 
-
-
 Pour lancer le back : run BackendApplication
 Pour lancer le front : ng serve
 
+Admin creds :  admin@ma-cueillette.local / admin1234
 
-Ou on s'est arreté sur le tuto securité : Step 4 — Update UserService.java
+Lancer le conteneur pour dev:
+
+podman compose start
+podman compose stop
+
+Reset de DB : 
+podman compose down
+podman volume rm ma_cueillette_postgres_data
+podman compose up -d
+
+recrée le test user : testGot , test@test.fr , test1234
+
+Commande pour mettre a jour le front :
+podman compose build frontend
+podman compose up -d frontend

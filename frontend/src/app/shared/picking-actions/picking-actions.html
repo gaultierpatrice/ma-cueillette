@@ -1,0 +1,38 @@
+<div
+  class="picking-actions"
+  [class.picking-actions--card]="layout === 'card'"
+  [class.picking-actions--details]="layout === 'details'"
+>
+  @if (layout === 'details') {
+    <button
+      class="btn btn-favorite"
+      [class.favorited]="isFavorite"
+      (click)="onFavoriteClick($event)"
+      [title]="favoriteTitle"
+    >
+      <img [src]="favoriteIconSrc" [alt]="favoriteTitle" class="heart-icon" />
+    </button>
+    <a [href]="gpsLink" target="_blank" class="btn btn-gps">Itinéraire GPS</a>
+    @if (showAdminRemove) {
+      <button
+        type="button"
+        class="btn btn-remove-picking"
+        [disabled]="removeInProgress"
+        (click)="onAdminRemoveClick($event)"
+        title="Supprimer cette cueillette (administrateur)"
+      >
+        {{ removeInProgress ? 'Suppression…' : 'Supprimer la cueillette' }}
+      </button>
+    }
+  } @else {
+    <button class="gps-btn" (click)="onGpsClick($event)" title="Itinéraire GPS">Itineraire</button>
+    <button
+      class="btn btn-favorite"
+      [class.favorited]="favoriteMode === 'remove' || isFavorite"
+      (click)="onFavoriteClick($event)"
+      [title]="favoriteTitle"
+    >
+      <img [src]="favoriteIconSrc" [alt]="favoriteTitle" class="heart-icon" />
+    </button>
+  }
+</div>

@@ -12,6 +12,8 @@ footer {
 .links {
   display: flex;
   gap: 40px;
+  width: 600px;
+  justify-content: space-between;
 }
 
 .links a {
@@ -25,4 +27,3 @@ footer {
   height: 24px;
   filter: invert(1);
 }
-

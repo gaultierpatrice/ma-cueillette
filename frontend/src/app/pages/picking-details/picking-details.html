@@ -1,63 +1,92 @@
-<div class="container">
-  <div *ngIf="loading" class="loading">Chargement des détails...</div>
+<section class="hero">
+  <div class="container">
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement des détails..."
+    />
 
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+    <div *ngIf="picking && !loading">
+      <div class="details-card">
+        <div class="card-header">
+          <div class="image-container">
+            <img [src]="pickingImageSrc" [alt]="picking.name" class="picking-image" />
+          </div>
 
-  <div *ngIf="picking && !loading">
-    <div class="details-card">
-      <div class="card-header">
-        <div class="image-container">
-          <img
-            *ngIf="picking.imageUrl"
-            [src]="picking.imageUrl"
-            [alt]="picking.name"
-            class="picking-image"
-          />
-          <div *ngIf="!picking.imageUrl" class="image-placeholder">
-            <span class="placeholder-icon">🌾</span>
+          <div class="header-info">
+            <div class="name-rating-section">
+              <h2 class="picking-name">{{ picking.name }}</h2>
+              <div class="info-section" *ngIf="picking.description">
+                <p class="description">{{ picking.description }}</p>
+              </div>
+              <app-rating-display [rating]="averageRating" [reviewCount]="totalReviews" size="lg" />
+            </div>
+            <div class="info-section">
+              <h3>Adresse:</h3>
+              <p>{{ picking.address }}</p>
+              <p *ngIf="picking.postalCode && picking.city">
+                {{ picking.postalCode }} {{ picking.city }}
+              </p>
+            </div>
+            <app-picking-actions
+              layout="details"
+              [isFavorite]="isFavorite(pickingId)"
+              [gpsLink]="getGoogleMapsLink()"
+              [showAdminRemove]="isAdmin"
+              [removeInProgress]="removePickingInProgress"
+              (favoriteClick)="toggleFavorite()"
+              (adminRemoveClick)="confirmRemovePicking()"
+            />
+
+            <div class="info-section" *ngIf="picking.daysOpen && picking.daysOpen.length > 0">
+              <h3>Jours d'ouverture:</h3>
+              <div class="days-list">
+                <span *ngFor="let day of picking.daysOpen" class="day-badge">{{
+                  translateDay(day)
+                }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="header-info">
-          <h2 class="picking-name">{{ picking.name }}</h2>
-
-          <div class="actions">
-            <button
-              class="btn btn-favorite"
-              [class.favorited]="isFavorite(pickingId)"
-              (click)="toggleFavorite()"
-              title="{{ isFavorite(pickingId) ? 'Retirer des favoris' : 'Ajouter aux favoris' }}"
-            >
-              <img
-                [src]="
-                  isFavorite(pickingId)
-                    ? 'assets/images/icons/heart-solid.png'
-                    : 'assets/images/icons/heart-regular.png'
-                "
-                [alt]="isFavorite(pickingId) ? 'Favoris' : 'Ajouter aux favoris'"
-                class="heart-icon"
-              />
-            </button>
-            <a [href]="getGoogleMapsLink()" target="_blank" class="btn btn-gps"> Itinéraire GPS </a>
+        <div class="card-body">
+          <div class="contact-item" *ngIf="picking.phone && picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
+            <a [href]="'tel:' + picking.phone" class="contact-link">{{ picking.phone }}</a>
+          </div>
+          <div class="contact-item" *ngIf="picking.phone && picking.phoneSecondary">
+            <span class="label">Second numéro :</span>
+            <a [href]="'tel:' + picking.phoneSecondary" class="contact-link">{{
+              picking.phoneSecondary
+            }}</a>
+          </div>
+          <div class="contact-item" *ngIf="picking.phone && !picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
+            <a [href]="'tel:' + picking.phone" class="contact-link">{{ picking.phone }}</a>
+          </div>
+          <div class="contact-item" *ngIf="!picking.phone && picking.phoneSecondary">
+            <span class="label">Téléphone :</span>
+            <a [href]="'tel:' + picking.phoneSecondary" class="contact-link">{{
+              picking.phoneSecondary
+            }}</a>
           </div>
 
-          <div class="info-section">
-            <h3>Adresse:</h3>
-            <p>{{ picking.address }}</p>
-            <p *ngIf="picking.postalCode && picking.city">
-              {{ picking.postalCode }} {{ picking.city }}
-            </p>
+          <div class="contact-item" *ngIf="picking.email">
+            <span class="label">Email:</span>
+            <a [href]="'mailto:' + picking.email" class="contact-link">{{ picking.email }}</a>
           </div>
 
-          <div class="info-section" *ngIf="picking.daysOpen && picking.daysOpen.length > 0">
-            <h3>Jours d'ouverture:</h3>
-            <div class="days-list">
-              <span *ngFor="let day of picking.daysOpen" class="day-badge">{{
-                translateDay(day)
-              }}</span>
-            </div>
+          <div class="contact-item" *ngIf="picking.website">
+            <span class="label">Site web:</span>
+            <a [href]="picking.website" target="_blank" class="contact-link">{{
+              picking.website
+            }}</a>
           </div>
 
+          <div class="info-section" *ngIf="picking.openingHours">
+            <h3>Horaires:</h3>
+            <p>{{ picking.openingHours }}</p>
+          </div>
           <div *ngIf="picking.products && picking.products.length > 0">
             <div class="info-section" *ngIf="vegetables.length > 0">
               <h3>Légumes:</h3>
@@ -77,96 +106,54 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="card-body">
-        <div class="contact-item" *ngIf="picking.phone">
-          <span class="label">Téléphone:</span>
-          <a [href]="'tel:' + picking.phone" class="contact-link">{{ picking.phone }}</a>
-        </div>
-
-        <div class="contact-item" *ngIf="picking.email">
-          <span class="label">Email:</span>
-          <a [href]="'mailto:' + picking.email" class="contact-link">{{ picking.email }}</a>
-        </div>
-
-        <div class="contact-item" *ngIf="picking.website">
-          <span class="label">Site web:</span>
-          <a [href]="picking.website" target="_blank" class="contact-link">{{ picking.website }}</a>
-        </div>
-
-        <div class="info-section" *ngIf="picking.openingHours">
-          <h3>Horaires:</h3>
-          <p>{{ picking.openingHours }}</p>
-        </div>
-
-        <div class="info-section" *ngIf="picking.description">
-          <p class="description">{{ picking.description }}</p>
-        </div>
-
-        <div class="info-section" *ngIf="picking.labels && picking.labels.length > 0">
-          <h3>Labels:</h3>
-          <div class="labels-list">
-            <span *ngFor="let label of picking.labels" class="label-badge">{{
-              translateLabel(label)
-            }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="reviews-section">
-        <div class="reviews-header">
-          <h3>⭐ Avis</h3>
-          <a [routerLink]="['/pickings', pickingId, 'review']" class="btn btn-small">
-            Laisser un avis
-          </a>
-        </div>
-
-        <p *ngIf="reviews.length === 0" class="no-reviews">
-          Aucun avis pour le moment. Soyez le premier à en laisser un !
-        </p>
-
-        <div *ngIf="reviews.length > 0">
-          <div class="reviews-list">
-            <div *ngFor="let review of reviews" class="review-card">
-              <div class="review-header">
-                <span class="reviewer-name">{{ review.user.name }}</span>
-                <span class="review-date">{{ formatDate(review.publishedAt) }}</span>
-              </div>
-              <div class="rating">
-                <span
-                  *ngFor="let star of getStarArray(review.rating); let i = index"
-                  class="star"
-                  [class.filled]="star"
-                  >★</span
-                >
-              </div>
-              <p *ngIf="review.comment" class="review-comment">{{ review.comment }}</p>
+          <div class="info-section" *ngIf="picking.labels && picking.labels.length > 0">
+            <h3>Labels:</h3>
+            <div class="labels-list">
+              <span *ngFor="let label of picking.labels" class="label-badge">{{
+                translateLabel(label)
+              }}</span>
             </div>
           </div>
+        </div>
 
-          <a [routerLink]="['/pickings', pickingId, 'review']" class="view-all-reviews">
-            Voir tous les avis →
-          </a>
+        <div class="reviews-section">
+          <div class="reviews-header">
+            <h3>⭐ Avis</h3>
+            <a [routerLink]="['/pickings', pickingId, 'review']" class="btn btn-small">
+              Laisser un avis
+            </a>
+          </div>
+
+          <p *ngIf="reviews.length === 0" class="no-reviews">
+            Aucun avis pour le moment. Soyez le premier à en laisser un !
+          </p>
+
+          <div *ngIf="reviews.length > 0">
+            <app-review-list
+              [reviews]="reviews"
+              [pickingId]="pickingId"
+              (reviewsChanged)="loadReviews()"
+            />
+
+            <a [routerLink]="['/pickings', pickingId, 'review']" class="view-all-reviews">
+              Voir tous les avis →
+            </a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="navigation">
-      <a routerLink="/pickings" class="btn btn-back">← Retour à la liste</a>
-    </div>
-  </div>
-</div>
-
-@if (isLoginModalVisible) {
-  <div class="modal-overlay" (click)="hideLoginModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Information</h3>
-      <p>{{ loginModalMessage }}</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" (click)="hideLoginModal()">OK</button>
+      <div class="navigation">
+        <a routerLink="/pickings" class="btn btn-back">← Retour à la liste</a>
       </div>
     </div>
   </div>
-}
+</section>
+
+<app-modal
+  [visible]="isLoginModalVisible"
+  title="Information"
+  [message]="loginModalMessage"
+  (closed)="hideLoginModal()"
+  (buttonClick)="hideLoginModal()"
+/>

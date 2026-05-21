@@ -1,25 +1,33 @@
 <section class="hero">
-  <div class="container" style="background: transparent; padding: 0; max-width: 520px">
-    <div>
-      @if (isAuthenticated) {
-        <div class="hero-card">
-          <h2>Bienvenue {{ username }} !</h2>
-
-          <a routerLink="/favorites">Mes favoris</a>
-        </div>
-      } @else {
-        <div class="hero-card">
-          <h2>Bienvenue !</h2>
-          <p>Connectez-vous pour accéder à toutes les fonctionnalités.</p>
-          <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
-        </div>
-      }
+  <div class="container" style="max-width: 900px">
+    @if (isAuthenticated) {
+      <div class="hero-card">
+        <h2>Bienvenue {{ username }} !</h2>
+      </div>
+    } @else {
+      <div class="hero-card">
+        <h2>Bienvenue !</h2>
+        <p>Connectez-vous ou créez un compte pour accéder à toutes les fonctionnalités.</p>
+        <button class="btn-login" (click)="navigateToLogin()">Se connecter</button>
+        <button class="btn-register" (click)="navigateToRegister()">Créer un compte</button>
+      </div>
+    }
+    <div class="center-link">
       <a routerLink="/pickings">Chercher une cueillette</a>
+      @if (isAuthenticated) {
+        <a routerLink="/favorites">Mes favoris</a>
+      }
     </div>
     @if (isAuthenticated) {
       <div>
         <div class="minor">
-          <a routerLink="/add-picking">Proposer ma cueillette</a>
+          @if (isProducer && hasPicking !== null) {
+            @if (hasPicking) {
+              <a routerLink="/modify-picking">Modifier ma cueillette</a>
+            } @else {
+              <a routerLink="/add-picking">Proposer ma cueillette</a>
+            }
+          }
           <a routerLink="/contact-admin">Contacter l'administrateur</a>
         </div>
         <div class="disconnect">
@@ -35,15 +43,11 @@
   </div>
 </section>
 
-@if (isLogoutModalVisible) {
-  <div class="modal-overlay" (click)="hideLogoutModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Confirmation</h3>
-      <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
-      <div class="modal-buttons">
-        <button class="btn-cancel" (click)="hideLogoutModal()">Annuler</button>
-        <button class="btn-confirm" (click)="confirmLogout()">OK</button>
-      </div>
-    </div>
-  </div>
-}
+<app-modal
+  [visible]="isLogoutModalVisible"
+  title="Confirmation"
+  message="Êtes-vous sûr de vouloir vous déconnecter ?"
+  [buttons]="logoutModalButtons"
+  (closed)="hideLogoutModal()"
+  (buttonClick)="onLogoutModalButton($event)"
+/>

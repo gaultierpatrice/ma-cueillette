@@ -1,31 +1,53 @@
-<div class="container">
-  <h2>Se connecter</h2>
+<section class="hero">
+  <div class="container">
+    <h2>Se connecter</h2>
 
-  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-    <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
-    </div>
-
-    <div class="field">
-      <label>Mot de passe</label>
-      <input type="password" [(ngModel)]="form.password" name="password" autocomplete="current-password" required />
-    </div>
-
-    <button type="submit">Se connecter</button>
-  </form>
-
-  <p><a routerLink="/register">Pas encore de compte? Creer un compte</a></p>
-</div>
-
-@if (isErrorModalVisible) {
-  <div class="modal-overlay" (click)="hideErrorModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Erreur de connexion</h3>
-      <p>L'email ou le mot de passe que vous avez saisi est incorrect. Veuillez réessayer.</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" (click)="hideErrorModal()">OK</button>
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input
+          id="login-email"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          autocomplete="email"
+          required
+        />
       </div>
-    </div>
+
+      <div class="field">
+        <label for="login-password">Mot de passe</label>
+        <input
+          id="login-password"
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button type="submit">Se connecter</button>
+    </form>
+
+    <p><a routerLink="/register">Pas encore de compte? Creer un compte</a></p>
   </div>
-}
+</section>
+
+<app-modal
+  [visible]="isSuccessModalVisible"
+  title="Connexion réussie"
+  message="Vous êtes connecté. Où souhaitez-vous aller ?"
+  [closeOnOverlay]="false"
+  [splitButtons]="true"
+  [buttons]="loginSuccessButtons"
+  (buttonClick)="onLoginSuccessButton($event)"
+/>
+
+<app-modal
+  [visible]="isErrorModalVisible"
+  title="Erreur de connexion"
+  [message]="loginErrorMessage"
+  (closed)="hideErrorModal()"
+  (buttonClick)="hideErrorModal()"
+/>

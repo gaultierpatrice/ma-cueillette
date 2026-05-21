@@ -12,8 +12,8 @@ import java.util.UUID;
 public class Picking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private String address;
@@ -28,6 +28,16 @@ public class Picking {
     private String city;
     private String email;
     private String phone;
+
+    @Column(name = "phone_secondary")
+    private String phoneSecondary;
+
+    @Column(name = "has_fruits", nullable = false)
+    private boolean hasFruits;
+
+    @Column(name = "has_vegetables", nullable = false)
+    private boolean hasVegetables;
+
     private String imageUrl;
 
     @ElementCollection(targetClass = DayOfWeek.class)

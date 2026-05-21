@@ -2,6 +2,7 @@ package com.cueillette.backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,12 +25,24 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                        .requestMatchers("/api/pickings", "/api/pickings/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickings/mine").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.PUT, "/api/pickings/*").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.POST, "/api/pickings/*/image").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.GET, "/api/pickings/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/pickings/*/reviews").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/pickings/*/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/pickings/*/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/pickings").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pickings/*").hasRole("ADMIN")
                         .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
                         .requestMatchers("/api/favorites/**").authenticated()
                         .anyRequest().authenticated()

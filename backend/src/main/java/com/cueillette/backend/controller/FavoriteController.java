@@ -1,20 +1,17 @@
 package com.cueillette.backend.controller;
 
+import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.model.Favorite;
-import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.security.JwtUtil;
 import com.cueillette.backend.service.FavoriteService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/favorites")
-@CrossOrigin(origins = "*")
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -26,68 +23,48 @@ public class FavoriteController {
     }
 
     @PostMapping("/{pickingId}")
-    public ResponseEntity<?> addFavorite(
+    public ResponseEntity<Map<String, Object>> addFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            String email = jwtUtil.extractEmail(token);
+            @PathVariable Long pickingId) {
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtil.extractEmail(token);
 
-            Favorite favorite = favoriteService.addFavorite(email, pickingId);
-            return ResponseEntity.ok(Map.of(
+        Favorite favorite = favoriteService.addFavorite(email, pickingId);
+        return ResponseEntity.ok(Map.of(
                 "message", "Picking added to favorites",
                 "favoriteId", favorite.getId()
-            ));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        ));
     }
 
     @DeleteMapping("/{pickingId}")
-    public ResponseEntity<?> removeFavorite(
+    public ResponseEntity<Map<String, String>> removeFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            String email = jwtUtil.extractEmail(token);
+            @PathVariable Long pickingId) {
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtil.extractEmail(token);
 
-            favoriteService.removeFavorite(email, pickingId);
-            return ResponseEntity.ok(Map.of("message", "Picking removed from favorites"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        favoriteService.removeFavorite(email, pickingId);
+        return ResponseEntity.ok(Map.of("message", "Picking removed from favorites"));
     }
 
     @GetMapping
-    public ResponseEntity<?> getUserFavorites(
+    public ResponseEntity<List<PickingWithRatingDTO>> getUserFavorites(
             @RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            String email = jwtUtil.extractEmail(token);
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtil.extractEmail(token);
 
-            List<Picking> favorites = favoriteService.getUserFavorites(email);
-            return ResponseEntity.ok(favorites);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        List<PickingWithRatingDTO> favorites = favoriteService.getUserFavorites(email);
+        return ResponseEntity.ok(favorites);
     }
 
     @GetMapping("/check/{pickingId}")
-    public ResponseEntity<?> checkFavorite(
+    public ResponseEntity<Map<String, Boolean>> checkFavorite(
             @RequestHeader("Authorization") String authHeader,
-            @PathVariable UUID pickingId) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            String email = jwtUtil.extractEmail(token);
+            @PathVariable Long pickingId) {
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtil.extractEmail(token);
 
-            boolean isFavorite = favoriteService.isFavorite(email, pickingId);
-            return ResponseEntity.ok(Map.of("isFavorite", isFavorite));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", e.getMessage()));
-        }
+        boolean isFavorite = favoriteService.isFavorite(email, pickingId);
+        return ResponseEntity.ok(Map.of("isFavorite", isFavorite));
     }
 }

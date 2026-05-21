@@ -1,32 +1,82 @@
-<div class="container">
-  <h2>Creer un compte</h2>
-  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
-    <div class="field">
-      <label>Nom</label>
-      <input type="text" [(ngModel)]="form.name" name="name" required />
-    </div>
-    <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required />
-    </div>
-    <div class="field">
-      <label>Mot de Passe</label>
-      <input type="password" [(ngModel)]="form.password" name="password" autocomplete="new-password" required />
-    </div>
-    <button type="submit">Creer mon compte</button>
-  </form>
-  <p class="success">{{ success }}</p>
-  <p><a routerLink="/login">Vous avez déjà un compte? Se connecter</a></p>
-</div>
-
-@if (isErrorModalVisible) {
-  <div class="modal-overlay" (click)="hideErrorModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Erreur d'inscription</h3>
-      <p>{{ errorMessage }}</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" (click)="hideErrorModal()">OK</button>
+<section class="hero">
+  <div class="container">
+    <h2>Creer un compte</h2>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+      <div class="field">
+        <label>
+          Type de compte
+          <select [(ngModel)]="form.role" name="role" required>
+            <option value="USER">Utilisateur</option>
+            <option value="PRODUCER">Producteur</option>
+          </select>
+        </label>
       </div>
-    </div>
+      <div class="field">
+        <label for="register-name">Nom</label>
+        <input
+          id="register-name"
+          type="text"
+          [(ngModel)]="form.name"
+          name="name"
+          autocomplete="name"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="register-email">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          [(ngModel)]="form.email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="register-password">Mot de Passe</label>
+        <input
+          id="register-password"
+          type="password"
+          [(ngModel)]="form.password"
+          name="password"
+          autocomplete="new-password"
+          required
+        />
+      </div>
+      @if (form.role === 'PRODUCER') {
+        <div class="field">
+          <label for="register-farm-name">Nom de l'exploitation</label>
+          <input
+            id="register-farm-name"
+            type="text"
+            [(ngModel)]="form.farmName"
+            name="farmName"
+            autocomplete="organization"
+            required
+          />
+        </div>
+      }
+      <button type="submit">Creer mon compte</button>
+    </form>
+    <p><a routerLink="/login">Vous avez déjà un compte? Se connecter</a></p>
   </div>
-}
+</section>
+
+<app-modal
+  [visible]="isSuccessModalVisible()"
+  title="Compte créé"
+  message="Votre compte a bien été créé. Que souhaitez-vous faire ?"
+  [closeOnOverlay]="false"
+  [splitButtons]="true"
+  [buttons]="registerSuccessButtons"
+  (buttonClick)="onRegisterSuccessButton($event)"
+/>
+
+<app-modal
+  [visible]="isErrorModalVisible()"
+  title="Erreur d'inscription"
+  [message]="errorMessage()"
+  (closed)="hideErrorModal()"
+  (buttonClick)="hideErrorModal()"
+/>

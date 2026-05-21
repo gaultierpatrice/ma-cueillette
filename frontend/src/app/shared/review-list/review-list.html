@@ -1,0 +1,96 @@
+<div *ngIf="successMessage" class="feedback success-message">
+  {{ successMessage }}
+</div>
+
+<div *ngIf="errorMessage" class="feedback error-message">
+  {{ errorMessage }}
+</div>
+
+<div class="reviews-list">
+  <div *ngFor="let review of displayReviews" class="review-card">
+    <div class="review-header">
+      <span class="reviewer-name">{{ review.user.name }}</span>
+      <div class="review-header-right">
+        <span class="review-date">{{ formatDate(review.publishedAt) }}</span>
+        <div *ngIf="isOwnReview(review) && editingReviewId !== review.id" class="review-actions">
+          <button type="button" class="btn-action btn-edit" (click)="startEdit(review)">
+            Modifier
+          </button>
+          <button
+            type="button"
+            class="btn-action btn-delete"
+            (click)="requestDeleteReview(review)"
+            [disabled]="deletingReviewId === review.id"
+          >
+            {{ deletingReviewId === review.id ? 'Suppression...' : 'Supprimer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="editingReviewId !== review.id; else editForm">
+      <div class="rating">
+        <span
+          *ngFor="let star of getStarArray(review.rating); let i = index"
+          class="star"
+          [class.filled]="star"
+        >
+          ★
+        </span>
+      </div>
+      <p *ngIf="review.comment" class="review-comment">{{ review.comment }}</p>
+    </ng-container>
+
+    <ng-template #editForm>
+      <form (ngSubmit)="saveEdit(review.id)" class="review-edit-form">
+        <div class="form-group">
+          <label>Note *</label>
+          <div class="star-rating star-rating--compact">
+            <span
+              *ngFor="let star of [1, 2, 3, 4, 5]"
+              class="star"
+              [class.filled]="isEditStarFilled(star)"
+              (click)="setEditRating(star)"
+              (mouseenter)="setEditHoveredStar(star)"
+              (mouseleave)="clearEditHoveredStar()"
+            >
+              ★
+            </span>
+          </div>
+          <span class="rating-text" *ngIf="editRating > 0">{{ editRating }}/5</span>
+        </div>
+
+        <div class="form-group">
+          <label [for]="'edit-comment-' + review.id">Commentaire (optionnel)</label>
+          <textarea
+            [id]="'edit-comment-' + review.id"
+            name="editComment"
+            [(ngModel)]="editComment"
+            rows="3"
+            placeholder="Partagez votre expérience..."
+            maxlength="500"
+          ></textarea>
+          <span class="char-count">{{ editComment.length }}/500</span>
+        </div>
+
+        <div class="edit-actions">
+          <button type="submit" class="btn-submit" [disabled]="editSubmitting || editRating === 0">
+            {{ editSubmitting ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancelEdit()" [disabled]="editSubmitting">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </ng-template>
+  </div>
+</div>
+
+<app-modal
+  [visible]="isDeleteConfirmModalVisible"
+  title="Confirmation"
+  [message]="deleteConfirmMessage"
+  [buttons]="deleteConfirmButtons"
+  (closed)="hideDeleteConfirmModal()"
+  (buttonClick)="onDeleteConfirmButton($event)"
+/>

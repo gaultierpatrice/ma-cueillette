@@ -1,5 +1,308 @@
-<div class="container">
-  <h2>Proposer ma Cueillette</h2>
+<section class="hero">
+  <div class="container">
+    <h2>Proposer ma Cueillette</h2>
 
-  <div>Placeholder Form</div>
-</div>
+    <form (ngSubmit)="onSubmit()" (keydown)="onFormKeydown($event)">
+      <div class="field">
+        <label>Nom de l'exploitation *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.name"
+          name="name"
+          required
+          placeholder="Vous pouvez modifier le nom si nécessaire (ex: Ferme Bio Martin - Site Nord)"
+        />
+        <small class="field-hint"
+          >Pré-rempli avec le nom de votre exploitation. Vous pouvez le modifier si vous avez
+          plusieurs sites.</small
+        >
+      </div>
+
+      <div class="field">
+        <label>Adresse *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.address"
+          name="address"
+          required
+          placeholder="123 Rue de la Ferme"
+          [attr.aria-busy]="isValidatingAddress"
+          (input)="onAddressFieldChange()"
+          (blur)="onAddressBlur()"
+        />
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <label>Code postal *</label>
+          <input
+            type="text"
+            [(ngModel)]="form.postalCode"
+            name="postalCode"
+            required
+            placeholder="75001"
+            [attr.aria-busy]="isValidatingAddress"
+            (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
+          />
+        </div>
+
+        <div class="field">
+          <label>Ville *</label>
+          <input
+            type="text"
+            [(ngModel)]="form.city"
+            name="city"
+            required
+            placeholder="Paris"
+            [attr.aria-busy]="isValidatingAddress"
+            (input)="onAddressFieldChange()"
+            (blur)="onAddressBlur()"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <button
+          type="button"
+          class="btn-verify"
+          (click)="verifyAddress()"
+          [disabled]="
+            isValidatingAddress ||
+            !form.address?.trim() ||
+            !form.postalCode?.trim() ||
+            !form.city?.trim()
+          "
+        >
+          {{ isValidatingAddress ? 'Vérification…' : 'Vérifier l’adresse' }}
+        </button>
+      </div>
+
+      @if (isValidatingAddress) {
+        <div class="address-check-banner" role="status" aria-live="polite" aria-busy="true">
+          <span class="address-check-spinner" aria-hidden="true"></span>
+          <span class="address-check-copy">Vérification de l’adresse en cours…</span>
+        </div>
+      }
+
+      @if (addressValidationMessage && !isValidatingAddress) {
+        <div
+          class="validation-message inline"
+          [class.success]="addressValidated"
+          [class.error]="!addressValidated"
+        >
+          {{ addressValidationMessage }}
+        </div>
+      }
+
+      <div class="field">
+        <label>Téléphone (fixe ou principal)</label>
+        <input type="tel" [(ngModel)]="form.phone" name="phone" placeholder="01 23 45 67 89" />
+      </div>
+
+      <div class="field">
+        <label>Second numéro (optionnel)</label>
+        <input
+          type="tel"
+          [(ngModel)]="form.phoneSecondary"
+          name="phoneSecondary"
+          placeholder="Fixe ou mobile supplémentaire"
+        />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" placeholder="contact@ferme.fr" />
+      </div>
+
+      <div class="field">
+        <label>Site web</label>
+        <input
+          type="url"
+          [(ngModel)]="form.website"
+          name="website"
+          placeholder="https://www.ferme.fr"
+        />
+      </div>
+
+      <div class="field">
+        <label>Horaires d'ouverture</label>
+        <textarea
+          #openingHoursTextarea
+          class="auto-resize"
+          [(ngModel)]="form.openingHours"
+          name="openingHours"
+          rows="2"
+          maxlength="255"
+          placeholder="Lun-Ven: 9h-18h, Sam: 9h-12h"
+          (input)="autoResize($event)"
+        ></textarea>
+        <small class="field-hint"
+          >Indiquez vos horaires d'ouverture en suivant le format suggéré (ex: Lun-Ven: 9h-18h, Sam:
+          9h-12h). Soyez aussi précis que possible.</small
+        >
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="form.description"
+          name="description"
+          rows="4"
+          placeholder="Décrivez votre exploitation, vos pratiques agricoles, vos produits..."
+        ></textarea>
+      </div>
+
+      <div class="field picking-image-field">
+        <label>Photo de la cueillette (optionnel)</label>
+        <small class="field-hint"
+          >JPEG, PNG ou WebP — 5 Mo maximum. Sans photo, l'image par défaut sera utilisée.</small
+        >
+        <div class="picking-image-upload">
+          <img [src]="imagePreviewUrl" alt="Photo de la cueillette" class="picking-image-preview" />
+          <label class="picking-image-file-label">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="onImageSelected($event)"
+            />
+            Choisir une photo
+          </label>
+        </div>
+        @if (imageError) {
+          <p class="image-error">{{ imageError }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label>Labels ou certifications</label>
+        <small class="field-hint"
+          >Ajoutez un ou plusieurs labels reconnus pour votre exploitation (optionnel).</small
+        >
+
+        @if (selectedLabels.length > 0) {
+          <div class="labels-selected-list">
+            @for (label of selectedLabels; track label) {
+              <div class="label-item">
+                <span class="label-item-name">{{ translateLabel(label) }}</span>
+                <button type="button" class="btn-remove" (click)="removeLabel($index)">✕</button>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="add-label-form">
+          <div class="form-row">
+            <select
+              [(ngModel)]="pendingLabel"
+              name="pendingLabel"
+              class="label-select"
+              [disabled]="availableLabelOptions.length === 0"
+            >
+              <option value="">Choisir un label</option>
+              @for (option of availableLabelOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+            <button
+              type="button"
+              class="btn-add"
+              (click)="addLabel()"
+              [disabled]="!pendingLabel"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Type de production</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="categories.fruits" name="fruits" />
+            Fruits
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="categories.vegetables" name="vegetables" />
+            Légumes
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Produits cultivés (optionnel)</label>
+        <small class="field-hint">Ajoutez les espèces que vous cultivez</small>
+
+        <div class="products-list">
+          @for (product of products; track $index) {
+            <div class="product-item">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-type">
+                {{ product.type === 'fruit' ? '🍎 Fruit' : '🥕 Légume' }}
+              </span>
+              @if (product.harvestSeason) {
+                <span class="product-season">{{ product.harvestSeason }}</span>
+              }
+              <button type="button" class="btn-remove" (click)="removeProduct($index)">✕</button>
+            </div>
+          }
+        </div>
+
+        <div class="add-product-form">
+          <div class="form-row">
+            <input
+              type="text"
+              [(ngModel)]="newProduct.name"
+              name="productName"
+              placeholder="Nom du produit (ex: Tomates, Fraises...)"
+              class="product-input"
+            />
+            <select [(ngModel)]="newProduct.type" name="productType" class="product-select">
+              <option value="">Type</option>
+              <option value="fruit">Fruit</option>
+              <option value="vegetable">Légume</option>
+            </select>
+            <input
+              type="text"
+              [(ngModel)]="newProduct.harvestSeason"
+              name="productSeason"
+              placeholder="Saison (optionnel)"
+              class="product-input-small"
+            />
+            <button
+              type="button"
+              class="btn-add"
+              (click)="addProduct()"
+              [disabled]="!newProduct.name || !newProduct.type"
+            >
+              Ajouter
+            </button>
+          </div>
+        </div>
+      </div>
+      @if (errorMessage) {
+        <div class="error-box">
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
+      @if (!addressValidated) {
+        <p class="submit-hint">
+          Cliquez sur « Vérifier l’adresse », puis validez le formulaire une fois l’adresse
+          reconnue.
+        </p>
+      }
+      <button type="submit" [disabled]="isSubmitting || !addressValidated">
+        {{ isSubmitting ? 'Envoi en cours...' : 'Proposer ma cueillette' }}
+      </button>
+    </form>
+  </div>
+</section>
+
+<app-modal
+  [visible]="isSuccessModalVisible"
+  title="Cueillette créée"
+  message="Votre cueillette a été ajoutée avec succès."
+  (closed)="dismissSuccessModal()"
+  (buttonClick)="dismissSuccessModal()"
+/>

@@ -1,209 +1,164 @@
-<div class="container">
-  <h2>Rechercher des cueillettes</h2>
+<section class="hero">
+  <div class="container">
+    <h2>Rechercher des cueillettes</h2>
 
-  <div class="navigation">
-    <a routerLink="/favorites" class="link">Mes favoris</a>
-  </div>
-
-  <div class="location-section">
-    <h3>Votre position</h3>
-
-    <div class="location-options">
-      <button (click)="useCurrentLocation()" [disabled]="geolocating" class="btn btn-primary">
-        {{ geolocating ? 'Chargement...' : 'Utiliser ma position actuelle' }}
-      </button>
-
-      <div class="address-search">
-        <input
-          type="text"
-          [(ngModel)]="addressInput"
-          (keyup.enter)="searchByAddress()"
-          placeholder="Ou entrez une adresse..."
-          [disabled]="geolocating"
-          class="address-input"
-        />
-        <button
-          (click)="searchByAddress()"
-          [disabled]="!addressInput || geolocating"
-          class="btn btn-secondary"
-        >
-          Chercher
-        </button>
-      </div>
-
-      @if (userLocation) {
-        <button (click)="clearLocation()" class="btn btn-link">Effacer la position</button>
-      }
+    <div class="navigation">
+      <a routerLink="/favorites" class="link">Mes favoris</a>
     </div>
 
-    @if (locationMessage) {
-      <div
-        class="location-message"
-        [class.error]="
-          locationMessage.includes('Impossible') || locationMessage.includes('introuvable')
-        "
-      >
-        {{ locationMessage }}
-      </div>
-    }
+    <div class="location-section">
+      <h3>Trier par distance (optionnel)</h3>
+      <p class="location-hint">Utilisez votre position pour trier les cueillettes par distance</p>
 
-    @if (!userLocation && !locationMessage && !geolocating) {
-      <div class="location-warning">
-        💡 Activez la localisation pour voir les cueillettes les plus proches de vous
-      </div>
-
-      <div class="view-all-section">
-        <p class="or-divider">ou</p>
-        <button (click)="viewAllPickings()" class="btn btn-view-all">
-          Voir toutes les cueillettes sans localisation
+      <div class="location-options">
+        <button (click)="useCurrentLocation()" [disabled]="geolocating" class="btn btn-primary">
+          {{ geolocating ? 'Chargement...' : 'Utiliser ma position actuelle' }}
         </button>
-      </div>
-    }
-  </div>
 
-  @if (loading) {
-    <div class="loading">Chargement des cueillettes...</div>
-  }
-
-  @if (error) {
-    <div class="error-message">{{ error }}</div>
-  }
-
-  @if (!loading && !error && showPickings) {
-    <div class="pickings-section">
-      <div class="section-header">
-        <h3>
-          @if (sortBy === 'distance' && userLocation) {
-            <span>Cueillettes triées par distance</span>
-            @if (locationSource) {
-              <span class="location-from">depuis {{ locationSource }}</span>
-            }
-          } @else if (sortBy === 'postal_code') {
-            Cueillettes (ordre par code postal)
-          } @else {
-            Cueillettes (ordre alphabétique)
-          }
-        </h3>
-
-        <div class="sort-controls">
-          <label>Trier par:</label>
+        <div class="address-search">
+          <input
+            type="text"
+            [(ngModel)]="addressInput"
+            (keyup.enter)="searchByAddress()"
+            placeholder="Ou entrez une adresse..."
+            [disabled]="geolocating"
+            class="address-input"
+          />
           <button
-            [class.active]="sortBy === 'distance'"
-            [disabled]="!userLocation"
-            (click)="setSortBy('distance')"
-            class="sort-btn"
+            (click)="searchByAddress()"
+            [disabled]="!addressInput || geolocating"
+            class="btn btn-secondary"
           >
-            Distance
-          </button>
-          <button
-            [class.active]="sortBy === 'alphabetical'"
-            (click)="setSortBy('alphabetical')"
-            class="sort-btn"
-          >
-            Alphabétique
-          </button>
-          <button
-            [class.active]="sortBy === 'postal_code'"
-            (click)="setSortBy('postal_code')"
-            class="sort-btn"
-          >
-            Code postal
+            Chercher
           </button>
         </div>
-      </div>
 
-      @if (pickings.length === 0) {
-        <div class="no-results">Aucune cueillette trouvée</div>
-      }
-
-      <div class="pickings-list">
-        @for (picking of displayedPickings; track picking.id) {
-          <div class="picking-card" [routerLink]="['/pickings', picking.id]">
-            <div class="picking-info">
-              <div class="picking-header">
-                <h4 class="picking-name">{{ picking.name }}</h4>
-                <div class="gps-distance">
-                  @if (picking.distance !== undefined && sortBy === 'distance') {
-                    <div class="picking-distance">
-                      <span class="distance">{{ picking.distance }} km</span>
-                    </div>
-                  }
-                  <button
-                    class="gps-btn"
-                    (click)="openGoogleMaps($event, picking)"
-                    title="Itinéraire GPS"
-                  >
-                    Itineraire
-                  </button>
-                </div>
-                <div class="header-actions">
-                  <button
-                    class="favorite-btn"
-                    [class.favorited]="isFavorite(picking.id)"
-                    (click)="toggleFavorite($event, picking.id)"
-                    title="{{
-                      isFavorite(picking.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'
-                    }}"
-                  >
-                    <img
-                      [src]="
-                        isFavorite(picking.id)
-                          ? 'assets/images/icons/heart-solid.png'
-                          : 'assets/images/icons/heart-regular.png'
-                      "
-                      [alt]="isFavorite(picking.id) ? 'Favoris' : 'Ajouter aux favoris'"
-                      class="heart-icon"
-                    />
-                    <span class="favorite-text">Ajouter aux favoris</span>
-                  </button>
-                </div>
-              </div>
-
-              <div class="picking-details">
-                <div class="picking-address">
-                  {{ picking.address }}
-                </div>
-                <div class="picking-city-postal">
-                  {{ picking.city }} - {{ picking.postalCode || 'N/A' }}
-                </div>
-                @if (picking.phone) {
-                  <div class="picking-phone">
-                    {{ picking.phone }}
-                  </div>
-                }
-                @if (picking.website) {
-                  <div class="picking-website">
-                    <a [href]="picking.website" target="_blank" (click)="$event.stopPropagation()">
-                      {{ picking.website }}
-                    </a>
-                  </div>
-                }
-              </div>
-            </div>
-            <div class="picking-arrow">→</div>
-          </div>
+        @if (userLocation) {
+          <button (click)="clearLocation()" class="btn btn-link">Effacer la position</button>
         }
       </div>
 
-      @if (hasMorePickings) {
-        <div class="show-more-section">
-          <button (click)="showMorePickings()" class="btn btn-show-more">
-            Afficher plus de résultats ({{ remainingPickingsCount }} restants)
-          </button>
+      @if (locationMessage) {
+        <div
+          class="location-message"
+          [class.error]="
+            locationMessage.includes('Impossible') || locationMessage.includes('introuvable')
+          "
+        >
+          {{ locationMessage }}
         </div>
       }
     </div>
-  }
-</div>
 
-@if (isLoginModalVisible) {
-  <div class="modal-overlay" (click)="hideLoginModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Information</h3>
-      <p>{{ loginModalMessage }}</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" (click)="hideLoginModal()">OK</button>
+    <app-async-state
+      [loading]="loading"
+      [error]="error"
+      loadingMessage="Chargement des cueillettes..."
+    />
+
+    @if (!loading && !error) {
+      <div class="pickings-section">
+        <div class="section-header">
+          <h3>
+            @if (sortBy === 'distance' && userLocation) {
+              <span>Cueillettes triées par distance</span>
+              @if (locationSource) {
+                <span class="location-from">depuis {{ locationSource }}</span>
+              }
+            } @else if (sortBy === 'postal_code') {
+              Cueillettes (ordre par code postal)
+            } @else {
+              Cueillettes (ordre alphabétique)
+            }
+          </h3>
+
+          <div class="section-controls">
+            <div class="filter-controls">
+              <label>Filtrer par:</label>
+              <button
+                [class.active]="productTypeFilter === 'all'"
+                (click)="setProductTypeFilter('all')"
+                class="filter-btn"
+              >
+                Tous
+              </button>
+              <button
+                [class.active]="productTypeFilter === 'fruit'"
+                (click)="setProductTypeFilter('fruit')"
+                class="filter-btn"
+              >
+                Fruits
+              </button>
+              <button
+                [class.active]="productTypeFilter === 'vegetable'"
+                (click)="setProductTypeFilter('vegetable')"
+                class="filter-btn"
+              >
+                Légumes
+              </button>
+            </div>
+
+            <div class="sort-controls">
+              <label>Trier par:</label>
+              <button
+                [class.active]="sortBy === 'distance'"
+                [disabled]="!userLocation"
+                (click)="setSortBy('distance')"
+                class="sort-btn"
+              >
+                Distance
+              </button>
+              <button
+                [class.active]="sortBy === 'alphabetical'"
+                (click)="setSortBy('alphabetical')"
+                class="sort-btn"
+              >
+                Alphabétique
+              </button>
+              <button
+                [class.active]="sortBy === 'postal_code'"
+                (click)="setSortBy('postal_code')"
+                class="sort-btn"
+              >
+                Code postal
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @if (pickings.length === 0) {
+          <div class="no-results">Aucune cueillette trouvée</div>
+        }
+
+        <div class="pickings-list">
+          @for (picking of displayedPickings; track picking.id) {
+            <app-picking-card
+              [picking]="picking"
+              [isFavorite]="isFavorite(picking.id)"
+              [showDistance]="picking.distance !== undefined && sortBy === 'distance'"
+              favoriteMode="toggle"
+              (favoriteClick)="toggleFavorite($event, picking.id)"
+              (gpsClick)="openGoogleMaps($event, picking)"
+            />
+          }
+        </div>
+
+        @if (hasMorePickings) {
+          <div class="show-more-section">
+            <button (click)="showMorePickings()" class="btn btn-show-more">
+              Afficher plus de résultats ({{ remainingPickingsCount }} restants)
+            </button>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
-}
+</section>
+
+<app-modal
+  [visible]="isLoginModalVisible"
+  title="Information"
+  [message]="loginModalMessage"
+  (closed)="hideLoginModal()"
+  (buttonClick)="hideLoginModal()"
+/>

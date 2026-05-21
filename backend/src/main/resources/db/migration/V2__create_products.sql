@@ -1,5 +1,5 @@
 CREATE TABLE products (
-                          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                          id BIGSERIAL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL,
                           harvest_season VARCHAR(255),
                           type VARCHAR(255)
