@@ -13,9 +13,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -102,40 +104,128 @@ class ReviewServiceTest {
     }
 
     @Test
-    void deleteReview_returnsFalseWhenReviewNotFound() {
+    void updateReview_throwsWhenReviewNotFound() {
+        User user = userWithEmail("user@test.com");
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
         when(reviewRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThat(reviewService.deleteReview(1L, 99L)).isFalse();
+        assertThatThrownBy(() -> reviewService.updateReview(1L, 99L, "user@test.com", 5, "Updated"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Review not found");
+    }
+
+    @Test
+    void updateReview_throwsWhenPickingIdDoesNotMatch() {
+        User user = userWithEmail("user@test.com");
+        Review review = reviewForPicking(2L, 10L, user);
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
+        when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
+
+        assertThatThrownBy(() -> reviewService.updateReview(1L, 10L, "user@test.com", 5, "Updated"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Review not found");
+    }
+
+    @Test
+    void updateReview_forbiddenWhenNotOwner() {
+        User owner = userWithEmail("owner@test.com");
+        User other = userWithEmail("other@test.com");
+        Review review = reviewForPicking(1L, 10L, owner);
+        when(userRepository.findByEmail("other@test.com")).thenReturn(Optional.of(other));
+        when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
+
+        assertThatThrownBy(() -> reviewService.updateReview(1L, 10L, "other@test.com", 5, "Updated"))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("own review");
+
+        verify(reviewRepository, never()).save(any());
+    }
+
+    @Test
+    void updateReview_updatesRatingAndCommentForOwner() {
+        User user = userWithEmail("user@test.com");
+        Review review = reviewForPicking(1L, 10L, user);
+        review.setRating(2);
+        review.setComment("Old");
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
+        when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
+        when(reviewRepository.save(review)).thenReturn(review);
+
+        Review result = reviewService.updateReview(1L, 10L, "user@test.com", 5, "Updated");
+
+        assertThat(result.getRating()).isEqualTo(5);
+        assertThat(result.getComment()).isEqualTo("Updated");
+        verify(reviewRepository).save(review);
+    }
+
+    @Test
+    void deleteReview_throwsWhenReviewNotFound() {
+        User user = userWithEmail("user@test.com");
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
+        when(reviewRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> reviewService.deleteReview(1L, 99L, "user@test.com"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Review not found");
 
         verify(reviewRepository, never()).delete(any());
     }
 
     @Test
-    void deleteReview_returnsFalseWhenPickingIdDoesNotMatch() {
-        Review review = reviewForPicking(2L, 10L);
+    void deleteReview_throwsWhenPickingIdDoesNotMatch() {
+        User user = userWithEmail("user@test.com");
+        Review review = reviewForPicking(2L, 10L, user);
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
         when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
 
-        assertThat(reviewService.deleteReview(1L, 10L)).isFalse();
+        assertThatThrownBy(() -> reviewService.deleteReview(1L, 10L, "user@test.com"))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("Review not found");
 
         verify(reviewRepository, never()).delete(any());
     }
 
     @Test
-    void deleteReview_deletesWhenReviewBelongsToPicking() {
-        Review review = reviewForPicking(1L, 10L);
+    void deleteReview_forbiddenWhenNotOwner() {
+        User owner = userWithEmail("owner@test.com");
+        User other = userWithEmail("other@test.com");
+        Review review = reviewForPicking(1L, 10L, owner);
+        when(userRepository.findByEmail("other@test.com")).thenReturn(Optional.of(other));
         when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
 
-        assertThat(reviewService.deleteReview(1L, 10L)).isTrue();
+        assertThatThrownBy(() -> reviewService.deleteReview(1L, 10L, "other@test.com"))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("own review");
+
+        verify(reviewRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteReview_deletesWhenOwner() {
+        User user = userWithEmail("user@test.com");
+        Review review = reviewForPicking(1L, 10L, user);
+        when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.of(user));
+        when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
+
+        reviewService.deleteReview(1L, 10L, "user@test.com");
 
         verify(reviewRepository).delete(review);
     }
 
-    private static Review reviewForPicking(Long pickingId, Long reviewId) {
+    private static User userWithEmail(String email) {
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setEmail(email);
+        return user;
+    }
+
+    private static Review reviewForPicking(Long pickingId, Long reviewId, User user) {
         Picking picking = new Picking();
         picking.setId(pickingId);
         Review review = new Review();
         review.setId(reviewId);
         review.setPicking(picking);
+        review.setUser(user);
         return review;
     }
 }

@@ -61,8 +61,10 @@ describe('PickingService', () => {
       expect(result).toEqual(reviews);
     });
 
-    const req = httpMock.expectOne('/api/pickings/3/reviews');
-    expect(req.request.method).toBe('GET');
+    const req = httpMock.expectOne(
+      (r) => r.url.startsWith('/api/pickings/3/reviews') && r.method === 'GET',
+    );
+    expect(req.request.params.has('_')).toBe(true);
     req.flush(reviews);
   });
 
@@ -83,6 +85,41 @@ describe('PickingService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ rating: 4, comment: 'Great' });
     req.flush(review);
+  });
+
+  it('updates a review for a picking', () => {
+    const review = {
+      id: 2,
+      rating: 5,
+      comment: 'Updated',
+      publishedAt: '2026-01-01',
+      user: { id: 'u1', name: 'Bob' },
+    };
+
+    service.updateReview(7, 2, 5, 'Updated').subscribe((result) => {
+      expect(result).toEqual(review);
+    });
+
+    const req = httpMock.expectOne('/api/pickings/7/reviews/2');
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual({ rating: 5, comment: 'Updated' });
+    req.flush(review);
+  });
+
+  it('deletes a review for a picking', () => {
+    let completed = false;
+    service.deleteReview(7, 2).subscribe({
+      next: (result) => {
+        expect(result).toBeUndefined();
+        completed = true;
+      },
+    });
+
+    const req = httpMock.expectOne('/api/pickings/7/reviews/2');
+    expect(req.request.method).toBe('DELETE');
+    expect(req.request.responseType).toBe('text');
+    req.flush('');
+    expect(completed).toBe(true);
   });
 
   it('adds a favorite for a picking', () => {

@@ -7,12 +7,13 @@ import { AuthService } from '../../services/auth';
 import { Review, Picking } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { AsyncStateComponent } from '../../shared/async-state/async-state';
+import { ReviewListComponent } from '../../shared/review-list/review-list';
 
 @Component({
   selector: 'app-cueillette-review',
-  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent],
+  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent, ReviewListComponent],
   templateUrl: './picking-review.html',
-  styleUrls: ['./picking-review.css']
+  styleUrls: ['./picking-review.css'],
 })
 export class CueilletteReviewComponent implements OnInit {
   readonly pickingId: number;
@@ -20,7 +21,7 @@ export class CueilletteReviewComponent implements OnInit {
   reviews: Review[] = [];
   loading = true;
   error: string | null = null;
-  
+
   rating = 0;
   comment = '';
   submitting = false;
@@ -34,7 +35,7 @@ export class CueilletteReviewComponent implements OnInit {
     private pickingService: PickingService,
     private authService: AuthService,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.pickingId = idParam ? parseInt(idParam, 10) : 0;
@@ -46,7 +47,7 @@ export class CueilletteReviewComponent implements OnInit {
       this.loading = false;
       return;
     }
-    
+
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;
@@ -77,17 +78,17 @@ export class CueilletteReviewComponent implements OnInit {
     this.pickingService.getPickingReviews(this.pickingId).subscribe({
       next: (data) => {
         this.ngZone.run(() => {
-          this.reviews = data;
+          this.reviews = [...data];
           this.loading = false;
           this.cdr.detectChanges();
         });
       },
-      error: (err) => {
+      error: () => {
         this.ngZone.run(() => {
           this.loading = false;
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 
@@ -121,7 +122,7 @@ export class CueilletteReviewComponent implements OnInit {
     this.successMessage = '';
 
     this.pickingService.addReview(this.pickingId, this.rating, this.comment).subscribe({
-      next: (review) => {
+      next: () => {
         this.ngZone.run(() => {
           this.successMessage = 'Votre avis a été publié avec succès !';
           this.rating = 0;
@@ -129,7 +130,7 @@ export class CueilletteReviewComponent implements OnInit {
           this.submitting = false;
           this.loadReviews();
           this.cdr.detectChanges();
-          
+
           setTimeout(() => {
             this.successMessage = '';
             this.cdr.detectChanges();
@@ -146,19 +147,6 @@ export class CueilletteReviewComponent implements OnInit {
           this.cdr.detectChanges();
         });
       },
-    });
-  }
-
-  getStarArray(rating: number): boolean[] {
-    return Array(5).fill(false).map((_, i) => i < rating);
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, of, throwError } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, catchError, map, of, throwError } from 'rxjs';
 import { Picking, Review } from './picking.types';
 import { getApiRoot } from './api-config';
 
@@ -23,11 +23,30 @@ export class PickingService {
   }
 
   getPickingReviews(id: string | number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.pickingsUrl}/${id}/reviews`);
+    const params = new HttpParams().set('_', String(Date.now()));
+    return this.http.get<Review[]>(`${this.pickingsUrl}/${id}/reviews`, { params });
   }
 
   addReview(pickingId: string | number, rating: number, comment: string): Observable<Review> {
     return this.http.post<Review>(`${this.pickingsUrl}/${pickingId}/reviews`, { rating, comment });
+  }
+
+  updateReview(
+    pickingId: string | number,
+    reviewId: number,
+    rating: number,
+    comment: string,
+  ): Observable<Review> {
+    return this.http.put<Review>(`${this.pickingsUrl}/${pickingId}/reviews/${reviewId}`, {
+      rating,
+      comment,
+    });
+  }
+
+  deleteReview(pickingId: string | number, reviewId: number): Observable<void> {
+    return this.http
+      .delete(`${this.pickingsUrl}/${pickingId}/reviews/${reviewId}`, { responseType: 'text' })
+      .pipe(map(() => undefined));
   }
 
   addToFavorites(pickingId: string | number): Observable<{ message: string; favoriteId: string }> {

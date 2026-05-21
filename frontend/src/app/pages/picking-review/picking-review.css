@@ -223,10 +223,94 @@ textarea:focus {
 .review-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.review-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.review-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-edit {
+  background-color: #e8f5e9;
+  color: #2c5f2d;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background-color: #c8e6c9;
+}
+
+.btn-delete {
+  background-color: #fdecea;
+  color: #b71c1c;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: #f8d7da;
+}
+
+.btn-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.star-rating--compact {
+  font-size: 28px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-cancel {
+  padding: 14px 28px;
+  background-color: #f5f5f5;
+  color: #555;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .reviewer-name {
