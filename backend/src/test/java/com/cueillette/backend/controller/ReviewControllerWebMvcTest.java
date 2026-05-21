@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,16 +21,20 @@ import org.springframework.security.web.method.annotation.AuthenticationPrincipa
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,19 +125,73 @@ class ReviewControllerWebMvcTest {
     }
 
     @Test
-    void deleteReviewReturnsNoContentWhenDeleted() throws Exception {
-        when(reviewService.deleteReview(3L, 10L)).thenReturn(true);
+    void updateReviewReturnsUpdatedReview() throws Exception {
+        Review updated = new Review();
+        updated.setId(10L);
+        updated.setRating(5);
+        updated.setComment("Updated comment");
+        when(reviewService.updateReview(eq(3L), eq(10L), eq(USER_EMAIL), eq(5), eq("Updated comment")))
+                .thenReturn(updated);
 
-        mockMvc.perform(delete("/api/pickings/3/reviews/10"))
-                .andExpect(status().isNoContent());
+        String body = """
+                {"rating":5,"comment":"Updated comment"}""";
+
+        mockMvc.perform(put("/api/pickings/3/reviews/10")
+                        .with(authenticatedAs(USER_EMAIL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(10))
+                .andExpect(jsonPath("$.rating").value(5))
+                .andExpect(jsonPath("$.comment").value("Updated comment"));
     }
 
     @Test
-    void deleteReviewReturnsNotFoundWhenMissing() throws Exception {
-        when(reviewService.deleteReview(3L, 99L)).thenReturn(false);
+    void updateReviewForbiddenReturnsApiError() throws Exception {
+        when(reviewService.updateReview(eq(3L), eq(10L), eq(USER_EMAIL), eq(5), eq("Updated comment")))
+                .thenThrow(new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own review"));
 
-        mockMvc.perform(delete("/api/pickings/3/reviews/99"))
-                .andExpect(status().isNotFound());
+        String body = """
+                {"rating":5,"comment":"Updated comment"}""";
+
+        mockMvc.perform(put("/api/pickings/3/reviews/10")
+                        .with(authenticatedAs(USER_EMAIL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.message").value("You can only modify your own review"));
+    }
+
+    @Test
+    void deleteReviewReturnsNoContentWhenDeleted() throws Exception {
+        mockMvc.perform(delete("/api/pickings/3/reviews/10")
+                        .with(authenticatedAs(USER_EMAIL)))
+                .andExpect(status().isNoContent());
+
+        verify(reviewService).deleteReview(3L, 10L, USER_EMAIL);
+    }
+
+    @Test
+    void deleteReviewNotFoundReturnsApiError() throws Exception {
+        doThrow(new NotFoundException("Review not found"))
+                .when(reviewService).deleteReview(3L, 99L, USER_EMAIL);
+
+        mockMvc.perform(delete("/api/pickings/3/reviews/99")
+                        .with(authenticatedAs(USER_EMAIL)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Review not found"));
+    }
+
+    @Test
+    void deleteReviewForbiddenReturnsApiError() throws Exception {
+        doThrow(new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only modify your own review"))
+                .when(reviewService).deleteReview(3L, 10L, USER_EMAIL);
+
+        mockMvc.perform(delete("/api/pickings/3/reviews/10")
+                        .with(authenticatedAs(USER_EMAIL)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("You can only modify your own review"));
     }
 
     @TestConfiguration

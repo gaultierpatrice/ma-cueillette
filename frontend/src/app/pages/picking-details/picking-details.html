@@ -130,23 +130,11 @@
           </p>
 
           <div *ngIf="reviews.length > 0">
-            <div class="reviews-list">
-              <div *ngFor="let review of reviews" class="review-card">
-                <div class="review-header">
-                  <span class="reviewer-name">{{ review.user.name }}</span>
-                  <span class="review-date">{{ formatDate(review.publishedAt) }}</span>
-                </div>
-                <div class="rating">
-                  <span
-                    *ngFor="let star of getStarArray(review.rating); let i = index"
-                    class="star"
-                    [class.filled]="star"
-                    >★</span
-                  >
-                </div>
-                <p *ngIf="review.comment" class="review-comment">{{ review.comment }}</p>
-              </div>
-            </div>
+            <app-review-list
+              [reviews]="reviews"
+              [pickingId]="pickingId"
+              (reviewsChanged)="loadReviews()"
+            />
 
             <a [routerLink]="['/pickings', pickingId, 'review']" class="view-all-reviews">
               Voir tous les avis →

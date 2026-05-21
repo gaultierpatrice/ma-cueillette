@@ -8,7 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pickings/{pickingId}/reviews")
@@ -35,13 +34,23 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 
+    @PutMapping("/{reviewId}")
+    public ResponseEntity<Review> updateReview(
+            @PathVariable Long pickingId,
+            @PathVariable Long reviewId,
+            @RequestBody ReviewRequest reviewRequest,
+            @AuthenticationPrincipal String userEmail) {
+        Review review = reviewService.updateReview(
+                pickingId, reviewId, userEmail, reviewRequest.getRating(), reviewRequest.getComment());
+        return ResponseEntity.ok(review);
+    }
+
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(
             @PathVariable Long pickingId,
-            @PathVariable Long reviewId) {
-        if (!reviewService.deleteReview(pickingId, reviewId)) {
-            return ResponseEntity.notFound().build();
-        }
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal String userEmail) {
+        reviewService.deleteReview(pickingId, reviewId, userEmail);
         return ResponseEntity.noContent().build();
     }
 
