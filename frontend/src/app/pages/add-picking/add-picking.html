@@ -153,6 +153,27 @@
         ></textarea>
       </div>
 
+      <div class="field picking-image-field">
+        <label>Photo de la cueillette (optionnel)</label>
+        <small class="field-hint"
+          >JPEG, PNG ou WebP — 5 Mo maximum. Sans photo, l'image par défaut sera utilisée.</small
+        >
+        <div class="picking-image-upload">
+          <img [src]="imagePreviewUrl" alt="Photo de la cueillette" class="picking-image-preview" />
+          <label class="picking-image-file-label">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="onImageSelected($event)"
+            />
+            Choisir une photo
+          </label>
+        </div>
+        @if (imageError) {
+          <p class="image-error">{{ imageError }}</p>
+        }
+      </div>
+
       <div class="field">
         <label>Labels ou certifications</label>
         <small class="field-hint"

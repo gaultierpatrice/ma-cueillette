@@ -64,6 +64,9 @@ services:
       SPRING_FLYWAY_PASSWORD: ${DB_PASSWORD:-change_me}
       SPRING_PROFILES_ACTIVE: prod
       SPRING_FLYWAY_ENABLED: true
+      APP_UPLOAD_PICKING_IMAGES_DIR: /app/uploads/pickings
+    volumes:
+      - picking_uploads:/app/uploads
     ports:
       - "8080:8080"
     depends_on:
@@ -96,6 +99,8 @@ volumes:
   postgres_data:
     driver: local
   pgadmin_data:
+    driver: local
+  picking_uploads:
     driver: local
 
 networks:

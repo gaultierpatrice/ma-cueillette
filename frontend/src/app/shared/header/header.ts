@@ -21,6 +21,7 @@ export class HeaderComponent {
     favorites: 'Mes favoris',
     'contact-admin': 'Contacter Admin',
     'add-picking': 'Proposer ma Cueillette',
+    'modify-picking': 'Modifier ma cueillette',
     legal: 'Mentions légales',
     about: 'A propos',
   };

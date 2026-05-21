@@ -13,6 +13,7 @@ import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
 import { RatingDisplayComponent } from '../../shared/rating-display/rating-display';
 import { AsyncStateComponent } from '../../shared/async-state/async-state';
+import { resolvePickingImageUrl } from '../../utils/picking-image';
 
 @Component({
   selector: 'app-cueillette-details',
@@ -21,7 +22,6 @@ import { AsyncStateComponent } from '../../shared/async-state/async-state';
   styleUrls: ['./picking-details.css'],
 })
 export class CueilletteDetailsComponent implements OnInit {
-  readonly defaultPickingImageUrl = '/assets/images/illustration/strawberry.jpg';
   picking: Picking | null = null;
   reviews: Review[] = [];
   allReviews: Review[] = [];
@@ -149,11 +149,7 @@ export class CueilletteDetailsComponent implements OnInit {
   }
 
   get pickingImageSrc(): string {
-    if (!this.picking) {
-      return this.defaultPickingImageUrl;
-    }
-    const u = this.picking.imageUrl?.trim();
-    return u ? u : this.defaultPickingImageUrl;
+    return resolvePickingImageUrl(this.picking?.imageUrl);
   }
 
   loadUserFavorites() {

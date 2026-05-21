@@ -3,10 +3,16 @@ package com.cueillette.backend.service;
 import com.cueillette.backend.dto.CreatePickingDTO;
 import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.dto.ProductDTO;
+import com.cueillette.backend.dto.UpdatePickingDTO;
+import com.cueillette.backend.exception.BadRequestException;
+import com.cueillette.backend.exception.NotFoundException;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.model.Product;
 import com.cueillette.backend.model.User;
 import com.cueillette.backend.repository.PickingRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import com.cueillette.backend.repository.ProductRepository;
 import com.cueillette.backend.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
@@ -26,13 +32,19 @@ public class PickingService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
     private final GeocodingService geocodingService;
+    private final PickingImageStorageService pickingImageStorageService;
 
-    public PickingService(PickingRepository pickingRepository, ReviewRepository reviewRepository, 
-                         ProductRepository productRepository, GeocodingService geocodingService) {
+    public PickingService(
+            PickingRepository pickingRepository,
+            ReviewRepository reviewRepository,
+            ProductRepository productRepository,
+            GeocodingService geocodingService,
+            PickingImageStorageService pickingImageStorageService) {
         this.pickingRepository = pickingRepository;
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
         this.geocodingService = geocodingService;
+        this.pickingImageStorageService = pickingImageStorageService;
     }
 
     public List<Picking> getAllPickings() {
@@ -41,6 +53,10 @@ public class PickingService {
 
     public Optional<Picking> getPickingById(Long id) {
         return pickingRepository.findById(id);
+    }
+
+    public Optional<Picking> getPickingForProducer(User producer) {
+        return pickingRepository.findFirstByProducer_IdOrderByIdAsc(producer.getId());
     }
 
     public List<PickingWithRatingDTO> getAllPickingsWithRatings() {
@@ -90,20 +106,7 @@ public class PickingService {
         }
 
         if (dto.getProducts() != null && !dto.getProducts().isEmpty()) {
-            List<Product> products = new ArrayList<>();
-            for (ProductDTO productDTO : dto.getProducts()) {
-                Product product = productRepository
-                        .findByNameAndType(productDTO.getName(), productDTO.getType())
-                        .orElseGet(() -> {
-                            Product newProduct = new Product();
-                            newProduct.setName(productDTO.getName());
-                            newProduct.setType(productDTO.getType());
-                            newProduct.setHarvestSeason(productDTO.getHarvestSeason());
-                            return productRepository.save(newProduct);
-                        });
-                products.add(product);
-            }
-            picking.setProducts(products);
+            picking.setProducts(resolveProducts(dto.getProducts()));
         }
 
         applyProductionCategories(picking, dto);
@@ -140,6 +143,77 @@ public class PickingService {
 
     private static boolean isVegetableType(String type) {
         return type != null && type.trim().equalsIgnoreCase("vegetable");
+    }
+
+    @Transactional
+    public Picking updatePicking(Long id, UpdatePickingDTO dto, User producer) {
+        Picking picking = requireOwnedPicking(id, producer);
+
+        String name = dto.getName() != null ? dto.getName().trim() : "";
+        if (name.isEmpty()) {
+            throw new BadRequestException("Picking name is required");
+        }
+        picking.setName(name);
+
+        picking.setPhone(dto.getPhone());
+        picking.setPhoneSecondary(dto.getPhoneSecondary());
+        picking.setEmail(dto.getEmail());
+        picking.setWebsite(dto.getWebsite());
+        picking.setOpeningHours(dto.getOpeningHours());
+        picking.setDescription(dto.getDescription());
+
+        if (dto.getLabels() != null) {
+            picking.setLabels(new ArrayList<>(dto.getLabels()));
+        } else {
+            picking.setLabels(new ArrayList<>());
+        }
+
+        if (dto.getProducts() != null) {
+            picking.setProducts(dto.getProducts().isEmpty() ? new ArrayList<>() : resolveProducts(dto.getProducts()));
+        } else {
+            picking.setProducts(new ArrayList<>());
+        }
+
+        CreatePickingDTO categoriesSource = new CreatePickingDTO();
+        categoriesSource.setCategories(dto.getCategories());
+        applyProductionCategories(picking, categoriesSource);
+
+        return pickingRepository.save(picking);
+    }
+
+    @Transactional
+    public Picking updatePickingImage(Long id, MultipartFile file, User producer) {
+        Picking picking = requireOwnedPicking(id, producer);
+        String imageUrl = pickingImageStorageService.storePickingImage(id, file);
+        picking.setImageUrl(imageUrl);
+        return pickingRepository.save(picking);
+    }
+
+    private Picking requireOwnedPicking(Long id, User producer) {
+        Picking picking = pickingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Picking not found"));
+
+        if (picking.getProducer() == null || !picking.getProducer().getId().equals(producer.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only edit your own picking");
+        }
+        return picking;
+    }
+
+    private List<Product> resolveProducts(List<ProductDTO> productDTOs) {
+        List<Product> products = new ArrayList<>();
+        for (ProductDTO productDTO : productDTOs) {
+            Product product = productRepository
+                    .findByNameAndType(productDTO.getName(), productDTO.getType())
+                    .orElseGet(() -> {
+                        Product newProduct = new Product();
+                        newProduct.setName(productDTO.getName());
+                        newProduct.setType(productDTO.getType());
+                        newProduct.setHarvestSeason(productDTO.getHarvestSeason());
+                        return productRepository.save(newProduct);
+                    });
+            products.add(product);
+        }
+        return products;
     }
 
     @Transactional

@@ -21,8 +21,12 @@
     @if (isAuthenticated) {
       <div>
         <div class="minor">
-          @if (isProducer) {
-            <a routerLink="/add-picking">Proposer ma cueillette</a>
+          @if (isProducer && hasPicking !== null) {
+            @if (hasPicking) {
+              <a routerLink="/modify-picking">Modifier ma cueillette</a>
+            } @else {
+              <a routerLink="/add-picking">Proposer ma cueillette</a>
+            }
           }
           <a routerLink="/contact-admin">Contacter l'administrateur</a>
         </div>
