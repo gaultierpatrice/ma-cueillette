@@ -13,11 +13,20 @@ import { ModalComponent } from '../../shared/modal/modal';
 import { PickingActionsComponent } from '../../shared/picking-actions/picking-actions';
 import { RatingDisplayComponent } from '../../shared/rating-display/rating-display';
 import { AsyncStateComponent } from '../../shared/async-state/async-state';
+import { ReviewListComponent } from '../../shared/review-list/review-list';
 import { resolvePickingImageUrl } from '../../utils/picking-image';
 
 @Component({
   selector: 'app-cueillette-details',
-  imports: [RouterModule, CommonModule, ModalComponent, PickingActionsComponent, RatingDisplayComponent, AsyncStateComponent],
+  imports: [
+    RouterModule,
+    CommonModule,
+    ModalComponent,
+    PickingActionsComponent,
+    RatingDisplayComponent,
+    AsyncStateComponent,
+    ReviewListComponent,
+  ],
   templateUrl: './picking-details.html',
   styleUrls: ['./picking-details.css'],
 })
@@ -78,10 +87,13 @@ export class CueilletteDetailsComponent implements OnInit {
   loadReviews() {
     this.pickingService.getPickingReviews(this.pickingId).subscribe({
       next: (data) => {
-        this.allReviews = data;
-        this.reviews = data.slice(0, 3);
+        this.ngZone.run(() => {
+          this.allReviews = [...data];
+          this.reviews = [...data.slice(0, 3)];
+          this.cdr.detectChanges();
+        });
       },
-      error: (err) => {
+      error: () => {
         // Silent fail - reviews are optional
       },
     });
@@ -110,21 +122,6 @@ export class CueilletteDetailsComponent implements OnInit {
   getGoogleMapsLink(): string {
     if (!this.picking) return '';
     return `https://www.google.com/maps/dir/?api=1&destination=${this.picking.lat},${this.picking.lng}`;
-  }
-
-  getStarArray(rating: number): boolean[] {
-    return Array(5)
-      .fill(false)
-      .map((_, i) => i < rating);
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   }
 
   translateDay(day: string): string {
