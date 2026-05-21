@@ -47,8 +47,10 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
+      # npm install (not ci): lockfile was generated on Windows; Linux CI needs
+      # optional @emnapi peer deps (@emnapi/core/runtime 1.10) not fully pinned in lock.
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Unit tests
         run: npx ng test --watch=false --progress=false
