@@ -33,6 +33,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/pickings/mine").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.PUT, "/api/pickings/*").hasRole("PRODUCER")
+                        .requestMatchers(HttpMethod.POST, "/api/pickings/*/image").hasRole("PRODUCER")
                         .requestMatchers(HttpMethod.GET, "/api/pickings/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/pickings/*/reviews").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/pickings").hasRole("PRODUCER")

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { Picking, Review } from './picking.types';
 import { getApiRoot } from './api-config';
 
@@ -46,8 +46,24 @@ export class PickingService {
     return this.http.get<{ isFavorite: boolean }>(`${this.favoritesUrl}/check/${pickingId}`);
   }
 
+  getMyPicking(): Observable<Picking | null> {
+    return this.http.get<Picking>(`${this.pickingsUrl}/mine`).pipe(
+      catchError((error) => (error.status === 404 ? of(null) : throwError(() => error))),
+    );
+  }
+
   createPicking(pickingData: unknown): Observable<Picking> {
     return this.http.post<Picking>(this.pickingsUrl, pickingData);
+  }
+
+  updatePicking(id: number, pickingData: unknown): Observable<Picking> {
+    return this.http.put<Picking>(`${this.pickingsUrl}/${id}`, pickingData);
+  }
+
+  uploadPickingImage(id: number, file: File): Observable<Picking> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Picking>(`${this.pickingsUrl}/${id}/image`, formData);
   }
 
   deletePicking(pickingId: string | number): Observable<void> {

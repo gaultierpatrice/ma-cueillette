@@ -12,6 +12,8 @@ import {
   translatePickingLabel,
   type PickingLabelValue,
 } from '../../utils/picking-labels';
+import { resolvePickingImageUrl, validatePickingImageFile } from '../../utils/picking-image';
+import { concatMap, of } from 'rxjs';
 
 interface ProductForm {
   name: string;
@@ -65,6 +67,10 @@ export class AddCueilletteComponent implements OnInit {
   addressValidationMessage = '';
   coordinates: { lat: number; lng: number } | null = null;
 
+  imagePreviewUrl = resolvePickingImageUrl();
+  pendingImageFile: File | null = null;
+  imageError = '';
+
   constructor(
     private authService: AuthService,
     private pickingService: PickingService,
@@ -96,9 +102,34 @@ export class AddCueilletteComponent implements OnInit {
     ) {
       return;
     }
-    if (t instanceof HTMLInputElement) {
+    if (t instanceof HTMLInputElement && t.type !== 'file') {
       event.preventDefault();
     }
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.imageError = '';
+
+    if (!file) {
+      return;
+    }
+
+    const validationError = validatePickingImageFile(file);
+    if (validationError) {
+      this.imageError = validationError;
+      input.value = '';
+      return;
+    }
+
+    if (this.imagePreviewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(this.imagePreviewUrl);
+    }
+
+    this.pendingImageFile = file;
+    this.imagePreviewUrl = URL.createObjectURL(file);
+    this.cdr.markForCheck();
   }
 
   autoResize(event: Event): void {
@@ -305,21 +336,33 @@ export class AddCueilletteComponent implements OnInit {
       labels: [...this.selectedLabels],
     };
 
-    this.pickingService.createPicking(submissionData).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.isSuccessModalVisible = true;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        this.errorMessage = getApiErrorMessage(
-          error,
-          "Une erreur est survenue lors de l'ajout de votre cueillette. Veuillez réessayer.",
-        );
-        this.isSubmitting = false;
-        this.cdr.detectChanges();
-      },
-    });
+    const pendingImage = this.pendingImageFile;
+
+    this.pickingService
+      .createPicking(submissionData)
+      .pipe(
+        concatMap((picking) =>
+          pendingImage
+            ? this.pickingService.uploadPickingImage(picking.id, pendingImage)
+            : of(picking),
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.pendingImageFile = null;
+          this.isSuccessModalVisible = true;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          this.errorMessage = getApiErrorMessage(
+            error,
+            "Une erreur est survenue lors de l'ajout de votre cueillette. Veuillez réessayer.",
+          );
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   dismissSuccessModal(): void {

@@ -3,6 +3,7 @@ package com.cueillette.backend.service;
 import com.cueillette.backend.dto.CreatePickingDTO;
 import com.cueillette.backend.dto.PickingWithRatingDTO;
 import com.cueillette.backend.dto.ProductDTO;
+import com.cueillette.backend.dto.UpdatePickingDTO;
 import com.cueillette.backend.model.Label;
 import com.cueillette.backend.model.Picking;
 import com.cueillette.backend.model.Product;
@@ -19,12 +20,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
 class PickingServiceTest {
@@ -40,6 +44,9 @@ class PickingServiceTest {
 
     @Mock
     private GeocodingService geocodingService;
+
+    @Mock
+    private PickingImageStorageService pickingImageStorageService;
 
     @InjectMocks
     private PickingService pickingService;
@@ -191,6 +198,62 @@ class PickingServiceTest {
         verify(productRepository).save(productCaptor.capture());
         assertThat(productCaptor.getValue().getName()).isEqualTo("Blueberry");
         assertThat(result.getProducts()).hasSize(1);
+    }
+
+    @Test
+    void updatePicking_updatesEditableFieldsForOwner() {
+        UUID producerId = UUID.randomUUID();
+        User producer = new User();
+        producer.setId(producerId);
+
+        Picking picking = new Picking();
+        picking.setId(3L);
+        picking.setName("Farm");
+        picking.setAddress("1 rue");
+        picking.setProducer(producer);
+
+        UpdatePickingDTO dto = new UpdatePickingDTO();
+        dto.setName("Ferme du Soleil");
+        dto.setPhone("01 23 45 67 89");
+        dto.setEmail("farm@example.com");
+        dto.setWebsite("https://farm.example");
+        dto.setOpeningHours("Lun-Ven 9h-18h");
+        dto.setDescription("Updated");
+        dto.setLabels(List.of(Label.AB));
+        CreatePickingDTO.CategoriesDTO categories = new CreatePickingDTO.CategoriesDTO();
+        categories.setFruits(true);
+        dto.setCategories(categories);
+
+        when(pickingRepository.findById(3L)).thenReturn(Optional.of(picking));
+        when(pickingRepository.save(any(Picking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Picking result = pickingService.updatePicking(3L, dto, producer);
+
+        assertThat(result.getName()).isEqualTo("Ferme du Soleil");
+        assertThat(result.getPhone()).isEqualTo("01 23 45 67 89");
+        assertThat(result.getEmail()).isEqualTo("farm@example.com");
+        assertThat(result.getWebsite()).isEqualTo("https://farm.example");
+        assertThat(result.getOpeningHours()).isEqualTo("Lun-Ven 9h-18h");
+        assertThat(result.getDescription()).isEqualTo("Updated");
+        assertThat(result.getLabels()).containsExactly(Label.AB);
+        assertThat(result.isHasFruits()).isTrue();
+    }
+
+    @Test
+    void updatePicking_forbiddenWhenNotOwner() {
+        User owner = new User();
+        owner.setId(UUID.randomUUID());
+        User other = new User();
+        other.setId(UUID.randomUUID());
+
+        Picking picking = new Picking();
+        picking.setId(4L);
+        picking.setProducer(owner);
+
+        when(pickingRepository.findById(4L)).thenReturn(Optional.of(picking));
+
+        assertThatThrownBy(() -> pickingService.updatePicking(4L, new UpdatePickingDTO(), other))
+                .isInstanceOf(ResponseStatusException.class);
     }
 
     @Test
