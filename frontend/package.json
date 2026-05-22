@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "optimize-images": "powershell -ExecutionPolicy Bypass -File scripts/optimize-images.ps1",
+    "optimize-images": "node scripts/optimize-images.mjs",
     "build": "npm run optimize-images && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -31,6 +31,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
+    "sharp": "^0.34.5",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
