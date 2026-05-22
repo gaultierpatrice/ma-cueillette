@@ -15,6 +15,7 @@ import { RatingDisplayComponent } from '../../shared/rating-display/rating-displ
 import { AsyncStateComponent } from '../../shared/async-state/async-state';
 import { ReviewListComponent } from '../../shared/review-list/review-list';
 import { resolvePickingImageUrl } from '../../utils/picking-image';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-cueillette-details',
@@ -49,6 +50,7 @@ export class CueilletteDetailsComponent implements OnInit {
     private favoritesService: FavoritesService,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
+    private seo: SeoService,
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.pickingId = idParam ? parseInt(idParam, 10) : 0;
@@ -70,6 +72,7 @@ export class CueilletteDetailsComponent implements OnInit {
       next: (data) => {
         this.ngZone.run(() => {
           this.picking = data;
+          this.seo.setPickingPage(data);
           this.loading = false;
           this.cdr.detectChanges();
         });

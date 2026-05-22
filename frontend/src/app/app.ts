@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header';
 import { FooterComponent } from './shared/footer/footer';
+import { SeoService } from './services/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,6 @@ import { FooterComponent } from './shared/footer/footer';
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.html',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(_seo: SeoService) {}
+}

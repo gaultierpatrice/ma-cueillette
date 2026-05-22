@@ -8,6 +8,7 @@ import { Review, Picking } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
 import { AsyncStateComponent } from '../../shared/async-state/async-state';
 import { ReviewListComponent } from '../../shared/review-list/review-list';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-cueillette-review',
@@ -36,6 +37,7 @@ export class CueilletteReviewComponent implements OnInit {
     private authService: AuthService,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
+    private seo: SeoService,
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.pickingId = idParam ? parseInt(idParam, 10) : 0;
@@ -62,6 +64,7 @@ export class CueilletteReviewComponent implements OnInit {
       next: (data) => {
         this.ngZone.run(() => {
           this.picking = data;
+          this.seo.setPickingPage(data, 'review');
           this.cdr.detectChanges();
         });
       },
