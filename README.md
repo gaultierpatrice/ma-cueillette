@@ -4,14 +4,14 @@ Application web full stack pour recenser et explorer des cueillettes (fruits, l�
 
 ## Prérequis
 
-| Outil | Version cible | Usage |
-|--------|----------------|--------|
-| **Java** | 21 (Temurin recommandé) | Backend Spring Boot (aligné sur la CI GitHub) |
-| **Maven** | 3.9+ | Build backend |
-| **Node.js** | 22 | Build et tests frontend |
-| **npm** | 10+ (fourni avec Node 22) | Paquets frontend |
-| **PostgreSQL** | 17 (ou compatible) | Base locale hors Docker, ou via Docker |
-| **Docker** & **Docker Compose** | récents | Optionnel : stack complète conteneurisée |
+| Outil                           | Version cible             | Usage                                         |
+| ------------------------------- | ------------------------- | --------------------------------------------- |
+| **Java**                        | 21 (Temurin recommandé)   | Backend Spring Boot (aligné sur la CI GitHub) |
+| **Maven**                       | 3.9+                      | Build backend                                 |
+| **Node.js**                     | 22                        | Build et tests frontend                       |
+| **npm**                         | 10+ (fourni avec Node 22) | Paquets frontend                              |
+| **PostgreSQL**                  | 17 (ou compatible)        | Base locale hors Docker, ou via Docker        |
+| **Docker** & **Docker Compose** | récents                   | Optionnel : stack complète conteneurisée      |
 
 Environnements de développement adaptés : **IntelliJ IDEA** / **VS Code ou Cursor** (Angular & Java), **terminal** PowerShell ou bash pour Maven, npm et Git. Les versions ci-dessus correspondent au workflow défini dans [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
@@ -29,19 +29,19 @@ Navigateur  →  Angular (SPA)  →  API REST `/api/*`  →  Spring Boot  →  J
 
 Pour le dossier ou la soutenance : chaque ligne rappelle une **alternative plausible** et le **choix du projet**.
 
-| Domaine | Alternative A | Alternative B | Choix retenu | Pourquoi (résumé) |
-|--------|----------------|----------------|--------------|-------------------|
-| Frontend SPA | **Angular** | React, Vue | Angular | Structure imposée (modules, CLI), TypeScript natif, écosystème entreprise cohérent avec une équipe Java. |
-| Backend API | **Spring Boot** | Node (Nest), Quarkus | Spring Boot | Écosystème mature (Sécurité, JPA, validation), aligné avec le référentiel formation Java / entreprise. |
-| Base relationnelle | **PostgreSQL** | MySQL, MariaDB | PostgreSQL | Standard robuste, types riches, image officielle Docker, bonne intégration JPA. |
-| Accès données | **Spring Data JPA** (+ Flyway) | SQL brut, autre ORM | JPA + Flyway | Modèle objet + migrations traçables dans le dépôt (reproductibilité). |
-| Auth API | **JWT stateless** | Sessions serveur | JWT | API REST sans session ; filtres Spring Security sur les routes `/api`. |
-| Déploiement local / prod | **Docker Compose** | Installations manuelles seules | Docker + doc locale | Un fichier décrit services, réseau et variables ; même stack pour tous les développeurs. |
+| Domaine                  | Alternative A                  | Alternative B                  | Choix retenu        | Pourquoi (résumé)                                                                                        |
+| ------------------------ | ------------------------------ | ------------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------- |
+| Frontend SPA             | **Angular**                    | React, Vue                     | Angular             | Structure imposée (modules, CLI), TypeScript natif, écosystème entreprise cohérent avec une équipe Java. |
+| Backend API              | **Spring Boot**                | Node (Nest), Quarkus           | Spring Boot         | Écosystème mature (Sécurité, JPA, validation), aligné avec le référentiel formation Java / entreprise.   |
+| Base relationnelle       | **PostgreSQL**                 | MySQL, MariaDB                 | PostgreSQL          | Standard robuste, types riches, image officielle Docker, bonne intégration JPA.                          |
+| Accès données            | **Spring Data JPA** (+ Flyway) | SQL brut, autre ORM            | JPA + Flyway        | Modèle objet + migrations traçables dans le dépôt (reproductibilité).                                    |
+| Auth API                 | **JWT stateless**              | Sessions serveur               | JWT                 | API REST sans session ; filtres Spring Security sur les routes `/api`.                                   |
+| Déploiement local / prod | **Docker Compose**             | Installations manuelles seules | Docker + doc locale | Un fichier décrit services, réseau et variables ; même stack pour tous les développeurs.                 |
 
 ## Cloner le dépôt
 
 ```bash
-git clone <url-de-votre-repo> ma_cueillette
+git clone https://github.com/gaultierpatrice/ma-cueillette ma_cueillette
 cd ma_cueillette
 ```
 
@@ -52,6 +52,7 @@ cd ma_cueillette
    ```bash
    copy .env.example .env
    ```
+
    (Sous macOS/Linux : `cp .env.example .env`.)
 
 2. Éditer **`.env`** : mots de passe et `JWT_SECRET` long et aléatoire (ne jamais commiter ce fichier).
@@ -70,8 +71,8 @@ Depuis la **racine** du dépôt, avec un `.env` valide :
 docker compose up --build
 ```
 
-- Frontend et API (Nginx, avec rate limiting) : `http://localhost:4200`  
-- API / PostgreSQL / pgAdmin (dev uniquement, `127.0.0.1`) : `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build`  
+- Frontend et API (Nginx, avec rate limiting) : `http://localhost:4200`
+- API / PostgreSQL / pgAdmin (dev uniquement, `127.0.0.1`) : `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
   - API : `http://127.0.0.1:8080` — PostgreSQL : `127.0.0.1:5432` — pgAdmin : `http://127.0.0.1:5050`
 
 Cela valide la **containeurisation** (Dockerfiles `backend/` et `frontend/`) et une installation **reproductible** sans installer Java/Node localement.
@@ -144,15 +145,15 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) exécute sur 
 
 ## Structure du dépôt
 
-| Élément | Rôle |
-|---------|------|
-| `backend/` | API Spring Boot, migrations Flyway, tests JUnit |
-| `frontend/` | Application Angular |
-| `docker-compose.yml` | Postgres, backend, frontend (prod : pas de port 8080 exposé) |
+| Élément                  | Rôle                                                                     |
+| ------------------------ | ------------------------------------------------------------------------ |
+| `backend/`               | API Spring Boot, migrations Flyway, tests JUnit                          |
+| `frontend/`              | Application Angular                                                      |
+| `docker-compose.yml`     | Postgres, backend, frontend (prod : pas de port 8080 exposé)             |
 | `docker-compose.dev.yml` | Surcharge locale : API, PostgreSQL et pgAdmin sur `127.0.0.1` uniquement |
-| `.env.example` | Modèle non secret des variables |
-| `.github/workflows/` | Pipeline CI |
+| `.env.example`           | Modèle non secret des variables                                          |
+| `.github/workflows/`     | Pipeline CI                                                              |
 
 ---
 
-*Projet développé dans le cadre du titre professionnel CDA (RNCP niv. 6) — ce README sert de base pour documenter l’**installation**, la **configuration**, les **choix techniques** et la **conteneurisation** exigés par la grille d’évaluation.*
+_Projet développé dans le cadre du titre professionnel CDA (RNCP niv. 6) — ce README sert de base pour documenter l’**installation**, la **configuration**, les **choix techniques** et la **conteneurisation** exigés par la grille d’évaluation._
