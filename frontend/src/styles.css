@@ -30,6 +30,17 @@ main {
 router-outlet {
   display: none;
 }
+.hero {
+  background-image: url('/assets/images/illustration/vegetables-800.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+@media (min-width: 768px) {
+  .hero {
+    background-image: url('/assets/images/illustration/vegetables.jpg');
+  }
+}
 main > :not(router-outlet) {
   display: flex;
   flex-direction: column;
