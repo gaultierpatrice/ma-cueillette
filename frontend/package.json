@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "optimize-images": "powershell -ExecutionPolicy Bypass -File scripts/optimize-images.ps1",
+    "build": "npm run optimize-images && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

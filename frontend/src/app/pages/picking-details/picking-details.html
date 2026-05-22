@@ -10,7 +10,15 @@
       <div class="details-card">
         <div class="card-header">
           <div class="image-container">
-            <img [src]="pickingImageSrc" [alt]="picking.name" class="picking-image" />
+            <img
+              [src]="pickingImageSrc"
+              [alt]="picking.name"
+              class="picking-image"
+              width="250"
+              height="250"
+              decoding="async"
+              fetchpriority="high"
+            />
           </div>
 
           <div class="header-info">

@@ -1,14 +1,36 @@
 <header>
   <nav>
     <a routerLink="/" class="logo-link" aria-label="Accueil">
-      <img src="assets/images/icons/logo-macueillette.png" alt="logo" class="logo-img" />
-      <img src="/assets/images/icons/house-regular.png" alt="Home" class="header-home" />
+      <img
+        src="assets/images/icons/logo-macueillette.png"
+        alt="logo"
+        class="logo-img"
+        width="171"
+        height="282"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <img
+        src="/assets/images/icons/house-regular.png"
+        alt="Home"
+        class="header-home"
+        width="48"
+        height="48"
+        decoding="async"
+      />
     </a>
 
     <a routerLink="/" class="header-title" aria-label="Accueil">Ma-Cueillette</a>
 
     <a routerLink="/dashboard" class="dashboard-link" aria-label="Tableau de bord">
-      <img src="/assets/images/icons/user-solid.png" alt="Compte" />
+      <img
+        src="/assets/images/icons/user-solid.png"
+        alt="Compte"
+        width="48"
+        height="48"
+        decoding="async"
+        loading="lazy"
+      />
     </a>
   </nav>
 </header>

@@ -22,23 +22,27 @@ public class PickingImageStorageService {
     );
 
     private static final long MAX_BYTES = 5L * 1024 * 1024;
+    private static final String STORED_EXTENSION = "jpg";
 
     private final Path uploadDirectory;
+    private final PickingImageProcessor imageProcessor;
 
     public PickingImageStorageService(
-            @Value("${app.upload.picking-images-dir:uploads/pickings}") String uploadDirectory) {
+            @Value("${app.upload.picking-images-dir:uploads/pickings}") String uploadDirectory,
+            PickingImageProcessor imageProcessor) {
         this.uploadDirectory = Paths.get(uploadDirectory).toAbsolutePath().normalize();
+        this.imageProcessor = imageProcessor;
     }
 
     public String storePickingImage(Long pickingId, MultipartFile file) {
         validate(file);
-        String extension = resolveExtension(file);
+        byte[] optimized = imageProcessor.toOptimizedJpeg(file);
         try {
             Files.createDirectories(uploadDirectory);
             deleteExistingImages(pickingId);
-            Path target = uploadDirectory.resolve(pickingId + "." + extension);
-            file.transferTo(target);
-            return "/api/uploads/pickings/" + pickingId + "." + extension;
+            Path target = uploadDirectory.resolve(pickingId + "." + STORED_EXTENSION);
+            Files.write(target, optimized);
+            return "/api/uploads/pickings/" + pickingId + "." + STORED_EXTENSION;
         } catch (IOException ex) {
             throw new BadRequestException("Unable to save image file");
         }
@@ -55,16 +59,6 @@ public class PickingImageStorageService {
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase(Locale.ROOT))) {
             throw new BadRequestException("Only JPEG, PNG and WebP images are allowed");
         }
-    }
-
-    private String resolveExtension(MultipartFile file) {
-        String contentType = file.getContentType().toLowerCase(Locale.ROOT);
-        return switch (contentType) {
-            case "image/jpeg" -> "jpg";
-            case "image/png" -> "png";
-            case "image/webp" -> "webp";
-            default -> throw new BadRequestException("Unsupported image type");
-        };
     }
 
     private void deleteExistingImages(Long pickingId) throws IOException {
