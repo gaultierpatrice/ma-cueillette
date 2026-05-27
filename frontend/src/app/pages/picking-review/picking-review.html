@@ -5,73 +5,77 @@
       <a [routerLink]="['/pickings', pickingId]" class="btn-back">← Retour à la fiche</a>
     </div>
 
-  <div class="review-form-card">
-    <h3>Laisser un avis</h3>
-    
-    <div *ngIf="successMessage" class="success-message">
-      {{ successMessage }}
-    </div>
+    <div class="review-form-card">
+      <h3>Laisser un avis</h3>
 
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-
-    <form (ngSubmit)="submitReview()" class="review-form">
-      <div class="form-group">
-        <label>Note *</label>
-        <div class="star-rating">
-          <span
-            *ngFor="let star of [1, 2, 3, 4, 5]"
-            class="star"
-            [class.filled]="isStarFilled(star)"
-            (click)="setRating(star)"
-            (mouseenter)="setHoveredStar(star)"
-            (mouseleave)="clearHoveredStar()"
-          >
-            ★
-          </span>
+      @if (successMessage) {
+        <div class="success-message">
+          {{ successMessage }}
         </div>
-        <span class="rating-text" *ngIf="rating > 0">{{ rating }}/5</span>
-      </div>
+      }
 
-      <div class="form-group">
-        <label for="comment">Votre commentaire (optionnel)</label>
-        <textarea
-          id="comment"
-          name="comment"
-          [(ngModel)]="comment"
-          rows="4"
-          placeholder="Partagez votre expérience..."
-          maxlength="500"
-        ></textarea>
-        <span class="char-count">{{ comment.length }}/500</span>
-      </div>
+      @if (errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
 
-      <button
-        type="submit"
-        class="btn-submit"
-        [disabled]="submitting || rating === 0"
-      >
-        {{ submitting ? 'Publication...' : 'Publier l\'avis' }}
-      </button>
-    </form>
-  </div>
+      <form (ngSubmit)="submitReview()" class="review-form">
+        <div class="form-group">
+          <label>Note *</label>
+          <div class="star-rating">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <span
+                class="star"
+                [class.filled]="isStarFilled(star)"
+                (click)="setRating(star)"
+                (mouseenter)="setHoveredStar(star)"
+                (mouseleave)="clearHoveredStar()"
+              >
+                ★
+              </span>
+            }
+          </div>
+          @if (rating > 0) {
+            <span class="rating-text">{{ rating }}/5</span>
+          }
+        </div>
 
-  <div class="reviews-section">
-    <h3>Tous les avis ({{ reviews.length }})</h3>
+        <div class="form-group">
+          <label for="comment">Votre commentaire (optionnel)</label>
+          <textarea
+            id="comment"
+            name="comment"
+            [(ngModel)]="comment"
+            rows="4"
+            placeholder="Partagez votre expérience..."
+            maxlength="500"
+          ></textarea>
+          <span class="char-count">{{ comment.length }}/500</span>
+        </div>
 
-    <app-async-state [loading]="loading" loadingMessage="Chargement des avis..." />
+        <button type="submit" class="btn-submit" [disabled]="submitting || rating === 0">
+          {{ submitting ? 'Publication...' : "Publier l'avis" }}
+        </button>
+      </form>
+    </div>
 
-    <p *ngIf="!loading && reviews.length === 0" class="no-reviews">
-      Aucun avis pour le moment. Soyez le premier à en laisser un !
-    </p>
+    <div class="reviews-section">
+      <h3>Tous les avis ({{ reviews.length }})</h3>
 
-    <app-review-list
-      *ngIf="!loading && reviews.length > 0"
-      [reviews]="reviews"
-      [pickingId]="pickingId"
-      (reviewsChanged)="loadReviews()"
-    />
-  </div>
+      <app-async-state [loading]="loading" loadingMessage="Chargement des avis..." />
+
+      @if (!loading && reviews.length === 0) {
+        <p class="no-reviews">Aucun avis pour le moment. Soyez le premier à en laisser un !</p>
+      }
+
+      @if (!loading && reviews.length > 0) {
+        <app-review-list
+          [reviews]="reviews"
+          [pickingId]="pickingId"
+          (reviewsChanged)="loadReviews()"
+        />
+      }
+    </div>
   </div>
 </section>

@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
@@ -18,7 +18,7 @@ import { ModalComponent } from '../modal/modal';
 
 @Component({
   selector: 'app-review-list',
-  imports: [CommonModule, FormsModule, ModalComponent],
+  imports: [FormsModule, ModalComponent],
   templateUrl: './review-list.html',
   styleUrl: './review-list.css',
 })
@@ -113,9 +113,7 @@ export class ReviewListComponent implements OnChanges {
           this.successMessage = 'Votre avis a été modifié avec succès !';
           this.cancelEdit();
           this.editSubmitting = false;
-          this.displayReviews = this.displayReviews.map((r) =>
-            r.id === reviewId ? updated : r,
-          );
+          this.displayReviews = this.displayReviews.map((r) => (r.id === reviewId ? updated : r));
           this.reviewsChanged.emit();
           this.cdr.markForCheck();
           this.clearSuccessMessageLater();

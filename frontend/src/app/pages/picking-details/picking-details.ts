@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
@@ -21,7 +21,6 @@ import { SeoService } from '../../services/seo.service';
   selector: 'app-cueillette-details',
   imports: [
     RouterModule,
-    CommonModule,
     ModalComponent,
     PickingActionsComponent,
     RatingDisplayComponent,

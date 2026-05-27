@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { PickingService } from '../../services/picking.service';
 import { AuthService } from '../../services/auth';
@@ -12,7 +12,7 @@ import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-cueillette-review',
-  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent, ReviewListComponent],
+  imports: [RouterModule, FormsModule, AsyncStateComponent, ReviewListComponent],
   templateUrl: './picking-review.html',
   styleUrls: ['./picking-review.css'],
 })

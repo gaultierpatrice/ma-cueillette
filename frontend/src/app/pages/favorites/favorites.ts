@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
 import { FavoritesService } from '../../services/favorites.service';
 import { getFavoriteModalMessage } from '../../services/favorites.types';
@@ -12,7 +11,7 @@ import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-favorites',
-  imports: [RouterModule, CommonModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
+  imports: [RouterModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './favorites.html',
   styleUrls: ['./favorites.css'],
 })

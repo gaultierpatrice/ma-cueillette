@@ -19,38 +19,40 @@
 
     <app-async-state [error]="error || null" />
 
-    <div *ngIf="!showConfirmation" class="button-group">
-      <button class="btn-danger" (click)="showConfirmDialog()">Supprimer mon compte</button>
-      <a routerLink="/dashboard" class="btn-secondary">Annuler</a>
-    </div>
-
-    <div *ngIf="showConfirmation" class="confirmation-dialog">
-      <h3>Êtes-vous sûr ?</h3>
-      <p>
-        Cette action est irréversible. Veuillez taper <strong>SUPPRIMER</strong>
-        pour confirmer.
-      </p>
-
-      <input
-        type="text"
-        [(ngModel)]="confirmationText"
-        placeholder="Tapez SUPPRIMER"
-        class="confirmation-input"
-        [disabled]="isDeleting"
-      />
-
+    @if (!showConfirmation) {
       <div class="button-group">
-        <button
-          class="btn-danger"
-          (click)="confirmDelete()"
-          [disabled]="isDeleting || confirmationText !== 'SUPPRIMER'"
-        >
-          {{ isDeleting ? 'Suppression en cours...' : 'Confirmer la suppression' }}
-        </button>
-        <button class="btn-secondary" (click)="cancelDelete()" [disabled]="isDeleting">
-          Annuler
-        </button>
+        <button class="btn-danger" (click)="showConfirmDialog()">Supprimer mon compte</button>
+        <a routerLink="/dashboard" class="btn-secondary">Annuler</a>
       </div>
-    </div>
+    }
+
+    @if (showConfirmation) {
+      <div class="confirmation-dialog">
+        <h3>Êtes-vous sûr ?</h3>
+        <p>
+          Cette action est irréversible. Veuillez taper <strong>SUPPRIMER</strong>
+          pour confirmer.
+        </p>
+        <input
+          type="text"
+          [(ngModel)]="confirmationText"
+          placeholder="Tapez SUPPRIMER"
+          class="confirmation-input"
+          [disabled]="isDeleting"
+        />
+        <div class="button-group">
+          <button
+            class="btn-danger"
+            (click)="confirmDelete()"
+            [disabled]="isDeleting || confirmationText !== 'SUPPRIMER'"
+          >
+            {{ isDeleting ? 'Suppression en cours...' : 'Confirmer la suppression' }}
+          </button>
+          <button class="btn-secondary" (click)="cancelDelete()" [disabled]="isDeleting">
+            Annuler
+          </button>
+        </div>
+      </div>
+    }
   </div>
 </section>

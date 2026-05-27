@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -10,7 +9,7 @@ import { ModalComponent } from '../../shared/modal/modal';
 
 @Component({
   selector: 'app-contact-admin',
-  imports: [RouterModule, CommonModule, FormsModule, ModalComponent],
+  imports: [RouterModule, FormsModule, ModalComponent],
   templateUrl: './contact-admin.html',
   styleUrl: './contact-admin.css',
 })

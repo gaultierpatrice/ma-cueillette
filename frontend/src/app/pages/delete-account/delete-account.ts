@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user';
@@ -10,7 +9,7 @@ import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-delete-account',
-  imports: [RouterModule, CommonModule, FormsModule, AsyncStateComponent],
+  imports: [RouterModule, FormsModule, AsyncStateComponent],
   templateUrl: './delete-account.html',
   styleUrl: './delete-account.css',
 })

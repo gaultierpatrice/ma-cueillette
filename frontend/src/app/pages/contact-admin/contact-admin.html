@@ -3,7 +3,8 @@
     <div class="card">
       <h1>Contacter l'administrateur</h1>
       <p class="lead">
-        Posez votre question ou signalez un problème. Vous recevrez une réponse à l'adresse e-mail indiquée.
+        Posez votre question ou signalez un problème. Vous recevrez une réponse à l'adresse e-mail
+        indiquée.
       </p>
 
       <form (ngSubmit)="onSubmit()" #f="ngForm">
@@ -53,7 +54,9 @@
           </button>
         </div>
 
-        <p class="msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        @if (errorMessage) {
+          <p class="msg error">{{ errorMessage }}</p>
+        }
       </form>
 
       <a routerLink="/" class="back-link">Retour à l'accueil</a>

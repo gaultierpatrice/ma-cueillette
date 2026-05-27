@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth';
 import { PickingService } from '../../services/picking.service';
 import { GeolocationService } from '../../services/geolocation.service';
 import { getApiErrorMessage } from '../../utils/api-error';
-import { CommonModule } from '@angular/common';
+
 import { ModalComponent } from '../../shared/modal/modal';
 import {
   LABEL_OPTIONS,
@@ -23,7 +23,7 @@ interface ProductForm {
 
 @Component({
   selector: 'app-add-cueillette',
-  imports: [RouterModule, FormsModule, CommonModule, ModalComponent],
+  imports: [RouterModule, FormsModule, ModalComponent],
   templateUrl: './add-picking.html',
   styleUrls: ['./add-picking.css'],
 })
@@ -38,12 +38,12 @@ export class AddCueilletteComponent implements OnInit {
     email: '',
     website: '',
     openingHours: '',
-    description: ''
+    description: '',
   };
 
   categories = {
     fruits: false,
-    vegetables: false
+    vegetables: false,
   };
 
   readonly labelOptions = LABEL_OPTIONS;
@@ -55,13 +55,13 @@ export class AddCueilletteComponent implements OnInit {
   newProduct: ProductForm = {
     name: '',
     type: '',
-    harvestSeason: ''
+    harvestSeason: '',
   };
 
   isSubmitting = false;
   errorMessage = '';
   isSuccessModalVisible = false;
-  
+
   addressValidated = false;
   isValidatingAddress = false;
   addressValidationMessage = '';
@@ -76,7 +76,7 @@ export class AddCueilletteComponent implements OnInit {
     private pickingService: PickingService,
     private geolocationService: GeolocationService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -143,12 +143,12 @@ export class AddCueilletteComponent implements OnInit {
       this.products.push({
         name: this.newProduct.name.trim(),
         type: this.newProduct.type,
-        harvestSeason: this.newProduct.harvestSeason.trim()
+        harvestSeason: this.newProduct.harvestSeason.trim(),
       });
       this.newProduct = {
         name: '',
         type: '',
-        harvestSeason: ''
+        harvestSeason: '',
       };
     }
   }
@@ -237,7 +237,7 @@ export class AddCueilletteComponent implements OnInit {
             const lower = part.toLocaleLowerCase('fr-FR');
             return lower.charAt(0).toLocaleUpperCase('fr-FR') + lower.slice(1);
           })
-          .join('-')
+          .join('-'),
       )
       .join(' ');
   }
@@ -257,11 +257,7 @@ export class AddCueilletteComponent implements OnInit {
   }
 
   private hasCompleteAddressInput(): boolean {
-    return !!(
-      this.form.address?.trim() &&
-      this.form.postalCode?.trim() &&
-      this.form.city?.trim()
-    );
+    return !!(this.form.address?.trim() && this.form.postalCode?.trim() && this.form.city?.trim());
   }
 
   private async validateAddress(): Promise<void> {
@@ -314,7 +310,7 @@ export class AddCueilletteComponent implements OnInit {
     this.cdr.markForCheck();
 
     if (!this.addressValidated || !this.coordinates) {
-      this.errorMessage = 'Veuillez d\'abord vérifier l\'adresse avant de soumettre le formulaire.';
+      this.errorMessage = "Veuillez d'abord vérifier l'adresse avant de soumettre le formulaire.";
       return;
     }
 

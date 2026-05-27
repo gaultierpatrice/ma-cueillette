@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { GeolocationService } from '../../services/geolocation.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -15,7 +15,7 @@ import { AsyncStateComponent } from '../../shared/async-state/async-state';
 
 @Component({
   selector: 'app-cueillettes-list',
-  imports: [RouterModule, CommonModule, FormsModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
+  imports: [RouterModule, FormsModule, ModalComponent, PickingCardComponent, AsyncStateComponent],
   templateUrl: './pickings-list.html',
   styleUrls: ['./pickings-list.css'],
 })

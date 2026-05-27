@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { PickingService } from '../../services/picking.service';
 import { Picking, Product } from '../../services/picking.types';
 import { getApiErrorMessage } from '../../utils/api-error';
@@ -22,7 +21,7 @@ interface ProductForm {
 
 @Component({
   selector: 'app-modify-picking',
-  imports: [RouterModule, FormsModule, CommonModule, ModalComponent],
+  imports: [RouterModule, FormsModule, ModalComponent],
   templateUrl: './modify-picking.html',
   styleUrls: ['../add-picking/add-picking.css'],
 })
